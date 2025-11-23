@@ -248,45 +248,53 @@
 
         setupSwipeGestures() {
             const mainDisplay = document.querySelector('.character-main-display');
-            if (!mainDisplay) return;
+            if (!mainDisplay) {
+                console.log('CharacterSelectionMobile: mainDisplay not found for swipe gestures');
+                return;
+            }
 
             let startX = 0;
             let startY = 0;
-            let endX = 0;
-            let endY = 0;
             let isSwiping = false;
 
             // Touch events for mobile
             mainDisplay.addEventListener('touchstart', (e) => {
-                startX = e.touches[0].clientX;
-                startY = e.touches[0].clientY;
+                const touch = e.touches[0];
+                startX = touch.clientX;
+                startY = touch.clientY;
                 isSwiping = true;
             }, { passive: true });
 
             mainDisplay.addEventListener('touchmove', (e) => {
                 if (!isSwiping) return;
-                endX = e.touches[0].clientX;
-                endY = e.touches[0].clientY;
+                // Allow scrolling but track movement
             }, { passive: true });
 
             mainDisplay.addEventListener('touchend', (e) => {
                 if (!isSwiping) return;
                 isSwiping = false;
 
+                const touch = e.changedTouches[0];
+                const endX = touch.clientX;
+                const endY = touch.clientY;
+
                 const deltaX = endX - startX;
                 const deltaY = endY - startY;
 
-                // Only process horizontal swipes
-                if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
+                // Only process horizontal swipes (minimum 50px, horizontal movement > vertical)
+                if (Math.abs(deltaX) > 50 && Math.abs(deltaX) > Math.abs(deltaY)) {
+                    e.preventDefault();
                     if (deltaX > 0) {
                         // Swipe right - go to previous card
+                        console.log('Swipe right detected, going to previous card');
                         this.previousCard();
                     } else {
                         // Swipe left - go to next card
+                        console.log('Swipe left detected, going to next card');
                         this.nextCard();
                     }
                 }
-            }, { passive: true });
+            }, { passive: false });
         }
 
         nextCard() {
@@ -448,21 +456,7 @@
             window.location.reload();
         }
 
-        setupSwipeGestures() {
-            const mainDisplay = document.querySelector('.character-main-display');
-            if (!mainDisplay) return;
-
-            new SwipeHandler(mainDisplay, {
-                onSwipeLeft: () => {
-                    const nextIndex = (this.currentIndex + 1) % this.cards.length;
-                    this.switchToCard(nextIndex);
-                },
-                onSwipeRight: () => {
-                    const prevIndex = (this.currentIndex - 1 + this.cards.length) % this.cards.length;
-                    this.switchToCard(prevIndex);
-                }
-            });
-        }
+        // Removed duplicate setupSwipeGestures - using the one above
 
         setupSwipeNavigation(grid) {
             // Add scroll snap

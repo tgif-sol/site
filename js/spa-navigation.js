@@ -97,6 +97,40 @@
         if (window.location.hash !== newUrl) {
             history.pushState({ page: pageKey }, '', newUrl);
         }
+
+        // Scroll to top on page change (especially important for mobile)
+        scrollToTop();
+    }
+
+    /**
+     * Scroll to top of page
+     */
+    function scrollToTop() {
+        // Use requestAnimationFrame for smooth scroll
+        requestAnimationFrame(() => {
+            // Try multiple methods for better compatibility
+            window.scrollTo({
+                top: 0,
+                left: 0,
+                behavior: 'instant' // Use 'instant' for immediate scroll, 'smooth' for animated
+            });
+
+            // Also scroll document element (for some browsers)
+            if (document.documentElement) {
+                document.documentElement.scrollTop = 0;
+            }
+
+            // Also scroll body (for some browsers)
+            if (document.body) {
+                document.body.scrollTop = 0;
+            }
+
+            // For mobile, also check content area
+            const contentArea = document.querySelector('.content');
+            if (contentArea) {
+                contentArea.scrollTop = 0;
+            }
+        });
     }
 
     /**
@@ -256,8 +290,35 @@
                     // If it's a specific article, load it after the writing page loads
                     if (page === 'writing' && article) {
                         setTimeout(() => {
-                            const targetLink = document.querySelector(`[data-article="${article}"]`);
-                            if (targetLink) targetLink.click();
+                            console.log(`Looking for article: ${article}`);
+
+                            // Handle different naming conventions (e.g., lattice-work vs latticework)
+                            let targetLink = document.querySelector(`[data-article="${article}"]`);
+
+                            // If not found, try without hyphens
+                            if (!targetLink && article.includes('-')) {
+                                const articleWithoutHyphens = article.replace(/-/g, '');
+                                console.log(`Trying without hyphens: ${articleWithoutHyphens}`);
+                                targetLink = document.querySelector(`[data-article="${articleWithoutHyphens}"]`);
+                            }
+
+                            // If still not found, try with hyphens added
+                            if (!targetLink && !article.includes('-')) {
+                                // Try common hyphenation patterns
+                                const hyphenated = article.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+                                console.log(`Trying with hyphens: ${hyphenated}`);
+                                targetLink = document.querySelector(`[data-article="${hyphenated}"]`);
+                            }
+
+                            if (targetLink) {
+                                console.log(`Found and clicking article link: ${article}`);
+                                targetLink.click();
+                            } else {
+                                console.warn(`Article link not found for: ${article}`);
+                                // Log all available article links for debugging
+                                const availableLinks = document.querySelectorAll('[data-article]');
+                                console.log('Available articles:', Array.from(availableLinks).map(el => el.dataset.article));
+                            }
                         }, 200);
                     }
                 }
@@ -738,6 +799,37 @@
 
                     // Scroll to top of reading pane
                     writingContentDiv.scrollTop = 0;
+
+                    // On mobile, scroll to article title after a short delay
+                    if (window.innerWidth <= 768) {
+                        setTimeout(() => {
+                            const articleTitle = writingContentDiv.querySelector('.article-title');
+                            if (articleTitle) {
+                                // Get the position and scroll with offset for mobile header
+                                const titleRect = articleTitle.getBoundingClientRect();
+                                const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+                                const targetPosition = titleRect.top + currentScroll - 80; // 80px offset for mobile header
+                                
+                                window.scrollTo({
+                                    top: targetPosition,
+                                    behavior: 'smooth'
+                                });
+                            } else {
+                                // Fallback to reading pane if title not found
+                                const readingPane = document.querySelector('.reading-pane');
+                                if (readingPane) {
+                                    const paneRect = readingPane.getBoundingClientRect();
+                                    const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+                                    const targetPosition = paneRect.top + currentScroll - 80;
+                                    
+                                    window.scrollTo({
+                                        top: targetPosition,
+                                        behavior: 'smooth'
+                                    });
+                                }
+                            }
+                        }, 150);
+                    }
                 } else {
                     console.warn('Article not found:', articleKey);
                 }
@@ -800,6 +892,37 @@
 
                     // Scroll to top of reading pane
                     quotesContentDiv.scrollTop = 0;
+
+                    // On mobile, scroll to article title after a short delay
+                    if (window.innerWidth <= 768) {
+                        setTimeout(() => {
+                            const articleTitle = quotesContentDiv.querySelector('.article-title');
+                            if (articleTitle) {
+                                // Get the position and scroll with offset for mobile header
+                                const titleRect = articleTitle.getBoundingClientRect();
+                                const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+                                const targetPosition = titleRect.top + currentScroll - 80; // 80px offset for mobile header
+                                
+                                window.scrollTo({
+                                    top: targetPosition,
+                                    behavior: 'smooth'
+                                });
+                            } else {
+                                // Fallback to reading pane if title not found
+                                const readingPane = document.querySelector('.reading-pane');
+                                if (readingPane) {
+                                    const paneRect = readingPane.getBoundingClientRect();
+                                    const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+                                    const targetPosition = paneRect.top + currentScroll - 80;
+                                    
+                                    window.scrollTo({
+                                        top: targetPosition,
+                                        behavior: 'smooth'
+                                    });
+                                }
+                            }
+                        }, 150);
+                    }
 
                     // Add scroll animations for quote items
                     setTimeout(() => {
@@ -881,6 +1004,37 @@
                     // Scroll to top of reading pane
                     questionsContentDiv.scrollTop = 0;
 
+                    // On mobile, scroll to article title after a short delay
+                    if (window.innerWidth <= 768) {
+                        setTimeout(() => {
+                            const articleTitle = questionsContentDiv.querySelector('.article-title');
+                            if (articleTitle) {
+                                // Get the position and scroll with offset for mobile header
+                                const titleRect = articleTitle.getBoundingClientRect();
+                                const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+                                const targetPosition = titleRect.top + currentScroll - 80; // 80px offset for mobile header
+                                
+                                window.scrollTo({
+                                    top: targetPosition,
+                                    behavior: 'smooth'
+                                });
+                            } else {
+                                // Fallback to reading pane if title not found
+                                const readingPane = document.querySelector('.reading-pane');
+                                if (readingPane) {
+                                    const paneRect = readingPane.getBoundingClientRect();
+                                    const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+                                    const targetPosition = paneRect.top + currentScroll - 80;
+                                    
+                                    window.scrollTo({
+                                        top: targetPosition,
+                                        behavior: 'smooth'
+                                    });
+                                }
+                            }
+                        }, 150);
+                    }
+
                     // Add scroll animations for question items
                     setTimeout(() => {
                         const observerOptions = {
@@ -959,6 +1113,37 @@
                     // Scroll to top of reading pane
                     investmentsContentDiv.scrollTop = 0;
 
+                    // On mobile, scroll to article title after a short delay
+                    if (window.innerWidth <= 768) {
+                        setTimeout(() => {
+                            const articleTitle = investmentsContentDiv.querySelector('.article-title');
+                            if (articleTitle) {
+                                // Get the position and scroll with offset for mobile header
+                                const titleRect = articleTitle.getBoundingClientRect();
+                                const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+                                const targetPosition = titleRect.top + currentScroll - 80; // 80px offset for mobile header
+                                
+                                window.scrollTo({
+                                    top: targetPosition,
+                                    behavior: 'smooth'
+                                });
+                            } else {
+                                // Fallback to reading pane if title not found
+                                const readingPane = document.querySelector('.reading-pane');
+                                if (readingPane) {
+                                    const paneRect = readingPane.getBoundingClientRect();
+                                    const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+                                    const targetPosition = paneRect.top + currentScroll - 80;
+                                    
+                                    window.scrollTo({
+                                        top: targetPosition,
+                                        behavior: 'smooth'
+                                    });
+                                }
+                            }
+                        }, 150);
+                    }
+
                     // Add scroll animations for investment items
                     setTimeout(() => {
                         const observerOptions = {
@@ -1025,14 +1210,37 @@
                     }
                 }
             }
+            // Scroll to top on browser navigation
+            scrollToTop();
         });
 
         // Handle initial hash
         const hash = window.location.hash.substring(1);
         if (hash) {
-            const pageKey = hash.split('/')[0];
+            const parts = hash.split('/');
+            const pageKey = parts[0];
+            const articleKey = parts[1];
+
             if (pageKey && pageKey !== currentPage) {
                 loadPageContent(pageKey);
+
+                // If there's an article, load it after the page loads
+                if (pageKey === 'writing' && articleKey) {
+                    setTimeout(() => {
+                        // Handle different naming conventions (e.g., lattice-work vs latticework)
+                        let targetLink = document.querySelector(`[data-article="${articleKey}"]`);
+
+                        // If not found, try without hyphens
+                        if (!targetLink && articleKey.includes('-')) {
+                            const articleWithoutHyphens = articleKey.replace(/-/g, '');
+                            targetLink = document.querySelector(`[data-article="${articleWithoutHyphens}"]`);
+                        }
+
+                        if (targetLink) {
+                            targetLink.click();
+                        }
+                    }, 200);
+                }
             }
         }
     }

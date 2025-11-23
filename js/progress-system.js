@@ -12,7 +12,10 @@ class ProgressSystem {
             'investments'
         ];
 
-        // Load or initialize progress
+        // Get current persona for persona-specific progress
+        this.currentPersona = localStorage.getItem('bustling_v2_persona') || 'founder';
+
+        // Load or initialize progress (now persona-specific)
         this.progress = this.loadProgress() || this.initializeProgress();
 
         // Initialize pagesVisited array if it doesn't exist
@@ -20,9 +23,13 @@ class ProgressSystem {
             this.progress.pagesVisited = [];
         }
 
-        // Mark welcome as visited on first visit
+        // Mark current page as visited on first visit for this persona
         if (!this.progress.initialized) {
-            this.progress.pagesVisited.push('welcome');
+            const currentPage = this.getCurrentPage();
+            if (!this.progress.pagesVisited.includes(currentPage)) {
+                this.progress.pagesVisited.push(currentPage);
+                console.log(`Progress System: Initial page ${currentPage} added for ${this.currentPersona}`);
+            }
             this.progress.initialized = true;
             this.saveProgress();
         }
@@ -31,6 +38,9 @@ class ProgressSystem {
         this.currentPage = this.getCurrentPage();
         this.startTracking();
         this.updateUI();
+
+        // Listen for persona changes
+        this.listenForPersonaChanges();
     }
 
     initializeProgress() {
@@ -42,13 +52,54 @@ class ProgressSystem {
     }
 
     loadProgress() {
-        const saved = localStorage.getItem('readingProgress');
-        return saved ? JSON.parse(saved) : null;
+        // Load persona-specific progress
+        const key = `readingProgress_${this.currentPersona}`;
+        const saved = localStorage.getItem(key);
+
+        if (saved) {
+            try {
+                const data = JSON.parse(saved);
+
+                // If old format with timestamp, extract just the progress
+                if (data.timestamp && data.progress) {
+                    console.log(`Progress System: Migrating old format for ${this.currentPersona}`);
+                    return data.progress;
+                }
+
+                // Otherwise use data directly
+                console.log(`Progress System: Loaded progress for ${this.currentPersona}`, data);
+                return data;
+            } catch (e) {
+                console.error('Progress System: Error parsing saved progress', e);
+                return null;
+            }
+        }
+
+        return null;
     }
 
-    saveProgress() {
-        localStorage.setItem('readingProgress', JSON.stringify(this.progress));
+    saveProgress(persona = null) {
+        // Use provided persona or current persona
+        const targetPersona = persona || this.currentPersona;
+        
+        // Verify that we're saving to the correct persona
+        const actualPersona = localStorage.getItem('bustling_v2_persona') || 'founder';
+        if (targetPersona !== actualPersona) {
+            console.log(`Progress System: Skipping save - persona mismatch. Target: ${targetPersona}, Actual: ${actualPersona}`);
+            return;
+        }
+
+        // Save persona-specific progress
+        const key = `readingProgress_${targetPersona}`;
+
+        try {
+            localStorage.setItem(key, JSON.stringify(this.progress));
+            console.log(`Progress System: Saved progress for ${targetPersona}`, this.progress);
+        } catch (e) {
+            console.error('Progress System: Error saving progress', e);
+        }
     }
+
 
     getCurrentPage() {
         const path = window.location.pathname;
@@ -160,8 +211,11 @@ class ProgressSystem {
     }
 
     updateUI() {
-        // Ensure percentage is within bounds
-        const targetPercentage = Math.max(0, Math.min(100, this.progress.totalProgress));
+        // Calculate total progress first
+        this.calculateTotalProgress();
+
+        // Ensure percentage is within bounds (0-100)
+        const targetPercentage = Math.max(0, Math.min(100, this.progress.totalProgress || 0));
 
         // Update progress bar with smooth animation
         const progressBarFill = document.getElementById('progressBarFill');
@@ -173,8 +227,13 @@ class ProgressSystem {
         const progressPercentage = document.getElementById('progressPercentage');
         if (progressPercentage) {
             // Parse current value and ensure it's valid
-            let currentValue = parseInt(progressPercentage.textContent) || 0;
-            currentValue = Math.max(0, Math.min(100, currentValue));
+            const currentText = progressPercentage.textContent.replace('%', '').trim();
+            let currentValue = parseInt(currentText) || 0;
+
+            // Ensure current value is within bounds
+            if (isNaN(currentValue) || currentValue < 0 || currentValue > 100) {
+                currentValue = 0;
+            }
 
             this.animateCounter(progressPercentage, currentValue, targetPercentage);
         }
@@ -186,9 +245,12 @@ class ProgressSystem {
         // Clear any existing animation
         if (this.counterTimer) {
             clearInterval(this.counterTimer);
+            this.counterTimer = null;
         }
 
-        // Ensure values are within bounds
+        // Ensure values are valid numbers and within bounds (0-100)
+        start = parseInt(start) || 0;
+        end = parseInt(end) || 0;
         start = Math.max(0, Math.min(100, start));
         end = Math.max(0, Math.min(100, end));
 
@@ -198,7 +260,7 @@ class ProgressSystem {
             return;
         }
 
-        const duration = 1000; // 1 second animation
+        const duration = 300; // Faster animation
         const range = Math.abs(end - start);
         const increment = end > start ? 1 : -1;
         const stepTime = Math.max(10, Math.floor(duration / range)); // Minimum 10ms per step
@@ -207,9 +269,12 @@ class ProgressSystem {
         this.counterTimer = setInterval(() => {
             current += increment;
 
-            // Ensure we don't overshoot
+            // Ensure current stays within bounds
+            current = Math.max(0, Math.min(100, current));
+
+            // Check if we've reached the target
             if ((increment > 0 && current >= end) || (increment < 0 && current <= end)) {
-                current = end;
+                current = Math.max(0, Math.min(100, end));
                 element.textContent = `${current}%`;
                 clearInterval(this.counterTimer);
                 this.counterTimer = null;
@@ -219,13 +284,71 @@ class ProgressSystem {
         }, stepTime);
     }
 
+    listenForPersonaChanges() {
+        // Listen for storage changes (persona switches)
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'bustling_v2_persona' && e.newValue !== this.currentPersona) {
+                this.handlePersonaChange(e.newValue);
+            }
+        });
+
+        // Also listen for custom persona change events
+        window.addEventListener('personaChanged', (e) => {
+            if (e.detail && e.detail.persona !== this.currentPersona) {
+                this.handlePersonaChange(e.detail.persona);
+            }
+        });
+    }
+
+    handlePersonaChange(newPersona) {
+        console.log(`Progress System: Switching from ${this.currentPersona} to ${newPersona}`);
+
+        // Save current progress with old persona before switching
+        const oldPersona = this.currentPersona;
+        this.saveProgress(oldPersona);
+
+        // Update current persona
+        this.currentPersona = newPersona;
+
+        // Load new persona's progress
+        const savedProgress = this.loadProgress();
+        if (savedProgress) {
+            this.progress = savedProgress;
+            console.log(`Progress System: Loaded existing progress for ${newPersona}`, this.progress);
+        } else {
+            // Initialize new persona
+            this.progress = this.initializeProgress();
+            const currentPage = this.getCurrentPage();
+            if (!this.progress.pagesVisited.includes(currentPage)) {
+                this.progress.pagesVisited.push(currentPage);
+            }
+            this.progress.initialized = true;
+            this.saveProgress(newPersona);
+        }
+
+        // Update UI
+        this.currentPage = this.getCurrentPage();
+        this.calculateTotalProgress();
+        this.updateUI();
+        
+        console.log(`Progress System: Progress for ${newPersona} - Pages visited: ${this.progress.pagesVisited.length}, Total progress: ${this.progress.totalProgress}%`);
+    }
+
 }
 
 // Initialize when DOM is ready
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
+        // Clean up existing instance if any
+        if (window.progressSystem) {
+            console.log('Progress System: Cleaning up existing instance');
+        }
         window.progressSystem = new ProgressSystem();
     });
 } else {
+    // Clean up existing instance if any
+    if (window.progressSystem) {
+        console.log('Progress System: Cleaning up existing instance');
+    }
     window.progressSystem = new ProgressSystem();
 }

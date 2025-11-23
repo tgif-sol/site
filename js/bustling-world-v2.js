@@ -90,6 +90,7 @@ class BustlingWorldV2 {
             }
         } else {
             const savedPersona = localStorage.getItem('bustling_v2_persona') || 'founder';
+            // Set persona - this will also dispatch the personaChanged event for XP system
             this.setPersona(savedPersona);
             this.hideCharacterSelection();
 
@@ -155,6 +156,8 @@ class BustlingWorldV2 {
         const isMobile = window.innerWidth <= 768;
 
         characterCards.forEach(card => {
+            const persona = card.dataset.persona;
+
             // Setup video for cards with video
             if (card.dataset.persona === 'founder' || card.dataset.persona === 'dad' || card.dataset.persona === 'operator') {
                 const video = card.querySelector('.character-video');
@@ -174,8 +177,23 @@ class BustlingWorldV2 {
                         });
                     }
 
-                    if (isMobile) {
-                        // Mobile: Click on portrait toggles between image and video
+                    // DESKTOP behavior
+                    if (!isMobile) {
+                        // Hover to play video
+                        card.addEventListener('mouseenter', () => {
+                            video.play().catch(e => {
+                                console.log('Video play failed:', e);
+                            });
+                        });
+
+                        card.addEventListener('mouseleave', () => {
+                            video.pause();
+                            video.currentTime = 0;
+                        });
+                    }
+                    // MOBILE behavior
+                    else {
+                        // Click on portrait toggles between image and video
                         const portrait = card.querySelector('.character-portrait');
                         const img = card.querySelector('.character-photo');
                         const videoElement = card.querySelector('.character-video');
@@ -219,31 +237,16 @@ class BustlingWorldV2 {
                                 e.stopPropagation();
                             }
                         });
-                    } else {
-                        // Desktop: Hover effect
-                        card.addEventListener('mouseenter', () => {
-                            video.play().catch(e => {
-                                console.log('Video play failed:', e);
-                            });
-                        });
-
-                        card.addEventListener('mouseleave', () => {
-                            video.pause();
-                            video.currentTime = 0;
-                        });
                     }
                 }
             }
 
-            // Desktop: Click on card navigates
-            // Mobile: Only button navigates (handled in mobile.js)
+            // DESKTOP ONLY: Click on card anywhere navigates (including on video)
             if (!isMobile) {
                 card.addEventListener('click', (e) => {
-                    // Don't navigate if clicking on video controls
-                    if (e.target.closest('.character-video')) {
-                        return;
-                    }
-                    const persona = card.dataset.persona;
+                    // Always navigate on desktop, no exceptions
+                    e.stopPropagation(); // Prevent bubbling
+                    console.log('Desktop card clicked, navigating to:', persona);
                     this.selectCharacter(persona);
                 });
             }
@@ -730,12 +733,20 @@ class BustlingWorldV2 {
      * @param {string} persona - The selected persona
      */
     selectCharacter(persona) {
+        console.log('selectCharacter called for:', persona);
+
         // Save selection
         localStorage.setItem('bustling_v2_visited', 'true');
         localStorage.setItem('bustling_v2_persona', persona);
 
         // Apply persona
         this.setPersona(persona);
+
+        // Clear any existing content first to prevent duplicate
+        const contentArea = document.querySelector('.content');
+        if (contentArea) {
+            contentArea.innerHTML = '';
+        }
 
         // Transition to main content
         this.hideCharacterSelection();
@@ -747,13 +758,16 @@ class BustlingWorldV2 {
         // After showing main content, load Welcome as the default page
         const isIndexPage = window.location.pathname === '/' || window.location.pathname === '/index.html';
         if (isIndexPage) {
-            // Load Welcome content after character selection
+            // Load welcome content after animation
             setTimeout(() => {
+                console.log('Loading welcome content after character selection');
                 if (window.loadPageContent) {
                     window.loadPageContent('welcome');
                 }
             }, 500);
         }
+
+        // Event dispatch is now handled in setPersona()
     }
 
     /**
@@ -767,7 +781,10 @@ class BustlingWorldV2 {
             return;
         }
 
+        // Save to localStorage - this will trigger storage event for cross-tab sync
         localStorage.setItem('bustling_v2_persona', persona);
+
+        // Set the persona which will dispatch the personaChanged event
         this.setPersona(persona);
 
         // Update role selection active state
@@ -810,6 +827,8 @@ class BustlingWorldV2 {
                 window.loadPageContent('welcome');
             }, 100);
         }
+
+        // Event dispatch is now handled in setPersona()
     }
 
     /**
@@ -817,14 +836,34 @@ class BustlingWorldV2 {
      * @param {string} persona - The current active persona
      */
     updateRoleSelectionActive(persona) {
-        const roleOptions = document.querySelectorAll('.role-option');
-        roleOptions.forEach(option => {
-            if (option.dataset.role === persona) {
-                option.classList.add('active');
-            } else {
-                option.classList.remove('active');
+        // Small delay to ensure DOM is ready
+        setTimeout(() => {
+            const roleOptions = document.querySelectorAll('.role-option');
+
+            if (roleOptions.length === 0) {
+                console.log('No role options found, retrying...');
+                // Retry after a short delay if elements not found
+                setTimeout(() => {
+                    const retryOptions = document.querySelectorAll('.role-option');
+                    retryOptions.forEach(option => {
+                        if (option.dataset.role === persona) {
+                            option.classList.add('active');
+                        } else {
+                            option.classList.remove('active');
+                        }
+                    });
+                }, 100);
+                return;
             }
-        });
+
+            roleOptions.forEach(option => {
+                if (option.dataset.role === persona) {
+                    option.classList.add('active');
+                } else {
+                    option.classList.remove('active');
+                }
+            });
+        }, 0);
     }
 
     /**
@@ -872,12 +911,25 @@ class BustlingWorldV2 {
     setPersona(persona) {
         if (!this.personaData[persona]) return;
 
+        // Check if persona is actually changing
+        const previousPersona = this.currentPersona;
+
         this.currentPersona = persona;
         const data = this.personaData[persona];
 
         // Update body theme class
         document.body.className = ''; // Clear existing classes
         document.body.classList.add(data.theme);
+
+        // Always update role selection active state when persona changes
+        this.updateRoleSelectionActive(persona);
+
+        // Dispatch persona change event if persona actually changed
+        if (previousPersona !== persona) {
+            window.dispatchEvent(new CustomEvent('personaChanged', {
+                detail: { persona: persona }
+            }));
+        }
 
         // Update persona badge
         const badge = document.getElementById('personaBadge');

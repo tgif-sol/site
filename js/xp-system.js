@@ -20,7 +20,10 @@ class XPSystem {
             levelMultiplier: 1.5 // Level requirement multiplier
         };
 
-        // Load saved progress or initialize
+        // Get current persona
+        this.currentPersona = localStorage.getItem('bustling_v2_persona') || 'founder';
+
+        // Load saved progress or initialize (now persona-specific)
         this.progress = this.loadProgress() || this.initializeProgress();
 
         // Initialize UI
@@ -31,6 +34,9 @@ class XPSystem {
 
         // Update UI immediately
         this.updateUI();
+
+        // Listen for persona changes
+        this.listenForPersonaChanges();
     }
 
     initializeProgress() {
@@ -45,12 +51,34 @@ class XPSystem {
     }
 
     loadProgress() {
-        const saved = localStorage.getItem('xpSystemProgress');
-        return saved ? JSON.parse(saved) : null;
+        // Load persona-specific progress
+        const key = `xpSystemProgress_${this.currentPersona}`;
+        const saved = localStorage.getItem(key);
+
+        if (saved) {
+            try {
+                const data = JSON.parse(saved);
+                console.log(`XP System: Loaded progress for ${this.currentPersona}`, data);
+                return data;
+            } catch (e) {
+                console.error('XP System: Error parsing saved progress', e);
+                return null;
+            }
+        }
+
+        return null;
     }
 
     saveProgress() {
-        localStorage.setItem('xpSystemProgress', JSON.stringify(this.progress));
+        // Save persona-specific progress (no timestamp, just data)
+        const key = `xpSystemProgress_${this.currentPersona}`;
+
+        try {
+            localStorage.setItem(key, JSON.stringify(this.progress));
+            console.log(`XP System: Saved progress for ${this.currentPersona}`, this.progress);
+        } catch (e) {
+            console.error('XP System: Error saving progress', e);
+        }
     }
 
     initializeUI() {
@@ -259,6 +287,44 @@ class XPSystem {
         }
     }
 
+    listenForPersonaChanges() {
+        // Listen for storage changes (persona switches)
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'bustling_v2_persona' && e.newValue !== this.currentPersona) {
+                this.handlePersonaChange(e.newValue);
+            }
+        });
+
+        // Also listen for custom persona change events
+        window.addEventListener('personaChanged', (e) => {
+            if (e.detail && e.detail.persona !== this.currentPersona) {
+                this.handlePersonaChange(e.detail.persona);
+            }
+        });
+    }
+
+    handlePersonaChange(newPersona) {
+        console.log(`XP System: Switching from ${this.currentPersona} to ${newPersona}`);
+
+        // Save current progress before switching
+        this.saveProgress();
+
+        // Update current persona
+        this.currentPersona = newPersona;
+
+        // Load new persona's progress
+        this.progress = this.loadProgress() || this.initializeProgress();
+
+        // Reset current page tracking
+        this.currentPage = this.getCurrentPage();
+        if (!this.progress.pageProgress[this.currentPage]) {
+            this.progress.pageProgress[this.currentPage] = 0;
+        }
+
+        // Update UI with new persona's progress
+        this.updateUI();
+    }
+
     updateUI() {
         const requiredXP = this.getRequiredXPForLevel(this.progress.level);
         const percentage = Math.floor((this.progress.currentXP / requiredXP) * 100);
@@ -340,8 +406,16 @@ document.head.appendChild(style);
 // Initialize when DOM is ready
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
+        // Clean up existing instance if any
+        if (window.xpSystem) {
+            console.log('XP System: Cleaning up existing instance');
+        }
         window.xpSystem = new XPSystem();
     });
 } else {
+    // Clean up existing instance if any
+    if (window.xpSystem) {
+        console.log('XP System: Cleaning up existing instance');
+    }
     window.xpSystem = new XPSystem();
 }
