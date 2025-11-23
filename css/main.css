@@ -116,7 +116,7 @@ body.persona-dad::after {
     background-position: center center;
     background-repeat: no-repeat;
     opacity: 0.1;
-    z-index: 1;
+    z-index: -1;
     pointer-events: none;
     display: block;
     /* Safari Rendering Fixes */
@@ -181,6 +181,8 @@ body.persona-dad::after {
     display: flex;
     justify-content: center;
     align-items: center;
+    /* Allow clicks to pass through to hamburger when overlay is not covering it */
+    pointer-events: auto;
 }
 
 /* Dark background base layer for character selection */
@@ -524,11 +526,9 @@ body.persona-dad::after {
     /* Prevent video from blocking clicks on desktop */
 }
 
-/* Remove dark filter and mask for operator video */
+/* Operator video positioning - same mask as other videos */
 .character-card[data-persona="operator"] .character-video {
-    filter: none !important;
-    -webkit-mask-image: none !important;
-    mask-image: none !important;
+    filter: brightness(0.9) contrast(1.1);
     transition: opacity 0.1s ease, visibility 0.1s ease;
     object-fit: cover;
     -webkit-object-fit: cover;
@@ -2954,8 +2954,15 @@ body.persona-dad .nav-list a.active {
 
     /* Also hide hamburger during character selection */
     body.character-select-active .hamburger,
-    #characterSelect:not(.hidden)~* .hamburger {
+    body.character-select-active #hamburger,
+    #characterSelect:not(.hidden)~.hamburger,
+    #characterSelect:not(.hidden)~#hamburger,
+    .character-select-overlay:not(.hidden)~.hamburger,
+    .character-select-overlay:not(.hidden)~#hamburger {
         display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
     }
 
     /* Create mobile header if it doesn't exist */
@@ -3001,7 +3008,7 @@ body.persona-dad .nav-list a.active {
         background: transparent !important;
         border: none !important;
         cursor: pointer !important;
-        z-index: 10002 !important;
+        z-index: 10006 !important;
         position: fixed !important;
         top: 18px !important;
         left: 15px !important;
@@ -3013,6 +3020,10 @@ body.persona-dad .nav-list a.active {
         align-items: center !important;
         transform: none !important;
         margin: 0 !important;
+        /* Ensure hamburger is always visible even when container has opacity: 0 */
+        isolation: isolate;
+        /* Ensure clicks work - hamburger should be above menu-overlay */
+        pointer-events: auto !important;
     }
 
     /* Hover/Active state for hamburger */
@@ -3264,10 +3275,12 @@ body.persona-dad .nav-list a.active {
         right: 0;
         bottom: 0;
         background: rgba(0, 0, 0, 0.5);
-        z-index: 10000;
+        z-index: 0;
         display: none;
         opacity: 0;
         transition: opacity 0.3s;
+        /* Don't block hamburger clicks */
+        pointer-events: auto;
     }
 
     body.menu-open .menu-overlay {
@@ -4894,6 +4907,7 @@ body::after {
         overflow-x: hidden;
         -webkit-overflow-scrolling: touch;
         /* Remove overscroll-behavior as it can cause issues on iOS */
+        pointer-events: auto;
     }
 
     /* Dark background base layer for mobile character selection */
@@ -5760,8 +5774,15 @@ body::after {
 
     /* Also hide hamburger during character selection */
     body.character-select-active .hamburger,
-    #characterSelect:not(.hidden)~* .hamburger {
+    body.character-select-active #hamburger,
+    #characterSelect:not(.hidden)~.hamburger,
+    #characterSelect:not(.hidden)~#hamburger,
+    .character-select-overlay:not(.hidden)~.hamburger,
+    .character-select-overlay:not(.hidden)~#hamburger {
         display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
     }
 
     /* Create mobile header if it doesn't exist */
@@ -5809,7 +5830,7 @@ body::after {
         background: transparent !important;
         border: none !important;
         cursor: pointer !important;
-        z-index: 10002 !important;
+        z-index: 10006 !important;
         position: fixed !important;
         top: 18px !important;
         left: 15px !important;
@@ -5821,6 +5842,10 @@ body::after {
         align-items: center !important;
         transform: none !important;
         margin: 0 !important;
+        /* Ensure hamburger is always visible even when container has opacity: 0 */
+        isolation: isolate;
+        /* Ensure clicks work - hamburger should be above menu-overlay */
+        pointer-events: auto !important;
     }
 
     /* Container stays fixed, spans are positioned absolutely inside */
@@ -6096,10 +6121,12 @@ body::after {
         right: 0;
         bottom: 0;
         background: rgba(0, 0, 0, 0.5);
-        z-index: 10000;
+        z-index: 0;
         display: none;
         opacity: 0;
         transition: opacity 0.3s;
+        /* Don't block hamburger clicks */
+        pointer-events: auto;
     }
 
     body.menu-open .menu-overlay {
