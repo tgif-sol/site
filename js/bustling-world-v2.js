@@ -179,8 +179,16 @@ class BustlingWorldV2 {
 
                     // DESKTOP behavior
                     if (!isMobile) {
-                        // Hover to play video
+                        // Hover to play video - only load when needed
                         card.addEventListener('mouseenter', () => {
+                            // Only load video source when first hovered
+                            if (!video.src || video.readyState === 0) {
+                                // Load from data-src if available, otherwise use src
+                                const videoSrc = video.getAttribute('data-src') || video.getAttribute('src');
+                                if (videoSrc && !video.src) {
+                                    video.src = videoSrc;
+                                }
+                            }
                             video.play().catch(e => {
                                 console.log('Video play failed:', e);
                             });

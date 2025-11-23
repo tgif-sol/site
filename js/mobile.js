@@ -428,8 +428,15 @@
                     void card.offsetWidth;
                 }
             } else {
-                // Start video
-                video.load(); // Force reload the video
+                // Start video - only load when needed
+                if (!video.src || video.readyState === 0) {
+                    // Load from data-src if available, otherwise use src
+                    const videoSrc = video.getAttribute('data-src') || video.getAttribute('src');
+                    if (videoSrc && !video.src) {
+                        video.src = videoSrc;
+                    }
+                    video.load();
+                }
 
                 // Start video with a small delay for reliability
                 setTimeout(() => {

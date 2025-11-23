@@ -13,7 +13,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&family=Merriweather:wght@300;400;700;900&family=Source+Serif+Pro:wght@400;600;700;900&family=Lora:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap"
-        rel="stylesheet">
+        rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&family=Merriweather:wght@300;400;700;900&family=Source+Serif+Pro:wght@400;600;700;900&family=Lora:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap"
+            rel="stylesheet">
+    </noscript>
 
     <!-- Alternative Professional Options (commented out - uncomment to try) -->
     <!-- Option 2: Executive Traditional
@@ -67,9 +72,9 @@
                     <div class="card-background warlord-bg"></div>
                     <div class="character-frame">
                         <div class="character-portrait warlord-portrait">
-                            <img src="/assets/alan-2.jpeg" alt="Founder" class="character-photo">
-                            <video src="/assets/animation/alan-2-animation.mp4" class="character-video" muted loop
-                                playsinline preload="metadata" webkit-playsinline></video>
+                            <img src="/assets/alan-2.jpeg" alt="Founder" class="character-photo" loading="lazy">
+                            <video data-src="/assets/animation/alan-2-animation.mp4" class="character-video" muted loop
+                                playsinline preload="none" webkit-playsinline></video>
                         </div>
                     </div>
                     <div class="character-info">
@@ -84,9 +89,9 @@
                     <div class="card-background strategist-bg"></div>
                     <div class="character-frame">
                         <div class="character-portrait strategist-portrait">
-                            <img src="/assets/operator.png" alt="Operator" class="character-photo">
-                            <video src="/assets/animation/operator.mp4" class="character-video" muted loop
-                                playsinline preload="metadata" webkit-playsinline></video>
+                            <img src="/assets/operator.png" alt="Operator" class="character-photo" loading="lazy">
+                            <video data-src="/assets/animation/operator.mp4" class="character-video" muted loop
+                                playsinline preload="none" webkit-playsinline></video>
                         </div>
                     </div>
                     <div class="character-info">
@@ -101,7 +106,7 @@
                     <div class="card-background merchant-bg"></div>
                     <div class="character-frame">
                         <div class="character-portrait merchant-portrait">
-                            <img src="/assets/investor.png" alt="Investor" class="character-photo">
+                            <img src="/assets/investor.png" alt="Investor" class="character-photo" loading="lazy">
                         </div>
                     </div>
                     <div class="character-info">
@@ -116,9 +121,9 @@
                     <div class="card-background scholar-bg"></div>
                     <div class="character-frame">
                         <div class="character-portrait scholar-portrait">
-                            <img src="/assets/dad.png" alt="Dad" class="character-photo">
-                            <video src="/assets/animation/dad2.mp4" class="character-video" muted loop playsinline
-                                preload="metadata" webkit-playsinline></video>
+                            <img src="/assets/dad.png" alt="Dad" class="character-photo" loading="lazy">
+                            <video data-src="/assets/animation/dad2.mp4" class="character-video" muted loop playsinline
+                                preload="none" webkit-playsinline></video>
                         </div>
                     </div>
                     <div class="character-info">
@@ -141,23 +146,23 @@
             <!-- Other role icons that appear on hover -->
             <div class="persona-options">
                 <button data-persona="founder" class="persona-icon-btn" title="Founder">
-                    <img class="persona-icon-img" src="/assets/alan-2.jpeg" alt="Founder">
+                    <img class="persona-icon-img" src="/assets/alan-2.jpeg" alt="Founder" loading="lazy">
                 </button>
                 <button data-persona="operator" class="persona-icon-btn" title="Operator">
-                    <img class="persona-icon-img" src="/assets/operator.png" alt="Operator">
+                    <img class="persona-icon-img" src="/assets/operator.png" alt="Operator" loading="lazy">
                 </button>
                 <button data-persona="investor" class="persona-icon-btn" title="Investor">
-                    <img class="persona-icon-img" src="/assets/investor.png" alt="Investor">
+                    <img class="persona-icon-img" src="/assets/investor.png" alt="Investor" loading="lazy">
                 </button>
                 <button data-persona="dad" class="persona-icon-btn" title="Dad">
-                    <img class="persona-icon-img" src="/assets/dad.png" alt="Dad">
+                    <img class="persona-icon-img" src="/assets/dad.png" alt="Dad" loading="lazy">
                 </button>
             </div>
             <!-- Current role icon (always visible) -->
             <button class="persona-btn" aria-label="Switch Persona">
                 <span class="current-persona-avatar">
                     <img id="currentPersonaImage" class="persona-profile-img" src="/assets/alan-2.jpeg"
-                        alt="Current Persona">
+                        alt="Current Persona" loading="eager">
                 </span>
             </button>
         </div>
@@ -375,19 +380,19 @@
         </main>
     </div>
 
-    <!-- GSAP Animation Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/gsap.min.js"></script>
+    <!-- GSAP Animation Library - Load only when needed -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/gsap.min.js" defer></script>
 
-    <!-- Scripts -->
-    <script src="/js/utilities.js"></script>
-    <script src="/js/bustling-world-v2.js"></script>
-    <script src="/js/mobile.js"></script>
-    <script src="/js/writing-content.js"></script>
-    <script src="/js/quotes-content.js"></script>
-    <script src="/js/questions-content.js"></script>
-    <script src="/js/investments-content.js"></script>
-    <script src="/js/spa-navigation.js"></script>
-    <script src="/js/progress-system.js"></script>
+    <!-- Scripts - Defer non-critical scripts -->
+    <script src="/js/utilities.js" defer></script>
+    <script src="/js/bustling-world-v2.js" defer></script>
+    <script src="/js/mobile.js" defer></script>
+    <script src="/js/writing-content.js" defer></script>
+    <script src="/js/quotes-content.js" defer></script>
+    <script src="/js/questions-content.js" defer></script>
+    <script src="/js/investments-content.js" defer></script>
+    <script src="/js/spa-navigation.js" defer></script>
+    <script src="/js/progress-system.js" defer></script>
 </body>
 
 </html>

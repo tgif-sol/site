@@ -147,6 +147,9 @@ body.persona-dad::after {
     height: 100%;
     background-image: url('/assets/bg3.png');
     background-size: cover;
+    /* Optimize background image loading */
+    background-attachment: fixed;
+    will-change: transform;
     background-position: center center;
     background-repeat: no-repeat;
     opacity: 0.5;
@@ -2287,9 +2290,14 @@ body.persona-dad .nav-list a.active {
     .character-video {
         width: 100%;
         height: 100%;
+        max-width: 380px;
+        max-height: 480px;
         object-fit: cover;
         object-position: center top;
         transform: scale(1.15);
+        /* Optimize image rendering */
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
     }
 
     /* Keep same zoom for all cards on mobile for consistency */
