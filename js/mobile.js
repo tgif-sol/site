@@ -149,6 +149,14 @@
 
                 // Add click handler for ALL cards to prevent navigation and handle video toggle
                 card.addEventListener('click', (e) => {
+                    // Check if this was a swipe gesture - if so, ignore click
+                    const mainDisplay = document.querySelector('.character-main-display');
+                    if (mainDisplay && mainDisplay.hasAttribute('data-swipe-handled')) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        return;
+                    }
+
                     // Always prevent any default navigation behavior on mobile
                     e.preventDefault();
                     e.stopPropagation();
@@ -256,6 +264,7 @@
             let startX = 0;
             let startY = 0;
             let isSwiping = false;
+            let hasMoved = false; // Track if user has moved during touch
 
             // Touch events for mobile
             mainDisplay.addEventListener('touchstart', (e) => {
@@ -263,11 +272,19 @@
                 startX = touch.clientX;
                 startY = touch.clientY;
                 isSwiping = true;
+                hasMoved = false;
             }, { passive: true });
 
             mainDisplay.addEventListener('touchmove', (e) => {
                 if (!isSwiping) return;
-                // Allow scrolling but track movement
+                const touch = e.touches[0];
+                const deltaX = Math.abs(touch.clientX - startX);
+                const deltaY = Math.abs(touch.clientY - startY);
+                
+                // If moved more than 10px, consider it a swipe gesture
+                if (deltaX > 10 || deltaY > 10) {
+                    hasMoved = true;
+                }
             }, { passive: true });
 
             mainDisplay.addEventListener('touchend', (e) => {
@@ -284,6 +301,7 @@
                 // Only process horizontal swipes (minimum 50px, horizontal movement > vertical)
                 if (Math.abs(deltaX) > 50 && Math.abs(deltaX) > Math.abs(deltaY)) {
                     e.preventDefault();
+                    e.stopPropagation(); // Prevent click events
                     if (deltaX > 0) {
                         // Swipe right - go to previous card
                         console.log('Swipe right detected, going to previous card');
@@ -293,6 +311,15 @@
                         console.log('Swipe left detected, going to next card');
                         this.nextCard();
                     }
+                    // Mark that we handled a swipe to prevent click events
+                    mainDisplay.setAttribute('data-swipe-handled', 'true');
+                    setTimeout(() => {
+                        mainDisplay.removeAttribute('data-swipe-handled');
+                    }, 300);
+                } else if (hasMoved) {
+                    // If user moved but it wasn't a swipe, still prevent click
+                    e.preventDefault();
+                    e.stopPropagation();
                 }
             }, { passive: false });
         }
@@ -392,6 +419,13 @@
                 const photo = card.querySelector('.character-photo');
                 if (photo) {
                     photo.removeAttribute('style');
+                }
+                
+                // Remove any active/focus states that might cause border to appear
+                card.blur();
+                if (card.classList.contains('active')) {
+                    // Force reflow to ensure border is removed
+                    void card.offsetWidth;
                 }
             } else {
                 // Start video

@@ -2180,6 +2180,9 @@ body.persona-dad .nav-list a.active {
         gap: 0px;
         overflow: visible;
         min-height: auto;
+        /* Fix size for Safari when video is playing */
+        width: 100%;
+        box-sizing: border-box;
     }
 
     /* Main character display area */
@@ -2207,6 +2210,18 @@ body.persona-dad .nav-list a.active {
         position: relative;
         overflow: visible;
         margin: 0 auto;
+        /* Fix size for Safari when video is playing */
+        box-sizing: border-box;
+        flex-shrink: 0;
+    }
+    
+    /* Ensure card size doesn't change when video is playing (Safari fix) */
+    .character-card.video-playing {
+        width: 95% !important;
+        max-width: 380px !important;
+        min-height: 480px !important;
+        height: auto !important;
+        flex-shrink: 0 !important;
     }
 
 
@@ -2374,6 +2389,13 @@ body.persona-dad .nav-list a.active {
         flex-direction: column;
         align-items: center;
         margin-bottom: 20px;
+        /* Fix size for Safari when video is playing */
+        width: 95%;
+        max-width: 380px;
+        margin-left: auto;
+        margin-right: auto;
+        box-sizing: border-box;
+        flex-shrink: 0;
     }
 
     .select-role-btn {
@@ -2393,6 +2415,11 @@ body.persona-dad .nav-list a.active {
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         position: relative;
         overflow: hidden;
+        /* Fix size for Safari when video is playing */
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        flex-shrink: 0;
     }
 
     .select-role-btn::before {
@@ -2575,10 +2602,22 @@ body.persona-dad .nav-list a.active {
         font-size: 23px !important;
     }
 
-    /* Touch feedback */
+    /* Touch feedback - but no border on active */
     .character-card:active {
         transform: scale(0.98);
         transition: transform 0.1s;
+        border: 1px solid rgba(255, 255, 255, 0.05) !important; /* Keep default border, no highlight */
+    }
+    
+    /* Ensure border is removed when video stops playing */
+    .character-card.active:not(.video-playing) {
+        border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    }
+    
+    /* Remove border on focus to prevent it from staying on */
+    .character-card:focus {
+        outline: none;
+        border: 1px solid rgba(255, 255, 255, 0.05) !important;
     }
 
     /* Hide scroll indicators - not needed with grid layout */
@@ -5276,10 +5315,22 @@ body::after {
         font-size: 23px !important;  /* Keep increased size when video plays */
     }
 
-    /* Touch feedback */
+    /* Touch feedback - but no border on active */
     .character-card:active {
         transform: scale(0.98);
         transition: transform 0.1s;
+        border: 1px solid rgba(255, 255, 255, 0.05) !important; /* Keep default border, no highlight */
+    }
+    
+    /* Ensure border is removed when video stops playing */
+    .character-card.active:not(.video-playing) {
+        border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    }
+    
+    /* Remove border on focus to prevent it from staying on */
+    .character-card:focus {
+        outline: none;
+        border: 1px solid rgba(255, 255, 255, 0.05) !important;
     }
 
     /* Hide scroll indicators - not needed with grid layout */
