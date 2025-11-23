@@ -61,6 +61,9 @@
     --mobile-card-gap: 15px;
     --swipe-threshold: 50px;
     --mobile-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Background Image Opacity */
+    --bg-image-opacity: 0.05;
 }
 
 /* ==================== Base Styles ==================== */
@@ -95,65 +98,11 @@ body::after {
     display: none;
 }
 
-/* Persona-specific backgrounds */
-/* Background images for personas with opacity */
-body.persona-founder::after {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url('/assets/founderbg1.png');
-    background-size: cover;
-    background-attachment: fixed;
-    will-change: transform;
-    background-position: center center;
-    background-repeat: no-repeat;
-    opacity: 0.1;
-    z-index: -1;
-    pointer-events: none;
-    display: block;
-}
-
-body.persona-operator::after {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url('/assets/operatorbg1.png');
-    background-size: cover;
-    background-attachment: fixed;
-    will-change: transform;
-    background-position: center center;
-    background-repeat: no-repeat;
-    opacity: 0.1;
-    z-index: -1;
-    pointer-events: none;
-    display: block;
-}
-
-body.persona-investor::after {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url('/assets/investorbg1.png');
-    background-size: cover;
-    background-attachment: fixed;
-    will-change: transform;
-    background-position: center center;
-    background-repeat: no-repeat;
-    opacity: 0.1;
-    z-index: -1;
-    pointer-events: none;
-    display: block;
-}
-
+/* ==================== Persona-Specific Backgrounds ==================== */
+/* Common background image styles for all personas */
+body.persona-founder::after,
+body.persona-operator::after,
+body.persona-investor::after,
 body.persona-dad::after {
     content: '';
     position: fixed;
@@ -161,16 +110,54 @@ body.persona-dad::after {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url('/assets/dadbg1.jpg');
     background-size: cover;
-    background-attachment: fixed;
-    will-change: transform;
+    /* background-attachment: fixed; - Removed for Safari compatibility */
+    /* will-change: transform; - Removed for Safari compatibility */
     background-position: center center;
     background-repeat: no-repeat;
     opacity: 0.1;
+    /* Direct value for Safari compatibility */
     z-index: -1;
     pointer-events: none;
     display: block;
+}
+
+/* Safari-specific: Force opacity recalculation */
+@supports (-webkit-appearance: none) {
+
+    body.persona-founder::after,
+    body.persona-operator::after,
+    body.persona-investor::after,
+    body.persona-dad::after {
+        opacity: 0.1 !important;
+    }
+}
+
+/* Persona-specific background images */
+body.persona-founder::after {
+    background-image: url('/assets/founderbg1.png');
+}
+
+body.persona-operator::after {
+    background-image: url('/assets/operatorbg1.png');
+}
+
+body.persona-investor::after {
+    background-image: url('/assets/investorbg1.png');
+}
+
+body.persona-dad::after {
+    background-image: url('/assets/dadbg1.jpg');
+}
+
+/* Hide background images on mobile */
+@media (max-width: 768px) {
+    body.persona-founder::after,
+    body.persona-operator::after,
+    body.persona-investor::after,
+    body.persona-dad::after {
+        display: none !important;
+    }
 }
 
 .hidden {
@@ -214,8 +201,8 @@ body.persona-dad::after {
     background-image: url('/assets/bg3.png');
     background-size: cover;
     /* Optimize background image loading */
-    background-attachment: fixed;
-    will-change: transform;
+    /* background-attachment: fixed; - Removed for Safari compatibility */
+    /* will-change: transform; - Removed for Safari compatibility */
     background-position: center center;
     background-repeat: no-repeat;
     opacity: 0.5;
@@ -427,7 +414,11 @@ body.persona-dad::after {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    -webkit-object-fit: cover;
+    /* Safari support */
     object-position: center 20%;
+    -webkit-object-position: center 20%;
+    /* Safari support */
     transition: all 0.4s ease;
     filter: brightness(0.9) contrast(1.1);
 }
@@ -435,17 +426,29 @@ body.persona-dad::after {
 /* Zoom in on operator and investor faces */
 .character-card[data-persona="operator"] .character-photo {
     transform: scale(1.1) translateY(-4%);
+    -webkit-transform: scale(1.1) translateY(-4%);
+    /* Safari support */
     object-position: center 5%;
+    -webkit-object-position: center 5%;
+    /* Safari support */
 }
 
 .character-card[data-persona="investor"] .character-photo {
     transform: scale(1.1) translateY(-8%);
+    -webkit-transform: scale(1.1) translateY(-8%);
+    /* Safari support */
     object-position: center 5%;
+    -webkit-object-position: center 5%;
+    /* Safari support */
 }
 
 .character-card[data-persona="dad"] .character-photo {
     transform: scale(1.1) translateY(-8%);
+    -webkit-transform: scale(1.1) translateY(-8%);
+    /* Safari support */
     object-position: center 25%;
+    -webkit-object-position: center 25%;
+    /* Safari support */
 }
 
 /* Portrait Hover Effects */
@@ -471,10 +474,21 @@ body.persona-dad::after {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    -webkit-object-fit: cover;
+    /* Safari support */
     object-position: center 20%;
+    -webkit-object-position: center 20%;
+    /* Safari support */
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.3s ease, visibility 0.3s ease;
+    /* Ensure video fills container completely */
+    min-height: 100%;
+    min-width: 100%;
+    /* Move video up to eliminate black space at top (Safari fix) */
+    transform: translateY(-5%);
+    -webkit-transform: translateY(-5%);
+    /* Safari support */
     filter: brightness(0.9) contrast(1.1);
     -webkit-mask-image: linear-gradient(to bottom,
             rgba(0, 0, 0, 1) 0%,
@@ -494,7 +508,8 @@ body.persona-dad::after {
             rgba(0, 0, 0, 0.3) 80%,
             rgba(0, 0, 0, 0.1) 90%,
             rgba(0, 0, 0, 0) 100%);
-    pointer-events: none; /* Prevent video from blocking clicks on desktop */
+    pointer-events: none;
+    /* Prevent video from blocking clicks on desktop */
 }
 
 /* Remove dark filter and mask for operator video */
@@ -504,47 +519,53 @@ body.persona-dad::after {
     mask-image: none !important;
     transition: opacity 0.1s ease, visibility 0.1s ease;
     object-fit: cover;
-    object-position: center 20%;
+    -webkit-object-fit: cover;
+    /* Safari support */
+    object-position: center 5%;
+    /* Moved up more to reduce black space at top */
+    -webkit-object-position: center 5%;
+    /* Safari support */
+    transform: translateY(-10%);
+    /* Move video up more to eliminate black space at top */
+    -webkit-transform: translateY(-10%);
+    /* Safari support */
 }
 
 /* Show video on hover for cards with video */
-.character-card[data-persona="founder"]:hover .character-video {
-    opacity: 1;
-    visibility: visible;
-    filter: brightness(1.05) contrast(1.05) saturate(1.05);
-    pointer-events: none; /* Allow clicks to pass through on desktop */
-}
-
-.character-card[data-persona="dad"]:hover .character-video {
-    opacity: 1;
-    visibility: visible;
-    filter: brightness(1.05) contrast(1.05) saturate(1.05);
-    pointer-events: none; /* Allow clicks to pass through on desktop */
-}
-
-.character-card[data-persona="operator"]:hover .character-video {
-    opacity: 1;
-    visibility: visible;
-    filter: brightness(1.05) contrast(1.05) saturate(1.05);
-    pointer-events: none; /* Allow clicks to pass through on desktop */
-}
-
+.character-card[data-persona="founder"]:hover .character-video,
+.character-card[data-persona="dad"]:hover .character-video,
+.character-card[data-persona="operator"]:hover .character-video,
 .character-card[data-persona="investor"]:hover .character-video {
     opacity: 1;
     visibility: visible;
     filter: brightness(1.05) contrast(1.05) saturate(1.05);
-    pointer-events: none; /* Allow clicks to pass through on desktop */
+    pointer-events: none;
+    /* Allow clicks to pass through on desktop */
 }
 
 /* Adjust dad video position */
 .character-card[data-persona="dad"] .character-video {
-    object-position: center 45%;
-    transform: scale(1.0);
+    object-position: center 30%;
+    /* Moved up to reduce black space at top */
+    -webkit-object-position: center 30%;
+    /* Safari support */
+    transform: scale(1.0) translateY(-5%);
+    /* Move video up to eliminate black space at top */
+    -webkit-transform: scale(1.0) translateY(-5%);
+    /* Safari support */
+    /* Override default translateY to combine with scale */
 }
 
 /* Adjust investor video position */
 .character-card[data-persona="investor"] .character-video {
-    object-position: center center;
+    object-position: center 25%;
+    /* Moved up to reduce black space at top */
+    -webkit-object-position: center 25%;
+    /* Safari support */
+    transform: translateY(-5%);
+    /* Move video up to eliminate black space at top (overrides default) */
+    -webkit-transform: translateY(-5%);
+    /* Safari support */
 }
 
 /* Hide image when video is visible - only for cards with video */
@@ -574,9 +595,9 @@ body.persona-dad::after {
     width: 200%;
     height: 100%;
     background: linear-gradient(135deg,
-        transparent 30%,
-        var(--theme-accent) 50%,
-        transparent 70%);
+            transparent 30%,
+            var(--theme-accent) 50%,
+            transparent 70%);
     opacity: 0.05;
     transform: translateX(-100%);
     animation: shimmer 8s infinite;
@@ -590,28 +611,41 @@ body.persona-dad::after {
     width: 100%;
     height: 3px;
     background: linear-gradient(90deg,
-        transparent,
-        var(--theme-accent),
-        transparent);
+            transparent,
+            var(--theme-accent),
+            transparent);
     animation: scan 3s infinite;
 }
 
 @keyframes shimmer {
-    0%, 100% { transform: translateX(-100%); }
-    50% { transform: translateX(100%); }
+
+    0%,
+    100% {
+        transform: translateX(-100%);
+    }
+
+    50% {
+        transform: translateX(100%);
+    }
 }
 
 @keyframes scan {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
 }
 
-.bio-introduction > * {
+.bio-introduction>* {
     transform: skewY(2deg);
 }
 
 .bio-introduction p {
-    font-size: 1.1rem;  /* Standardized to match welcome page */
+    font-size: 1.1rem;
+    /* Standardized to match welcome page */
     line-height: 1.8;
     margin-bottom: 1rem;
     color: var(--theme-text);
@@ -637,16 +671,14 @@ body.persona-dad::after {
     top: 50px;
     bottom: 50px;
     width: 1px;
-    background: linear-gradient(
-        to bottom,
-        transparent 0%,
-        rgba(var(--theme-accent-rgb), 0.1) 5%,
-        rgba(var(--theme-accent-rgb), 0.2) 15%,
-        rgba(var(--theme-accent-rgb), 0.3) 50%,
-        rgba(var(--theme-accent-rgb), 0.2) 85%,
-        rgba(var(--theme-accent-rgb), 0.1) 95%,
-        transparent 100%
-    );
+    background: linear-gradient(to bottom,
+            transparent 0%,
+            rgba(var(--theme-accent-rgb), 0.1) 5%,
+            rgba(var(--theme-accent-rgb), 0.2) 15%,
+            rgba(var(--theme-accent-rgb), 0.3) 50%,
+            rgba(var(--theme-accent-rgb), 0.2) 85%,
+            rgba(var(--theme-accent-rgb), 0.1) 95%,
+            transparent 100%);
     z-index: 1;
 }
 
@@ -683,8 +715,8 @@ body.persona-dad::after {
     line-height: 1;
     color: var(--theme-accent);
     background: linear-gradient(135deg,
-        rgba(var(--theme-accent-rgb), 0.02) 0%,
-        rgba(var(--theme-accent-rgb), 0.05) 100%);
+            rgba(var(--theme-accent-rgb), 0.02) 0%,
+            rgba(var(--theme-accent-rgb), 0.05) 100%);
     border: 1px solid rgba(var(--theme-accent-rgb), 0.15);
     border-radius: 50%;
     z-index: 3;
@@ -717,8 +749,8 @@ body.persona-dad::after {
     width: 70%;
     height: 70%;
     background: radial-gradient(circle,
-        rgba(var(--theme-accent-rgb), 0.05) 0%,
-        transparent 70%);
+            rgba(var(--theme-accent-rgb), 0.05) 0%,
+            transparent 70%);
     border-radius: 50%;
     pointer-events: none;
 }
@@ -735,8 +767,8 @@ body.persona-dad .timeline-year {
     position: relative;
     padding: 1.5rem 2rem;
     background: linear-gradient(135deg,
-        rgba(var(--theme-accent-rgb), 0.02) 0%,
-        rgba(var(--theme-accent-rgb), 0.04) 100%);
+            rgba(var(--theme-accent-rgb), 0.02) 0%,
+            rgba(var(--theme-accent-rgb), 0.04) 100%);
     border: 1px solid rgba(var(--theme-accent-rgb), 0.1);
     border-left: 2px solid rgba(var(--theme-accent-rgb), 0.3);
     border-radius: 8px;
@@ -748,8 +780,8 @@ body.persona-dad .timeline-year {
 body.persona-investor .timeline-content,
 body.persona-dad .timeline-content {
     background: linear-gradient(135deg,
-        rgba(var(--theme-accent-rgb), 0.03) 0%,
-        rgba(var(--theme-accent-rgb), 0.06) 100%);
+            rgba(var(--theme-accent-rgb), 0.03) 0%,
+            rgba(var(--theme-accent-rgb), 0.06) 100%);
     border: 1px solid rgba(var(--theme-accent-rgb), 0.15);
     border-left: 2px solid rgba(var(--theme-accent-rgb), 0.4);
 }
@@ -757,28 +789,33 @@ body.persona-dad .timeline-content {
 
 .timeline-title {
     font-family: var(--font-primary);
-    font-size: 1.2rem;  /* Reduced and standardized */
+    font-size: 1.2rem;
+    /* Reduced and standardized */
     font-weight: 600;
     color: var(--theme-text);
     margin-bottom: 0.5rem;
     line-height: 1.3;
-    text-transform: none;  /* Remove uppercase for better readability */
+    text-transform: none;
+    /* Remove uppercase for better readability */
     letter-spacing: normal;
 }
 
 .timeline-description {
-    font-size: 1rem;  /* Standardized to match body text */
+    font-size: 1rem;
+    /* Standardized to match body text */
     color: var(--theme-text);
     opacity: 0.75;
     line-height: 1.6;
-    font-style: normal;  /* Remove italic for consistency */
+    font-style: normal;
+    /* Remove italic for consistency */
 }
 
 /* Scroll animations */
 .timeline-item {
     opacity: 0;
     transform: translateY(-30px);
-    transition: all 0.3s ease; /* Reduced from 0.6s to 0.3s for 2x speed */
+    transition: all 0.3s ease;
+    /* Reduced from 0.6s to 0.3s for 2x speed */
 }
 
 .timeline-item.visible {
@@ -787,20 +824,61 @@ body.persona-dad .timeline-content {
 }
 
 /* Stagger animation for timeline items - 2x faster */
-.timeline-item:nth-child(1) { transition-delay: 0.05s; }
-.timeline-item:nth-child(2) { transition-delay: 0.1s; }
-.timeline-item:nth-child(3) { transition-delay: 0.15s; }
-.timeline-item:nth-child(4) { transition-delay: 0.2s; }
-.timeline-item:nth-child(5) { transition-delay: 0.25s; }
-.timeline-item:nth-child(6) { transition-delay: 0.3s; }
-.timeline-item:nth-child(7) { transition-delay: 0.35s; }
-.timeline-item:nth-child(8) { transition-delay: 0.4s; }
-.timeline-item:nth-child(9) { transition-delay: 0.45s; }
-.timeline-item:nth-child(10) { transition-delay: 0.5s; }
-.timeline-item:nth-child(11) { transition-delay: 0.55s; }
-.timeline-item:nth-child(12) { transition-delay: 0.6s; }
-.timeline-item:nth-child(13) { transition-delay: 0.65s; }
-.timeline-item:nth-child(14) { transition-delay: 0.7s; }
+.timeline-item:nth-child(1) {
+    transition-delay: 0.05s;
+}
+
+.timeline-item:nth-child(2) {
+    transition-delay: 0.1s;
+}
+
+.timeline-item:nth-child(3) {
+    transition-delay: 0.15s;
+}
+
+.timeline-item:nth-child(4) {
+    transition-delay: 0.2s;
+}
+
+.timeline-item:nth-child(5) {
+    transition-delay: 0.25s;
+}
+
+.timeline-item:nth-child(6) {
+    transition-delay: 0.3s;
+}
+
+.timeline-item:nth-child(7) {
+    transition-delay: 0.35s;
+}
+
+.timeline-item:nth-child(8) {
+    transition-delay: 0.4s;
+}
+
+.timeline-item:nth-child(9) {
+    transition-delay: 0.45s;
+}
+
+.timeline-item:nth-child(10) {
+    transition-delay: 0.5s;
+}
+
+.timeline-item:nth-child(11) {
+    transition-delay: 0.55s;
+}
+
+.timeline-item:nth-child(12) {
+    transition-delay: 0.6s;
+}
+
+.timeline-item:nth-child(13) {
+    transition-delay: 0.65s;
+}
+
+.timeline-item:nth-child(14) {
+    transition-delay: 0.7s;
+}
 
 /* Persona-specific colors */
 body.persona-founder .timeline-year,
@@ -834,7 +912,7 @@ body.persona-dad .timeline-content {
         padding: 2rem;
     }
 
-    .bio-introduction > * {
+    .bio-introduction>* {
         transform: none;
     }
 
@@ -1073,10 +1151,7 @@ body.persona-dad .nav-link:hover {
     color: var(--theme-accent);
 }
 
-body.persona-investor .nav-link.active,
-body.persona-dad .nav-link.active {
-    /* background removed for cleaner look */
-}
+/* Light theme nav links use default active styles */
 
 .nav-icon {
     width: 20px;
@@ -1153,13 +1228,15 @@ body.persona-dad .page-header {
     top: 20px;
     right: 20px;
     z-index: 9999;
-    display: block; /* Show by default for mobile */
+    display: block;
+    /* Show by default for mobile */
 }
 
 /* Desktop: Horizontal icon layout - Hide ONLY on desktop */
 @media (min-width: 769px) {
     .persona-switcher {
-        display: none !important; /* Hide only on desktop */
+        display: none !important;
+        /* Hide only on desktop */
     }
 
     .persona-icons-container {
@@ -1439,8 +1516,8 @@ body.persona-investor .persona-profile-img[src*="investor"] {
     margin: 0 0 24px 0;
     padding: 20px 24px;
     background: linear-gradient(135deg,
-        rgba(255, 255, 255, 0.02) 0%,
-        rgba(255, 255, 255, 0.04) 100%);
+            rgba(255, 255, 255, 0.02) 0%,
+            rgba(255, 255, 255, 0.04) 100%);
     border-left: 3px solid rgba(var(--theme-accent-rgb), 0.5);
     border-radius: 8px;
     position: relative;
@@ -1471,8 +1548,8 @@ body.persona-investor .persona-profile-img[src*="investor"] {
 body.persona-investor .question-item,
 body.persona-dad .question-item {
     background: linear-gradient(135deg,
-        rgba(0, 0, 0, 0.02) 0%,
-        rgba(0, 0, 0, 0.04) 100%);
+            rgba(0, 0, 0, 0.02) 0%,
+            rgba(0, 0, 0, 0.04) 100%);
     border-left: 3px solid rgba(var(--theme-accent-rgb), 0.5);
     border-radius: 8px;
 }
@@ -1517,16 +1594,45 @@ body.persona-dad .question-item::before {
 }
 
 /* Staggered animation delays */
-.question-item:nth-child(1) { transition-delay: 0s; }
-.question-item:nth-child(2) { transition-delay: 0.1s; }
-.question-item:nth-child(3) { transition-delay: 0.2s; }
-.question-item:nth-child(4) { transition-delay: 0.3s; }
-.question-item:nth-child(5) { transition-delay: 0.4s; }
-.question-item:nth-child(6) { transition-delay: 0.5s; }
-.question-item:nth-child(7) { transition-delay: 0.6s; }
-.question-item:nth-child(8) { transition-delay: 0.7s; }
-.question-item:nth-child(9) { transition-delay: 0.8s; }
-.question-item:nth-child(10) { transition-delay: 0.9s; }
+.question-item:nth-child(1) {
+    transition-delay: 0s;
+}
+
+.question-item:nth-child(2) {
+    transition-delay: 0.1s;
+}
+
+.question-item:nth-child(3) {
+    transition-delay: 0.2s;
+}
+
+.question-item:nth-child(4) {
+    transition-delay: 0.3s;
+}
+
+.question-item:nth-child(5) {
+    transition-delay: 0.4s;
+}
+
+.question-item:nth-child(6) {
+    transition-delay: 0.5s;
+}
+
+.question-item:nth-child(7) {
+    transition-delay: 0.6s;
+}
+
+.question-item:nth-child(8) {
+    transition-delay: 0.7s;
+}
+
+.question-item:nth-child(9) {
+    transition-delay: 0.8s;
+}
+
+.question-item:nth-child(10) {
+    transition-delay: 0.9s;
+}
 
 /* ==================== Investment Page Styles ==================== */
 .investment-list {
@@ -1639,16 +1745,45 @@ body.persona-dad .investment-status {
 }
 
 /* Staggered animation delays */
-.investment-list li:nth-child(1) { transition-delay: 0s; }
-.investment-list li:nth-child(2) { transition-delay: 0.1s; }
-.investment-list li:nth-child(3) { transition-delay: 0.2s; }
-.investment-list li:nth-child(4) { transition-delay: 0.3s; }
-.investment-list li:nth-child(5) { transition-delay: 0.4s; }
-.investment-list li:nth-child(6) { transition-delay: 0.5s; }
-.investment-list li:nth-child(7) { transition-delay: 0.6s; }
-.investment-list li:nth-child(8) { transition-delay: 0.7s; }
-.investment-list li:nth-child(9) { transition-delay: 0.8s; }
-.investment-list li:nth-child(10) { transition-delay: 0.9s; }
+.investment-list li:nth-child(1) {
+    transition-delay: 0s;
+}
+
+.investment-list li:nth-child(2) {
+    transition-delay: 0.1s;
+}
+
+.investment-list li:nth-child(3) {
+    transition-delay: 0.2s;
+}
+
+.investment-list li:nth-child(4) {
+    transition-delay: 0.3s;
+}
+
+.investment-list li:nth-child(5) {
+    transition-delay: 0.4s;
+}
+
+.investment-list li:nth-child(6) {
+    transition-delay: 0.5s;
+}
+
+.investment-list li:nth-child(7) {
+    transition-delay: 0.6s;
+}
+
+.investment-list li:nth-child(8) {
+    transition-delay: 0.7s;
+}
+
+.investment-list li:nth-child(9) {
+    transition-delay: 0.8s;
+}
+
+.investment-list li:nth-child(10) {
+    transition-delay: 0.9s;
+}
 
 /* ==================== Mobile Responsive ==================== */
 .hamburger,
@@ -1689,6 +1824,7 @@ body.persona-dad .investment-status {
 body.persona-founder {
     --theme-primary: var(--founder-bg);
     --theme-accent: var(--founder-accent);
+    --theme-accent-rgb: var(--founder-accent-rgb);
     --theme-text: var(--founder-text);
     background-color: var(--founder-bg) !important;
     color: var(--founder-text) !important;
@@ -1697,6 +1833,7 @@ body.persona-founder {
 body.persona-operator {
     --theme-primary: var(--operator-bg);
     --theme-accent: var(--operator-accent);
+    --theme-accent-rgb: var(--operator-accent-rgb);
     --theme-text: var(--operator-text);
     background-color: var(--operator-bg) !important;
     color: var(--operator-text) !important;
@@ -1705,6 +1842,7 @@ body.persona-operator {
 body.persona-investor {
     --theme-primary: var(--investor-bg);
     --theme-accent: var(--investor-accent);
+    --theme-accent-rgb: var(--investor-accent-rgb);
     --theme-text: var(--investor-text);
     background-color: var(--investor-bg) !important;
     color: var(--investor-text) !important;
@@ -1713,6 +1851,7 @@ body.persona-investor {
 body.persona-dad {
     --theme-primary: var(--dad-bg);
     --theme-accent: var(--dad-accent);
+    --theme-accent-rgb: var(--dad-accent-rgb);
     --theme-text: var(--dad-text);
     background-color: var(--dad-bg) !important;
     color: var(--dad-text) !important;
@@ -1830,10 +1969,7 @@ body.persona-dad .nav-link:hover {
     background: rgba(0, 0, 0, 0.05);
 }
 
-body.persona-investor .nav-link.active,
-body.persona-dad .nav-link.active {
-    /* background removed for cleaner look */
-}
+/* Light theme nav links use default active styles */
 
 /* ==================== Split View Layout ==================== */
 .split-view {
@@ -2065,16 +2201,45 @@ body.persona-dad .article-header {
 }
 
 /* Stagger animation for quote items */
-.quote-item:nth-child(1) { transition-delay: 0.1s; }
-.quote-item:nth-child(2) { transition-delay: 0.2s; }
-.quote-item:nth-child(3) { transition-delay: 0.3s; }
-.quote-item:nth-child(4) { transition-delay: 0.4s; }
-.quote-item:nth-child(5) { transition-delay: 0.5s; }
-.quote-item:nth-child(6) { transition-delay: 0.6s; }
-.quote-item:nth-child(7) { transition-delay: 0.7s; }
-.quote-item:nth-child(8) { transition-delay: 0.8s; }
-.quote-item:nth-child(9) { transition-delay: 0.9s; }
-.quote-item:nth-child(10) { transition-delay: 1.0s; }
+.quote-item:nth-child(1) {
+    transition-delay: 0.1s;
+}
+
+.quote-item:nth-child(2) {
+    transition-delay: 0.2s;
+}
+
+.quote-item:nth-child(3) {
+    transition-delay: 0.3s;
+}
+
+.quote-item:nth-child(4) {
+    transition-delay: 0.4s;
+}
+
+.quote-item:nth-child(5) {
+    transition-delay: 0.5s;
+}
+
+.quote-item:nth-child(6) {
+    transition-delay: 0.6s;
+}
+
+.quote-item:nth-child(7) {
+    transition-delay: 0.7s;
+}
+
+.quote-item:nth-child(8) {
+    transition-delay: 0.8s;
+}
+
+.quote-item:nth-child(9) {
+    transition-delay: 0.9s;
+}
+
+.quote-item:nth-child(10) {
+    transition-delay: 1.0s;
+}
 
 body.persona-investor .quote-item,
 body.persona-dad .quote-item {
@@ -2297,7 +2462,7 @@ body.persona-dad .nav-list a.active {
         box-sizing: border-box;
         flex-shrink: 0;
     }
-    
+
     /* Ensure card size doesn't change when video is playing (Safari fix) */
     .character-card.video-playing {
         width: 95% !important;
@@ -2381,18 +2546,9 @@ body.persona-dad .nav-list a.active {
     }
 
     /* Keep same zoom for all cards on mobile for consistency */
-    .character-card[data-persona="founder"] .character-photo {
-        transform: scale(1.1);
-    }
-
-    .character-card[data-persona="operator"] .character-photo {
-        transform: scale(1.1);
-    }
-
-    .character-card[data-persona="investor"] .character-photo {
-        transform: scale(1.1);
-    }
-
+    .character-card[data-persona="founder"] .character-photo,
+    .character-card[data-persona="operator"] .character-photo,
+    .character-card[data-persona="investor"] .character-photo,
     .character-card[data-persona="dad"] .character-photo {
         transform: scale(1.1);
     }
@@ -2580,19 +2736,28 @@ body.persona-dad .nav-list a.active {
         transition: opacity 0.3s ease;
     }
 
-    /* Add filter and position for dad video on mobile */
-    .character-card[data-persona="dad"] .character-video {
-        filter: brightness(1.05) contrast(1.05) saturate(1.05);
-        transition: opacity 0.3s ease;
-        object-position: center 45%;
-        transform: scale(1.0);
-    }
-
-    /* Add filter and position for investor video on mobile */
+    /* Video filter and positioning for specific personas on mobile */
+    .character-card[data-persona="dad"] .character-video,
     .character-card[data-persona="investor"] .character-video {
         filter: brightness(1.05) contrast(1.05) saturate(1.05);
         transition: opacity 0.3s ease;
-        object-position: center center;
+    }
+
+    .character-card[data-persona="dad"] .character-video {
+        object-position: center 30%;
+        /* Moved up to reduce black space at top */
+        -webkit-object-position: center 30%;
+        /* Safari support */
+        transform: scale(1.0);
+        -webkit-transform: scale(1.0);
+        /* Safari support */
+    }
+
+    .character-card[data-persona="investor"] .character-video {
+        object-position: center 25%;
+        /* Moved up to reduce black space at top */
+        -webkit-object-position: center 25%;
+        /* Safari support */
     }
 
     /* When card is active and playing, show video and hide photo */
@@ -2603,7 +2768,8 @@ body.persona-dad .nav-list a.active {
         opacity: 1 !important;
         visibility: visible !important;
         display: block !important;
-        pointer-events: auto !important; /* Enable clicks on mobile */
+        pointer-events: auto !important;
+        /* Enable clicks on mobile */
     }
 
     .character-card[data-persona="founder"].video-playing .character-photo,
@@ -2704,14 +2870,15 @@ body.persona-dad .nav-list a.active {
     .character-card:active {
         transform: scale(0.98);
         transition: transform 0.1s;
-        border: 1px solid rgba(255, 255, 255, 0.05) !important; /* Keep default border, no highlight */
+        border: 1px solid rgba(255, 255, 255, 0.05) !important;
+        /* Keep default border, no highlight */
     }
-    
+
     /* Ensure border is removed when video stops playing */
     .character-card.active:not(.video-playing) {
         border: 1px solid rgba(255, 255, 255, 0.05) !important;
     }
-    
+
     /* Remove border on focus to prevent it from staying on */
     .character-card:focus {
         outline: none;
@@ -2989,11 +3156,13 @@ body.persona-dad .nav-list a.active {
         right: 15px !important;
         top: 10px !important;
         transform: none !important;
-        display: block !important; /* Show on mobile */
+        display: block !important;
+        /* Show on mobile */
         width: 48px !important;
         height: 48px !important;
         margin-bottom: 20px !important;
-        z-index: 10000 !important; /* Increased z-index to ensure it's clickable */
+        z-index: 10000 !important;
+        /* Increased z-index to ensure it's clickable */
     }
 
     /* Sidebar as Full-Screen Overlay */
@@ -3260,7 +3429,8 @@ body.persona-dad .nav-list a.active {
         width: auto !important;
         height: 48px !important;
         margin-bottom: 15px !important;
-        z-index: 10001 !important; /* Ensure it's above other elements */
+        z-index: 10001 !important;
+        /* Ensure it's above other elements */
     }
 
     /* Options container that slides out */
@@ -3690,6 +3860,7 @@ body.persona-dad .nav-list a.active {
     .character-desc {
         font-size: 11px !important;
         -webkit-line-clamp: 2;
+        line-clamp: 2;
     }
 
     .swipe-indicators {
@@ -3786,7 +3957,9 @@ body.persona-dad .nav-list a.active {
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
     }
-}/* Hearthstone Card Deck Styles */
+}
+
+/* Hearthstone Card Deck Styles */
 .card-deck-container {
     position: fixed;
     bottom: 30px;
@@ -3834,9 +4007,9 @@ body.persona-dad .nav-list a.active {
     right: 0;
     bottom: 0;
     background: linear-gradient(to bottom,
-        rgba(0, 0, 0, 0) 0%,
-        rgba(0, 0, 0, 0.3) 70%,
-        rgba(0, 0, 0, 0.7) 100%);
+            rgba(0, 0, 0, 0) 0%,
+            rgba(0, 0, 0, 0.3) 70%,
+            rgba(0, 0, 0, 0.7) 100%);
     pointer-events: none;
 }
 
@@ -3909,6 +4082,7 @@ body.persona-dad .nav-list a.active {
     from {
         opacity: 0;
     }
+
     to {
         opacity: 1;
     }
@@ -3991,6 +4165,7 @@ body.persona-dad .nav-list a.active {
 .persona-founder .progress-percentage {
     color: #A0A453;
 }
+
 .persona-founder .progress-bar-fill {
     background: #A0A453;
 }
@@ -3998,6 +4173,7 @@ body.persona-dad .nav-list a.active {
 .persona-operator .progress-percentage {
     color: #FFB800;
 }
+
 .persona-operator .progress-bar-fill {
     background: #FFB800;
 }
@@ -4005,6 +4181,7 @@ body.persona-dad .nav-list a.active {
 .persona-investor .progress-percentage {
     color: #C39F47;
 }
+
 .persona-investor .progress-bar-fill {
     background: #C39F47;
 }
@@ -4012,6 +4189,7 @@ body.persona-dad .nav-list a.active {
 .persona-dad .progress-percentage {
     color: #FF7F50;
 }
+
 .persona-dad .progress-bar-fill {
     background: #FF7F50;
 }
@@ -4026,10 +4204,13 @@ body.persona-dad .nav-list a.active {
 }
 
 @keyframes swordPulse {
-    0%, 100% {
+
+    0%,
+    100% {
         filter: drop-shadow(0 0 2px rgba(160, 164, 83, 0.4));
         transform: translateY(0);
     }
+
     50% {
         filter: drop-shadow(0 0 4px rgba(160, 164, 83, 0.9));
         transform: translateY(-1px);
@@ -4046,17 +4227,22 @@ body.persona-dad .nav-list a.active {
 }
 
 @keyframes wrenchTurn {
-    0%, 100% {
+
+    0%,
+    100% {
         filter: drop-shadow(0 0 2px rgba(90, 188, 216, 0.4));
         transform: rotate(0deg);
     }
+
     25% {
         transform: rotate(-8deg);
     }
+
     50% {
         filter: drop-shadow(0 0 4px rgba(90, 188, 216, 0.9));
         transform: rotate(0deg);
     }
+
     75% {
         transform: rotate(8deg);
     }
@@ -4072,10 +4258,13 @@ body.persona-dad .nav-list a.active {
 }
 
 @keyframes coinBounce {
-    0%, 100% {
+
+    0%,
+    100% {
         filter: drop-shadow(0 0 3px rgba(255, 215, 0, 0.4));
         transform: translateY(0);
     }
+
     50% {
         filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.7));
         transform: translateY(-5px);
@@ -4098,22 +4287,27 @@ body.persona-dad .nav-list a.active {
         opacity: 0;
         transform: translateY(0);
     }
+
     20% {
         opacity: 0.6;
         transform: translateY(-2px);
     }
+
     40% {
         opacity: 0.8;
         transform: translateY(-4px) translateX(1px);
     }
+
     60% {
         opacity: 0.6;
         transform: translateY(-6px) translateX(-1px);
     }
+
     80% {
         opacity: 0.3;
         transform: translateY(-8px);
     }
+
     100% {
         opacity: 0;
         transform: translateY(-10px);
@@ -4130,7 +4324,8 @@ body.persona-dad .nav-list a.active {
     }
 
     .progress-system {
-        display: none; /* Hide on mobile for now */
+        display: none;
+        /* Hide on mobile for now */
     }
 }
 
@@ -4161,6 +4356,7 @@ body.persona-dad .nav-list a.active {
         font-size: 0.95rem;
     }
 }
+
 /* ==================== Role Card Display - Game Card Style ==================== */
 .role-card-container {
     margin-top: 5px;
@@ -4175,7 +4371,8 @@ body.persona-dad .nav-list a.active {
     cursor: pointer;
     border: 4px solid #E8E8E8;
     background: #2a2a2a;
-    border-radius: 0; /* 90-degree corners */
+    border-radius: 0;
+    /* 90-degree corners */
     display: flex;
     flex-direction: column;
 }
@@ -4203,9 +4400,9 @@ body.persona-dad .nav-list a.active {
     right: 11px;
     bottom: 11px;
     background: linear-gradient(180deg,
-        rgba(0, 0, 0, 0) 0%,
-        rgba(0, 0, 0, 0.1) 60%,
-        rgba(0, 0, 0, 0.6) 100%);
+            rgba(0, 0, 0, 0) 0%,
+            rgba(0, 0, 0, 0.1) 60%,
+            rgba(0, 0, 0, 0.6) 100%);
     z-index: 1;
 }
 
@@ -4223,7 +4420,8 @@ body.persona-dad .nav-list a.active {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    opacity: 0.9;  /* Much clearer image */
+    opacity: 0.9;
+    /* Much clearer image */
 }
 
 /* Name banners */
@@ -4307,55 +4505,67 @@ body.persona-founder .role-card-subtitle-banner {
 
 /* Persona-specific theme RGB values for gradients */
 body.persona-founder {
-    --theme-rgb: 160, 164, 83; /* #A0A453 */
+    --theme-rgb: 160, 164, 83;
+    /* #A0A453 */
 }
 
 /* Founder card specific border colors */
 body.persona-founder .role-card {
-    border-color: rgba(160, 164, 83, 0.3); /* Accent color with transparency */
+    border-color: rgba(160, 164, 83, 0.3);
+    /* Accent color with transparency */
 }
 
 body.persona-founder .role-card::before {
-    border-color: #A0A453; /* Accent color full */
+    border-color: #A0A453;
+    /* Accent color full */
 }
 
 body.persona-operator {
-    --theme-rgb: 255, 184, 0; /* #FFB800 */
+    --theme-rgb: 255, 184, 0;
+    /* #FFB800 */
 }
 
 /* Operator card specific border colors */
 body.persona-operator .role-card {
-    border-color: rgba(255, 184, 0, 0.3); /* #FFB800 with transparency */
+    border-color: rgba(255, 184, 0, 0.3);
+    /* #FFB800 with transparency */
 }
 
 body.persona-operator .role-card::before {
-    border-color: #FFB800; /* Accent color full */
+    border-color: #FFB800;
+    /* Accent color full */
 }
 
 body.persona-investor {
-    --theme-rgb: 195, 159, 71; /* #C39F47 */
+    --theme-rgb: 195, 159, 71;
+    /* #C39F47 */
 }
 
 /* Investor card specific border colors */
 body.persona-investor .role-card {
-    border-color: rgba(195, 159, 71, 0.3); /* Accent color with transparency */
+    border-color: rgba(195, 159, 71, 0.3);
+    /* Accent color with transparency */
 }
 
 body.persona-investor .role-card::before {
-    border-color: #C39F47; /* Accent color full */
+    border-color: #C39F47;
+    /* Accent color full */
 }
 
 body.persona-dad {
-    --theme-rgb: 255, 127, 80; /* #FF7F50 */
+    --theme-rgb: 255, 127, 80;
+    /* #FF7F50 */
 }
 
 /* Dad card specific border colors */
 body.persona-dad .role-card {
-    border-color: rgba(255, 127, 80, 0.3); /* #FF7F50 with transparency */
+    border-color: rgba(255, 127, 80, 0.3);
+    /* #FF7F50 with transparency */
 }
 
 body.persona-dad .role-card::before {
-    border-color: #FF7F50; /* Accent color full */
+    border-color: #FF7F50;
+    /* Accent color full */
 }
 
 /* Role Selection Options - Sleek Contained Design */
@@ -4379,9 +4589,9 @@ body.persona-dad .role-card::before {
     position: absolute;
     inset: -1px;
     background: linear-gradient(90deg,
-        transparent 0%,
-        rgba(var(--theme-rgb), 0.25) 50%,
-        transparent 100%);
+            transparent 0%,
+            rgba(var(--theme-rgb), 0.25) 50%,
+            transparent 100%);
     border-radius: 20px;
     opacity: 0;
     z-index: -1;
@@ -4393,9 +4603,11 @@ body.persona-dad .role-card::before {
         opacity: 0;
         transform: translateX(-100%);
     }
+
     50% {
         opacity: 0.45;
     }
+
     100% {
         opacity: 0;
         transform: translateX(100%);
@@ -4434,7 +4646,7 @@ body.persona-dad .role-option {
     left: 50%;
     transform: translateX(-50%) translateY(5px);
     padding: 2px 6px;
-    background: rgba(0,0,0,0.95);
+    background: rgba(0, 0, 0, 0.95);
     color: var(--theme-accent, white);
     font-size: 8px;
     font-weight: 700;
@@ -4445,7 +4657,7 @@ body.persona-dad .role-option {
     opacity: 0;
     pointer-events: none;
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 /* Arrow - smaller and cleaner - only for non-active */
@@ -4459,7 +4671,7 @@ body.persona-dad .role-option {
     height: 0;
     border-left: 3px solid transparent;
     border-right: 3px solid transparent;
-    border-top: 3px solid rgba(0,0,0,0.95);
+    border-top: 3px solid rgba(0, 0, 0, 0.95);
     opacity: 0;
     pointer-events: none;
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -4506,10 +4718,13 @@ body.persona-dad .role-option {
 }
 
 @keyframes activePulse {
-    0%, 100% {
+
+    0%,
+    100% {
         opacity: 0;
         transform: scale(1);
     }
+
     50% {
         opacity: 0.2;
         transform: scale(1.2);
@@ -4575,7 +4790,7 @@ body.persona-operator .role-option[data-role="operator"].active {
 body.persona-investor .role-option[data-role="investor"].active {
     background: #C39F47;
     border-color: #C39F47;
-    box-shadow: 0 0 8px rgba(195, 159, 71, 0.5), inset 0 0 3px rgba(0,0,0,0.2);
+    box-shadow: 0 0 8px rgba(195, 159, 71, 0.5), inset 0 0 3px rgba(0, 0, 0, 0.2);
     --theme-accent: #C39F47;
     --theme-rgb: 195, 159, 71;
 }
@@ -4583,7 +4798,7 @@ body.persona-investor .role-option[data-role="investor"].active {
 body.persona-dad .role-option[data-role="dad"].active {
     background: #FF7F50;
     border-color: #FF7F50;
-    box-shadow: 0 0 8px rgba(255, 127, 80, 0.5), inset 0 0 3px rgba(0,0,0,0.1);
+    box-shadow: 0 0 8px rgba(255, 127, 80, 0.5), inset 0 0 3px rgba(0, 0, 0, 0.1);
     --theme-accent: #FF7F50;
     --theme-rgb: 255, 127, 80;
 }
@@ -4643,6 +4858,7 @@ body::after {
 
 /* ==================== Mobile Character Selection ==================== */
 @media (max-width: 768px) {
+
     /* Full screen overlay - now scrollable */
     .character-select-overlay {
         position: fixed;
@@ -4653,8 +4869,10 @@ body::after {
         width: 100%;
         height: 100%;
         z-index: 9999;
-        background: transparent;  /* Make transparent to show backgrounds */
-        overflow-y: scroll; /* Force scrollbar always */
+        background: transparent;
+        /* Make transparent to show backgrounds */
+        overflow-y: scroll;
+        /* Force scrollbar always */
         overflow-x: hidden;
         -webkit-overflow-scrolling: touch;
         /* Remove overscroll-behavior as it can cause issues on iOS */
@@ -4663,7 +4881,8 @@ body::after {
     /* Dark background base layer for mobile character selection */
     .character-select-overlay::before {
         content: '';
-        position: fixed;  /* Fixed to cover whole viewport */
+        position: fixed;
+        /* Fixed to cover whole viewport */
         top: 0;
         left: 0;
         width: 100%;
@@ -4676,7 +4895,8 @@ body::after {
     /* Background image for mobile character selection */
     .character-select-overlay::after {
         content: '';
-        position: fixed;  /* Fixed to cover whole viewport */
+        position: fixed;
+        /* Fixed to cover whole viewport */
         top: 0;
         left: 0;
         width: 100%;
@@ -4685,13 +4905,14 @@ body::after {
         background-size: cover;
         background-position: center center;
         background-repeat: no-repeat;
-        opacity: 0.5;  /* Subtle but visible effect */
+        opacity: 0.5;
+        /* Subtle but visible effect */
         z-index: -1;
         pointer-events: none;
     }
 
     /* Hide container when character select is visible */
-    .character-select-overlay:not(.hidden) ~ .container {
+    .character-select-overlay:not(.hidden)~.container {
         display: none;
     }
 
@@ -4705,31 +4926,41 @@ body::after {
         justify-content: flex-start;
         overflow: visible;
         background: transparent;
-        padding-bottom: 50px; /* Extra padding at bottom */
-        padding-bottom: calc(50px + env(safe-area-inset-bottom)); /* For iOS safe area */
+        padding-bottom: 50px;
+        /* Extra padding at bottom */
+        padding-bottom: calc(50px + env(safe-area-inset-bottom));
+        /* For iOS safe area */
     }
 
     .scroll-header {
-        padding: 20px 15px 15px 15px; /* top: 20px, right: 15px, bottom: 15px, left: 15px */
+        padding: 20px 15px 15px 15px;
+        /* top: 20px, right: 15px, bottom: 15px, left: 15px */
         text-align: center;
     }
 
     .select-title {
-        font-size: 19px;  /* Adjusted to fit on one line */
+        font-size: 19px;
+        /* Adjusted to fit on one line */
         letter-spacing: 1.5px;
-        margin-bottom: 8px; /* Reduced from 15px */
+        margin-bottom: 8px;
+        /* Reduced from 15px */
         margin-top: 5px;
         color: #F0F2F5 !important;
-        text-transform: uppercase;  /* Professional, authoritative */
+        text-transform: uppercase;
+        /* Professional, authoritative */
         font-weight: 700;
     }
 
     .select-subtitle {
         font-size: 12px;
-        font-weight: 300;  /* Lighter weight on mobile */
-        margin-top: 0;  /* Closer to title */
-        margin-bottom: 5px; /* Reduced from 10px */
-        color: rgba(216, 216, 216, 0.5) !important;  /* Less visible with lower opacity */
+        font-weight: 300;
+        /* Lighter weight on mobile */
+        margin-top: 0;
+        /* Closer to title */
+        margin-bottom: 5px;
+        /* Reduced from 10px */
+        color: rgba(216, 216, 216, 0.5) !important;
+        /* Less visible with lower opacity */
         letter-spacing: 0.3px;
     }
 
@@ -4752,7 +4983,8 @@ body::after {
         min-height: auto;
         margin-bottom: 0;
         position: relative;
-        touch-action: pan-y; /* Allow vertical scroll but detect horizontal swipes */
+        touch-action: pan-y;
+        /* Allow vertical scroll but detect horizontal swipes */
     }
 
     /* Character cards */
@@ -4761,7 +4993,8 @@ body::after {
         width: 95%;
         max-width: 380px;
         height: auto;
-        min-height: 480px;  /* Reduced from 550px to make cards shorter */
+        min-height: 480px;
+        /* Reduced from 550px to make cards shorter */
         padding: 0;
         flex-direction: column;
         border-radius: 12px;
@@ -4780,7 +5013,8 @@ body::after {
     .character-card[data-persona="operator"],
     .character-card[data-persona="investor"],
     .character-card[data-persona="dad"] {
-        background: transparent !important;  /* Make card transparent */
+        background: transparent !important;
+        /* Make card transparent */
     }
 
     /* Opaque background layer for mobile character cards */
@@ -4798,7 +5032,7 @@ body::after {
     }
 
     /* Ensure all content is above the background layer */
-    .character-card > * {
+    .character-card>* {
         position: relative;
         z-index: 1;
     }
@@ -4823,7 +5057,8 @@ body::after {
 
     /* Hide character-frame on mobile - merge with portrait */
     .character-frame {
-        display: contents; /* This makes the frame act as if it doesn't exist */
+        display: contents;
+        /* This makes the frame act as if it doesn't exist */
     }
 
 
@@ -4838,6 +5073,7 @@ body::after {
             opacity: 0;
             transform: translateX(50px);
         }
+
         to {
             opacity: 1;
             transform: translateX(0);
@@ -4847,72 +5083,77 @@ body::after {
     /* Maintain the same fade gradient for active cards */
     .character-card.active .character-portrait {
         -webkit-mask-image: linear-gradient(to bottom,
-            rgba(0,0,0,1) 0%,
-            rgba(0,0,0,1) 80%,   /* Full opacity until 80% - where title starts */
-            rgba(0,0,0,0.98) 82%,
-            rgba(0,0,0,0.95) 84%,
-            rgba(0,0,0,0.90) 86%,
-            rgba(0,0,0,0.82) 88%,
-            rgba(0,0,0,0.70) 90%,
-            rgba(0,0,0,0.55) 92%,
-            rgba(0,0,0,0.38) 94%,
-            rgba(0,0,0,0.20) 96%,
-            rgba(0,0,0,0.08) 98%,
-            rgba(0,0,0,0) 100%) !important;
+                rgba(0, 0, 0, 1) 0%,
+                rgba(0, 0, 0, 1) 80%,
+                /* Full opacity until 80% - where title starts */
+                rgba(0, 0, 0, 0.98) 82%,
+                rgba(0, 0, 0, 0.95) 84%,
+                rgba(0, 0, 0, 0.90) 86%,
+                rgba(0, 0, 0, 0.82) 88%,
+                rgba(0, 0, 0, 0.70) 90%,
+                rgba(0, 0, 0, 0.55) 92%,
+                rgba(0, 0, 0, 0.38) 94%,
+                rgba(0, 0, 0, 0.20) 96%,
+                rgba(0, 0, 0, 0.08) 98%,
+                rgba(0, 0, 0, 0) 100%) !important;
         mask-image: linear-gradient(to bottom,
-            rgba(0,0,0,1) 0%,
-            rgba(0,0,0,1) 80%,   /* Full opacity until 80% - where title starts */
-            rgba(0,0,0,0.98) 82%,
-            rgba(0,0,0,0.95) 84%,
-            rgba(0,0,0,0.90) 86%,
-            rgba(0,0,0,0.82) 88%,
-            rgba(0,0,0,0.70) 90%,
-            rgba(0,0,0,0.55) 92%,
-            rgba(0,0,0,0.38) 94%,
-            rgba(0,0,0,0.20) 96%,
-            rgba(0,0,0,0.08) 98%,
-            rgba(0,0,0,0) 100%) !important;
+                rgba(0, 0, 0, 1) 0%,
+                rgba(0, 0, 0, 1) 80%,
+                /* Full opacity until 80% - where title starts */
+                rgba(0, 0, 0, 0.98) 82%,
+                rgba(0, 0, 0, 0.95) 84%,
+                rgba(0, 0, 0, 0.90) 86%,
+                rgba(0, 0, 0, 0.82) 88%,
+                rgba(0, 0, 0, 0.70) 90%,
+                rgba(0, 0, 0, 0.55) 92%,
+                rgba(0, 0, 0, 0.38) 94%,
+                rgba(0, 0, 0, 0.20) 96%,
+                rgba(0, 0, 0, 0.08) 98%,
+                rgba(0, 0, 0, 0) 100%) !important;
     }
 
     /* Adjust portrait for main card */
     .character-portrait {
-        height: 380px; /* Increased from 350px to show more image */
+        height: 380px;
+        /* Increased from 350px to show more image */
         width: 100%;
         position: relative;
         margin: 0;
         border-radius: 12px 12px 0 0;
         overflow: hidden;
-        background: linear-gradient(135deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 100%);
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.3) 100%);
         display: flex;
         align-items: center;
         justify-content: center;
         /* Ultra-smooth gradient fade starting at title position */
         -webkit-mask-image: linear-gradient(to bottom,
-            rgba(0,0,0,1) 0%,
-            rgba(0,0,0,1) 80%,   /* Full opacity until 80% - where title starts */
-            rgba(0,0,0,0.98) 82%,
-            rgba(0,0,0,0.95) 84%,
-            rgba(0,0,0,0.90) 86%,
-            rgba(0,0,0,0.82) 88%,
-            rgba(0,0,0,0.70) 90%,
-            rgba(0,0,0,0.55) 92%,
-            rgba(0,0,0,0.38) 94%,
-            rgba(0,0,0,0.20) 96%,
-            rgba(0,0,0,0.08) 98%,
-            rgba(0,0,0,0) 100%);
+                rgba(0, 0, 0, 1) 0%,
+                rgba(0, 0, 0, 1) 80%,
+                /* Full opacity until 80% - where title starts */
+                rgba(0, 0, 0, 0.98) 82%,
+                rgba(0, 0, 0, 0.95) 84%,
+                rgba(0, 0, 0, 0.90) 86%,
+                rgba(0, 0, 0, 0.82) 88%,
+                rgba(0, 0, 0, 0.70) 90%,
+                rgba(0, 0, 0, 0.55) 92%,
+                rgba(0, 0, 0, 0.38) 94%,
+                rgba(0, 0, 0, 0.20) 96%,
+                rgba(0, 0, 0, 0.08) 98%,
+                rgba(0, 0, 0, 0) 100%);
         mask-image: linear-gradient(to bottom,
-            rgba(0,0,0,1) 0%,
-            rgba(0,0,0,1) 80%,   /* Full opacity until 80% - where title starts */
-            rgba(0,0,0,0.98) 82%,
-            rgba(0,0,0,0.95) 84%,
-            rgba(0,0,0,0.90) 86%,
-            rgba(0,0,0,0.82) 88%,
-            rgba(0,0,0,0.70) 90%,
-            rgba(0,0,0,0.55) 92%,
-            rgba(0,0,0,0.38) 94%,
-            rgba(0,0,0,0.20) 96%,
-            rgba(0,0,0,0.08) 98%,
-            rgba(0,0,0,0) 100%);
+                rgba(0, 0, 0, 1) 0%,
+                rgba(0, 0, 0, 1) 80%,
+                /* Full opacity until 80% - where title starts */
+                rgba(0, 0, 0, 0.98) 82%,
+                rgba(0, 0, 0, 0.95) 84%,
+                rgba(0, 0, 0, 0.90) 86%,
+                rgba(0, 0, 0, 0.82) 88%,
+                rgba(0, 0, 0, 0.70) 90%,
+                rgba(0, 0, 0, 0.55) 92%,
+                rgba(0, 0, 0, 0.38) 94%,
+                rgba(0, 0, 0, 0.20) 96%,
+                rgba(0, 0, 0, 0.08) 98%,
+                rgba(0, 0, 0, 0) 100%);
     }
 
     .character-photo,
@@ -4926,25 +5167,33 @@ body::after {
 
     /* Extra zoom for operator and investor on mobile */
     .character-card[data-persona="operator"] .character-photo {
-        transform: scale(1.15) translateY(-2%);  /* Reduced zoom to match others */
-        object-position: center 0%;  /* Moved to top to bring head closer */
+        transform: scale(1.15) translateY(-2%);
+        /* Reduced zoom to match others */
+        object-position: center 0%;
+        /* Moved to top to bring head closer */
     }
 
     .character-card[data-persona="investor"] .character-photo {
-        transform: scale(1.15) translateY(-6%);  /* Reduced zoom and move up slightly */
-        object-position: center 0%;  /* Moved to top to bring head closer */
+        transform: scale(1.15) translateY(-6%);
+        /* Reduced zoom and move up slightly */
+        object-position: center 0%;
+        /* Moved to top to bring head closer */
     }
 
     .character-card[data-persona="dad"] .character-photo {
-        transform: scale(1.12) translateY(-6%);  /* Reduced zoom and move up slightly */
-        object-position: center 20%;  /* Moved up to 20% to bring head closer to top */
+        transform: scale(1.12) translateY(-6%);
+        /* Reduced zoom and move up slightly */
+        object-position: center 20%;
+        /* Moved up to 20% to bring head closer to top */
     }
 
     /* Info section for main card - natural height, no scroll */
     .character-info {
         height: auto;
-        padding: 30px 20px 10px 20px;  /* Reduced top padding from 60px to 30px */
-        margin-top: -60px;  /* Reduced overlap from -110px to -60px to show more image */
+        padding: 30px 20px 10px 20px;
+        /* Reduced top padding from 60px to 30px */
+        margin-top: -60px;
+        /* Reduced overlap from -110px to -60px to show more image */
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
@@ -4962,11 +5211,13 @@ body::after {
     /* Remove persona-specific info padding - all use the default */
 
     .character-name {
-        font-size: 22px !important;  /* Professional size for Libre Baskerville on mobile */
+        font-size: 22px !important;
+        /* Professional size for Libre Baskerville on mobile */
         font-weight: 700;
         letter-spacing: 1.5px;
         text-transform: uppercase;
-        margin-top: 5px;  /* Reduced from 15px to bring closer to image */
+        margin-top: 5px;
+        /* Reduced from 15px to bring closer to image */
         margin-bottom: 0px;
         color: #F0F2F5 !important;
         width: auto !important;
@@ -4975,8 +5226,10 @@ body::after {
 
     .character-title {
         font-size: 14px !important;
-        font-weight: 400 !important;  /* Lighter weight on mobile */
-        margin: 0 0 8px 0;  /* No top margin to move even higher */
+        font-weight: 400 !important;
+        /* Lighter weight on mobile */
+        margin: 0 0 8px 0;
+        /* No top margin to move even higher */
         color: #D8D8D8 !important;
         letter-spacing: 0.3px;
     }
@@ -4984,7 +5237,8 @@ body::after {
     .character-desc {
         font-size: 12px !important;
         line-height: 1.4;
-        margin: 12px 0 10px 0;  /* Added more space before description */
+        margin: 12px 0 10px 0;
+        /* Added more space before description */
         min-height: unset;
         color: rgba(234, 234, 234, 0.8) !important;
     }
@@ -5175,7 +5429,8 @@ body::after {
         display: flex;
         justify-content: center;
         gap: 8px;
-        padding: 2px 5px 10px 5px;  /* Minimal top padding to bring very close to card */
+        padding: 2px 5px 10px 5px;
+        /* Minimal top padding to bring very close to card */
         margin-bottom: 0;
     }
 
@@ -5195,13 +5450,15 @@ body::after {
 
     /* Swipe Hint - Hidden */
     .swipe-hint {
-        display: none;  /* Hide the swipe to explore roles text */
+        display: none;
+        /* Hide the swipe to explore roles text */
     }
 
 
     /* Select Role Button */
     .select-role-container {
-        padding: 15px 15px 25px;  /* Tighter padding to bring button closer */
+        padding: 15px 15px 25px;
+        /* Tighter padding to bring button closer */
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -5214,7 +5471,8 @@ body::after {
         border: none;
         border-radius: 8px;
         padding: 12px 40px;
-        margin: 0; /* Remove margin on mobile */
+        margin: 0;
+        /* Remove margin on mobile */
         font-size: 16px;
         font-weight: 600;
         text-transform: uppercase;
@@ -5255,7 +5513,8 @@ body::after {
     /* Footer text inside button container */
     .mobile-footer-text {
         font-size: 12px;
-        color: rgba(234, 234, 234, 0.5);  /* Reduced opacity for less emphasis */
+        color: rgba(234, 234, 234, 0.5);
+        /* Reduced opacity for less emphasis */
         margin: 4px 0 0 0;
         font-style: italic;
         letter-spacing: 0.5px;
@@ -5297,19 +5556,28 @@ body::after {
         transition: opacity 0.3s ease;
     }
 
-    /* Add filter and position for dad video on mobile */
-    .character-card[data-persona="dad"] .character-video {
-        filter: brightness(1.05) contrast(1.05) saturate(1.05);
-        transition: opacity 0.3s ease;
-        object-position: center 45%;  /* Show more of video including steak at bottom */
-        transform: scale(1.0);  /* Fill the container completely */
-    }
-
-    /* Add filter and position for investor video on mobile */
+    /* Video filter and positioning for specific personas on mobile */
+    .character-card[data-persona="dad"] .character-video,
     .character-card[data-persona="investor"] .character-video {
         filter: brightness(1.05) contrast(1.05) saturate(1.05);
         transition: opacity 0.3s ease;
-        object-position: center center;
+    }
+
+    .character-card[data-persona="dad"] .character-video {
+        object-position: center 30%;
+        /* Moved up to reduce black space at top */
+        -webkit-object-position: center 30%;
+        /* Safari support */
+        transform: scale(1.0);
+        -webkit-transform: scale(1.0);
+        /* Safari support */
+    }
+
+    .character-card[data-persona="investor"] .character-video {
+        object-position: center 25%;
+        /* Moved up to reduce black space at top */
+        -webkit-object-position: center 25%;
+        /* Safari support */
     }
 
     /* When card is active and playing, show video and hide photo */
@@ -5320,22 +5588,26 @@ body::after {
         opacity: 1 !important;
         visibility: visible !important;
         display: block !important;
-        pointer-events: auto !important; /* Enable clicks on mobile */
+        pointer-events: auto !important;
+        /* Enable clicks on mobile */
     }
 
     .character-card[data-persona="founder"].video-playing .character-photo,
     .character-card[data-persona="operator"].video-playing .character-photo,
     .character-card[data-persona="dad"].video-playing .character-photo,
     .character-card[data-persona="investor"].video-playing .character-photo {
-        opacity: 0 !important; /* Hide photo when video is playing */
+        opacity: 0 !important;
+        /* Hide photo when video is playing */
         display: none !important;
     }
 
     /* Keep character-info and character-name in place when video is playing */
     .character-card.video-playing .character-info {
         /* Keep the same values as the default .character-info */
-        padding: 30px 20px 10px 20px !important;  /* Same as default */
-        margin-top: -60px !important;  /* Same as default */
+        padding: 30px 20px 10px 20px !important;
+        /* Same as default */
+        margin-top: -60px !important;
+        /* Same as default */
         position: relative !important;
         width: 100% !important;
     }
@@ -5343,36 +5615,39 @@ body::after {
     /* Maintain the same fade gradient when video is playing */
     .character-card.video-playing .character-portrait {
         -webkit-mask-image: linear-gradient(to bottom,
-            rgba(0,0,0,1) 0%,
-            rgba(0,0,0,1) 80%,   /* Full opacity until 80% - where title starts */
-            rgba(0,0,0,0.98) 82%,
-            rgba(0,0,0,0.95) 84%,
-            rgba(0,0,0,0.90) 86%,
-            rgba(0,0,0,0.82) 88%,
-            rgba(0,0,0,0.70) 90%,
-            rgba(0,0,0,0.55) 92%,
-            rgba(0,0,0,0.38) 94%,
-            rgba(0,0,0,0.20) 96%,
-            rgba(0,0,0,0.08) 98%,
-            rgba(0,0,0,0) 100%) !important;
+                rgba(0, 0, 0, 1) 0%,
+                rgba(0, 0, 0, 1) 80%,
+                /* Full opacity until 80% - where title starts */
+                rgba(0, 0, 0, 0.98) 82%,
+                rgba(0, 0, 0, 0.95) 84%,
+                rgba(0, 0, 0, 0.90) 86%,
+                rgba(0, 0, 0, 0.82) 88%,
+                rgba(0, 0, 0, 0.70) 90%,
+                rgba(0, 0, 0, 0.55) 92%,
+                rgba(0, 0, 0, 0.38) 94%,
+                rgba(0, 0, 0, 0.20) 96%,
+                rgba(0, 0, 0, 0.08) 98%,
+                rgba(0, 0, 0, 0) 100%) !important;
         mask-image: linear-gradient(to bottom,
-            rgba(0,0,0,1) 0%,
-            rgba(0,0,0,1) 80%,   /* Full opacity until 80% - where title starts */
-            rgba(0,0,0,0.98) 82%,
-            rgba(0,0,0,0.95) 84%,
-            rgba(0,0,0,0.90) 86%,
-            rgba(0,0,0,0.82) 88%,
-            rgba(0,0,0,0.70) 90%,
-            rgba(0,0,0,0.55) 92%,
-            rgba(0,0,0,0.38) 94%,
-            rgba(0,0,0,0.20) 96%,
-            rgba(0,0,0,0.08) 98%,
-            rgba(0,0,0,0) 100%) !important;
+                rgba(0, 0, 0, 1) 0%,
+                rgba(0, 0, 0, 1) 80%,
+                /* Full opacity until 80% - where title starts */
+                rgba(0, 0, 0, 0.98) 82%,
+                rgba(0, 0, 0, 0.95) 84%,
+                rgba(0, 0, 0, 0.90) 86%,
+                rgba(0, 0, 0, 0.82) 88%,
+                rgba(0, 0, 0, 0.70) 90%,
+                rgba(0, 0, 0, 0.55) 92%,
+                rgba(0, 0, 0, 0.38) 94%,
+                rgba(0, 0, 0, 0.20) 96%,
+                rgba(0, 0, 0, 0.08) 98%,
+                rgba(0, 0, 0, 0) 100%) !important;
     }
 
     .character-card.video-playing .character-name {
         /* Keep same as default character-name */
-        margin-top: 5px !important;  /* Same as default */
+        margin-top: 5px !important;
+        /* Same as default */
         margin-bottom: 0px !important;
         text-align: left !important;
         position: relative !important;
@@ -5390,8 +5665,10 @@ body::after {
 
     /* Ensure padding stays consistent when card is active */
     .character-card.active .character-info {
-        padding: 30px 20px 10px 20px !important;  /* Same as default */
-        margin-top: -60px !important;  /* Same as default */
+        padding: 30px 20px 10px 20px !important;
+        /* Same as default */
+        margin-top: -60px !important;
+        /* Same as default */
     }
 
     /* Apply same tap effect to all cards on mobile - more specific selectors */
@@ -5400,37 +5677,43 @@ body::after {
     .character-card[data-persona="operator"].active .character-name,
     .character-card[data-persona="investor"].active .character-name,
     .character-card[data-persona="dad"].active .character-name {
-        color: #FFFFFF !important;  /* Pure white for all cards */
+        color: #FFFFFF !important;
+        /* Pure white for all cards */
         text-shadow:
-            2px 2px 4px rgba(0,0,0,0.5),
+            2px 2px 4px rgba(0, 0, 0, 0.5),
             0 0 30px rgba(255, 255, 255, 0.6),
             0 0 50px rgba(255, 255, 255, 0.3) !important;
-        font-size: 23px !important;  /* Increase from 22px to 23px */
-        transform: none !important;  /* Ensure no transform */
+        font-size: 23px !important;
+        /* Increase from 22px to 23px */
+        transform: none !important;
+        /* Ensure no transform */
     }
 
     /* Maintain same glow effect when video is playing on mobile */
     .character-card.video-playing .character-name {
-        color: #FFFFFF !important;  /* Pure white for all cards */
+        color: #FFFFFF !important;
+        /* Pure white for all cards */
         text-shadow:
-            2px 2px 4px rgba(0,0,0,0.5),
+            2px 2px 4px rgba(0, 0, 0, 0.5),
             0 0 30px rgba(255, 255, 255, 0.6),
             0 0 50px rgba(255, 255, 255, 0.3) !important;
-        font-size: 23px !important;  /* Keep increased size when video plays */
+        font-size: 23px !important;
+        /* Keep increased size when video plays */
     }
 
     /* Touch feedback - but no border on active */
     .character-card:active {
         transform: scale(0.98);
         transition: transform 0.1s;
-        border: 1px solid rgba(255, 255, 255, 0.05) !important; /* Keep default border, no highlight */
+        border: 1px solid rgba(255, 255, 255, 0.05) !important;
+        /* Keep default border, no highlight */
     }
-    
+
     /* Ensure border is removed when video stops playing */
     .character-card.active:not(.video-playing) {
         border: 1px solid rgba(255, 255, 255, 0.05) !important;
     }
-    
+
     /* Remove border on focus to prevent it from staying on */
     .character-card:focus {
         outline: none;
@@ -5446,11 +5729,12 @@ body::after {
 
 /* ==================== Mobile Navigation ==================== */
 @media (max-width: 768px) {
+
     /* Hide persona switcher when character selection is visible */
-    .character-select-overlay:not(.hidden) ~ * .persona-switcher,
-    .character-select-overlay:not(.hidden) ~ .persona-switcher,
-    #characterSelect:not(.hidden) ~ * .persona-switcher,
-    #characterSelect:not(.hidden) + * .persona-switcher,
+    .character-select-overlay:not(.hidden)~* .persona-switcher,
+    .character-select-overlay:not(.hidden)~.persona-switcher,
+    #characterSelect:not(.hidden)~* .persona-switcher,
+    #characterSelect:not(.hidden)+* .persona-switcher,
     body.character-select-active .persona-switcher,
     .persona-switcher.hidden {
         display: none !important;
@@ -5458,7 +5742,7 @@ body::after {
 
     /* Also hide hamburger during character selection */
     body.character-select-active .hamburger,
-    #characterSelect:not(.hidden) ~ * .hamburger {
+    #characterSelect:not(.hidden)~* .hamburger {
         display: none !important;
     }
 
@@ -5475,13 +5759,15 @@ body::after {
         top: 0;
         left: 0;
         right: 0;
-        height: calc(var(--mobile-navbar-height) + 10px); /* Slightly taller header */
+        height: calc(var(--mobile-navbar-height) + 10px);
+        /* Slightly taller header */
         background: var(--theme-primary, #1E2C23);
         backdrop-filter: blur(10px);
         z-index: 1000;
         align-items: center;
         justify-content: space-between;
-        padding: 5px var(--mobile-padding) 10px; /* More padding at bottom */
+        padding: 5px var(--mobile-padding) 10px;
+        /* More padding at bottom */
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
 
@@ -5539,63 +5825,77 @@ body::after {
         height: 3px !important;
         width: 24px;
         background: linear-gradient(90deg,
-            var(--theme-accent, #fff) 0%,
-            var(--theme-text, #fff) 100%);
+                var(--theme-accent, #fff) 0%,
+                var(--theme-text, #fff) 100%);
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         transform-origin: center center;
         border-radius: 3px;
-        position: absolute !important;  /* Absolute positioning for precise control */
+        position: absolute !important;
+        /* Absolute positioning for precise control */
         opacity: 1 !important;
         visibility: visible !important;
         left: 50%;
-        transform: translateX(-50%);  /* Center horizontally */
+        transform: translateX(-50%);
+        /* Center horizontally */
     }
 
     /* First line - shorter */
     .hamburger span:first-child,
     #hamburger span:first-child {
         width: 20px;
-        top: 6px;  /* Position from top */
+        top: 6px;
+        /* Position from top */
     }
 
     /* Middle line - full width */
     .hamburger span:nth-child(2),
     #hamburger span:nth-child(2) {
         width: 24px;
-        top: 13px;  /* Center position (30px height / 2 - 1.5px) */
+        top: 13px;
+        /* Center position (30px height / 2 - 1.5px) */
     }
 
     /* Last line - shorter, aligned right */
     .hamburger span:last-child,
     #hamburger span:last-child {
         width: 16px;
-        top: 20px;  /* Position from top */
+        top: 20px;
+        /* Position from top */
         left: auto;
-        right: 3px;  /* Align to right */
-        transform: none;  /* Remove center transform */
+        right: 3px;
+        /* Align to right */
+        transform: none;
+        /* Remove center transform */
     }
 
     /* Active state - transforms into perfect centered X */
     .hamburger.active span:first-child,
     #hamburger.active span:first-child {
         width: 24px !important;
-        top: 13px !important;  /* Move to center */
-        transform: translateX(-50%) rotate(45deg);  /* Keep centered and rotate */
+        top: 13px !important;
+        /* Move to center */
+        transform: translateX(-50%) rotate(45deg);
+        /* Keep centered and rotate */
     }
 
     .hamburger.active span:nth-child(2),
     #hamburger.active span:nth-child(2) {
         opacity: 0;
-        transform: translateX(-50%) scale(0);  /* Keep centered while scaling */
+        transform: translateX(-50%) scale(0);
+        /* Keep centered while scaling */
     }
 
     .hamburger.active span:last-child,
     #hamburger.active span:last-child {
         width: 24px !important;
-        top: 13px !important;  /* Move to center */
-        left: 50% !important;  /* Reset to center */
-        right: auto !important;  /* Reset right alignment */
-        transform: translateX(-50%) rotate(-45deg);  /* Keep centered and rotate */
+        top: 13px !important;
+        /* Move to center */
+        left: 50% !important;
+        /* Reset to center */
+        right: auto !important;
+        /* Reset right alignment */
+        transform: translateX(-50%) rotate(-45deg);
+        /* Keep centered and rotate */
     }
 
     /* Persona-specific hamburger colors on mobile */
@@ -5624,7 +5924,8 @@ body::after {
         display: flex !important;
         position: fixed;
         top: 22px;
-        left: 59px; /* Position next to hamburger - moved 1px closer */
+        left: 59px;
+        /* Position next to hamburger - moved 1px closer */
         z-index: 1001;
         align-items: center;
     }
@@ -5640,7 +5941,7 @@ body::after {
 
     /* Hide role title during character selection */
     body.character-select-active .mobile-role-title,
-    #characterSelect:not(.hidden) ~ * .mobile-role-title {
+    #characterSelect:not(.hidden)~* .mobile-role-title {
         display: none !important;
     }
 
@@ -5672,7 +5973,8 @@ body::after {
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
-        display: none !important;  /* Hide the title */
+        display: none !important;
+        /* Hide the title */
     }
 
     /* Persona switcher on mobile - top right */
@@ -5684,8 +5986,10 @@ body::after {
         display: block !important;
         width: 48px !important;
         height: 48px !important;
-        margin-bottom: 20px !important; /* Add space below for better separation */
-        z-index: 999 !important; /* Ensure it's above other elements */
+        margin-bottom: 20px !important;
+        /* Add space below for better separation */
+        z-index: 999 !important;
+        /* Ensure it's above other elements */
     }
 
     /* Sidebar as Full-Screen Overlay */
@@ -5696,7 +6000,8 @@ body::after {
         width: 85%;
         max-width: 320px;
         height: 100vh !important;
-        background: rgba(30, 44, 35, 0.98); /* Default with slight transparency */
+        background: rgba(30, 44, 35, 0.98);
+        /* Default with slight transparency */
         z-index: 10001;
         transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease;
         display: flex !important;
@@ -5710,25 +6015,30 @@ body::after {
 
     /* Persona-specific sidebar backgrounds */
     body.persona-founder .sidebar {
-        background: rgba(30, 44, 35, 0.98); /* Founder green theme - matches #1E2C23 */
+        background: rgba(30, 44, 35, 0.98);
+        /* Founder green theme - matches #1E2C23 */
     }
 
     body.persona-operator .sidebar {
-        background: rgba(26, 29, 32, 0.98); /* Operator dark theme - matches #1A1D20 */
+        background: rgba(26, 29, 32, 0.98);
+        /* Operator dark theme - matches #1A1D20 */
     }
 
     body.persona-investor .sidebar {
-        background: rgba(239, 235, 228, 0.98); /* Investor light theme - matches #EFEBE4 */
+        background: rgba(239, 235, 228, 0.98);
+        /* Investor light theme - matches #EFEBE4 */
     }
 
     body.persona-dad .sidebar {
-        background: rgba(255, 251, 239, 0.98); /* Dad warm light theme - matches #FFFBEF */
+        background: rgba(255, 251, 239, 0.98);
+        /* Dad warm light theme - matches #FFFBEF */
     }
 
     /* Light theme adjustments for mobile navigation */
     body.persona-investor .nav-link,
     body.persona-dad .nav-link {
-        color: #0A1D1A !important; /* Dark text for light backgrounds */
+        color: #0A1D1A !important;
+        /* Dark text for light backgrounds */
     }
 
     body.persona-investor .nav-link:hover,
@@ -5818,7 +6128,8 @@ body::after {
     .navigation {
         flex: 1;
         overflow-y: auto;
-        padding: 0 0 20px 0;  /* Removed top padding completely */
+        padding: 0 0 20px 0;
+        /* Removed top padding completely */
         display: block !important;
     }
 
@@ -5873,14 +6184,16 @@ body::after {
 
     /* Content Area */
     .container {
-        padding-top: calc(var(--mobile-navbar-height) - 15px); /* Reduce top padding more */
+        padding-top: calc(var(--mobile-navbar-height) - 15px);
+        /* Reduce top padding more */
         min-height: 100vh;
     }
 
     .content {
         margin-left: 0;
         padding: var(--mobile-padding);
-        padding-top: 0; /* No top padding - content starts immediately */
+        padding-top: 0;
+        /* No top padding - content starts immediately */
     }
 
     /* Remove top margins from content grids on mobile */
@@ -5889,15 +6202,19 @@ body::after {
     .questions-container,
     .investments-grid,
     .article-grid {
-        margin-top: 0 !important;  /* Remove top margin to move content higher */
+        margin-top: 0 !important;
+        /* Remove top margin to move content higher */
         padding-top: 0 !important;
     }
 
     /* Reduce page header spacing on mobile to move content up */
     .page-header {
-        margin-bottom: 5px !important;  /* Very small margin */
-        padding-bottom: 5px !important;  /* Very small padding */
-        margin-top: 0 !important;  /* No negative margin to prevent cutoff */
+        margin-bottom: 5px !important;
+        /* Very small margin */
+        padding-bottom: 5px !important;
+        /* Very small padding */
+        margin-top: 0 !important;
+        /* No negative margin to prevent cutoff */
         padding-top: 0 !important;
     }
 
@@ -5930,12 +6247,12 @@ body::after {
     }
 
     /* Make first child of any content container start at top */
-    .content > *:first-child,
-    .content-body > *:first-child,
-    .writing-grid > *:first-child,
-    .quotes-container > *:first-child,
-    .questions-container > *:first-child,
-    .investments-grid > *:first-child {
+    .content>*:first-child,
+    .content-body>*:first-child,
+    .writing-grid>*:first-child,
+    .quotes-container>*:first-child,
+    .questions-container>*:first-child,
+    .investments-grid>*:first-child {
         margin-top: 0 !important;
         padding-top: 15px !important;
     }
@@ -5945,13 +6262,15 @@ body::after {
     /* Container for persona icons - horizontal layout */
     .persona-icons-container {
         display: flex !important;
-        flex-direction: row-reverse !important; /* Icons appear to the left of main button */
+        flex-direction: row-reverse !important;
+        /* Icons appear to the left of main button */
         align-items: center !important;
         gap: 8px !important;
         position: relative !important;
         width: auto !important;
         height: 48px !important;
-        margin-bottom: 15px !important; /* Add more space below the role icon */
+        margin-bottom: 15px !important;
+        /* Add more space below the role icon */
     }
 
     /* Options container that slides out - VISIBLE FOR TESTING */
@@ -5959,7 +6278,8 @@ body::after {
         display: flex !important;
         flex-direction: row-reverse !important;
         gap: 6px !important;
-        overflow: visible !important; /* Changed to visible for testing */
+        overflow: visible !important;
+        /* Changed to visible for testing */
         max-width: 0 !important;
         opacity: 0 !important;
         transition: max-width 0.5s cubic-bezier(0.4, 0.0, 0.2, 1), opacity 0.4s ease !important;
@@ -5968,7 +6288,8 @@ body::after {
 
     /* Show options when container has show-options class */
     .persona-icons-container.show-options .persona-options {
-        max-width: 200px !important; /* Increased to ensure all icons show */
+        max-width: 200px !important;
+        /* Increased to ensure all icons show */
         opacity: 1 !important;
     }
 
@@ -5979,7 +6300,7 @@ body::after {
         min-width: 48px !important;
         min-height: 48px !important;
         border-radius: 50% !important;
-        background: rgba(255,255,255,0.95) !important;
+        background: rgba(255, 255, 255, 0.95) !important;
         border: 1px solid rgba(255, 255, 255, 0.2) !important;
         cursor: pointer !important;
         padding: 0 !important;
@@ -5987,7 +6308,8 @@ body::after {
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
         overflow: hidden !important;
         opacity: 0 !important;
-        transform: translateX(20px) scale(0.9) !important;  /* Match desktop animation */
+        transform: translateX(20px) scale(0.9) !important;
+        /* Match desktop animation */
         display: block !important;
         flex-shrink: 0 !important;
     }
@@ -6002,12 +6324,15 @@ body::after {
     .persona-icons-container.show-options .persona-icon-btn:nth-child(1) {
         transition-delay: 0.05s !important;
     }
+
     .persona-icons-container.show-options .persona-icon-btn:nth-child(2) {
         transition-delay: 0.1s !important;
     }
+
     .persona-icons-container.show-options .persona-icon-btn:nth-child(3) {
         transition-delay: 0.15s !important;
     }
+
     .persona-icons-container.show-options .persona-icon-btn:nth-child(4) {
         transition-delay: 0.2s !important;
     }
@@ -6047,10 +6372,12 @@ body::after {
         width: 100% !important;
         height: 100% !important;
         object-fit: cover !important;
-        object-position: center 15% !important;  /* Position to show faces better - more up */
+        object-position: center 15% !important;
+        /* Position to show faces better - more up */
         display: block !important;
         border-radius: 50% !important;
-        transform: scale(1.3) !important;  /* Scale up image by 30% */
+        transform: scale(1.3) !important;
+        /* Scale up image by 30% */
     }
 
     /* Main persona button */
@@ -6069,7 +6396,7 @@ body::after {
         border: 1px solid rgba(255, 255, 255, 0.2) !important;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
         display: block !important;
-        background: rgba(255,255,255,0.95) !important;
+        background: rgba(255, 255, 255, 0.95) !important;
         cursor: pointer !important;
         position: relative !important;
         z-index: 2 !important;
@@ -6106,10 +6433,13 @@ body::after {
         width: 100% !important;
         height: 100% !important;
         object-fit: cover !important;
-        object-position: center 15% !important; /* Position to show face better - moved up */
+        object-position: center 15% !important;
+        /* Position to show face better - moved up */
         display: block !important;
-        border-radius: 0 !important; /* Remove radius from image since container handles it */
-        transform: scale(1.3) !important;  /* Scale up image by 30% */
+        border-radius: 0 !important;
+        /* Remove radius from image since container handles it */
+        transform: scale(1.3) !important;
+        /* Scale up image by 30% */
     }
 
     .current-persona-avatar {
@@ -6117,7 +6447,8 @@ body::after {
         width: 100% !important;
         height: 100% !important;
         line-height: 0 !important;
-        border-radius: 0 !important; /* Remove radius from span since button handles it */
+        border-radius: 0 !important;
+        /* Remove radius from span since button handles it */
         overflow: hidden !important;
     }
 
@@ -6134,25 +6465,35 @@ body::after {
     .split-view {
         flex-direction: column;
         height: auto;
-        min-height: auto !important;  /* Don't force minimum height */
-        padding: var(--mobile-padding) !important;  /* Match regular content padding */
-        padding-top: 0 !important;  /* No top padding, same as regular content */
+        min-height: auto !important;
+        /* Don't force minimum height */
+        padding: var(--mobile-padding) !important;
+        /* Match regular content padding */
+        padding-top: 0 !important;
+        /* No top padding, same as regular content */
         gap: 0;
-        align-items: flex-start !important;  /* Align content to top */
-        justify-content: flex-start !important;  /* Push content to top */
+        align-items: flex-start !important;
+        /* Align content to top */
+        justify-content: flex-start !important;
+        /* Push content to top */
     }
 
     .list-pane {
         width: 100%;
         min-width: 100%;
-        max-height: none !important;  /* Remove height restriction */
-        height: auto !important;  /* Let it size to content */
+        max-height: none !important;
+        /* Remove height restriction */
+        height: auto !important;
+        /* Let it size to content */
         border-right: none;
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         padding: var(--mobile-padding);
-        padding-top: 0 !important;  /* Remove top padding in list-pane */
-        position: relative !important;  /* Change from sticky to relative */
-        top: 0 !important;  /* Reset top position */
+        padding-top: 0 !important;
+        /* Remove top padding in list-pane */
+        position: relative !important;
+        /* Change from sticky to relative */
+        top: 0 !important;
+        /* Reset top position */
         background: var(--theme-primary);
         z-index: 10;
     }
@@ -6201,8 +6542,12 @@ body::after {
 
 /* ==================== Mobile Forms and Inputs ==================== */
 @media (max-width: 768px) {
-    input, textarea, select {
-        font-size: 16px; /* Prevents zoom on iOS */
+
+    input,
+    textarea,
+    select {
+        font-size: 16px;
+        /* Prevents zoom on iOS */
         padding: 12px;
         width: 100%;
         border-radius: 8px;
@@ -6211,8 +6556,10 @@ body::after {
         color: var(--theme-text);
     }
 
-    button, .btn {
-        min-height: 44px; /* Apple's minimum touch target */
+    button,
+    .btn {
+        min-height: 44px;
+        /* Apple's minimum touch target */
         padding: 12px 20px;
         font-size: 16px;
         border-radius: 8px;
@@ -6282,7 +6629,8 @@ body::after {
         line-height: 1.4;
     }
 
-    p, li {
+    p,
+    li {
         font-size: 16px;
         line-height: 1.6;
     }
@@ -6362,7 +6710,9 @@ body::after {
 }
 
 @keyframes spin {
-    to { transform: rotate(360deg); }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 /* ==================== Bottom Navigation (Optional) ==================== */
@@ -6430,7 +6780,8 @@ body::after {
     }
 
     .select-subtitle {
-        display: none; /* Hide subtitle in landscape to save space */
+        display: none;
+        /* Hide subtitle in landscape to save space */
     }
 
     /* Adjust layout for landscape */
@@ -6463,6 +6814,7 @@ body::after {
     .character-desc {
         font-size: 11px !important;
         -webkit-line-clamp: 2;
+        line-clamp: 2;
     }
 
     /* Swipe indicators in landscape */
@@ -6537,7 +6889,8 @@ body::after {
         font-size: 20px;
     }
 
-    p, li {
+    p,
+    li {
         font-size: 14px;
     }
 
@@ -6574,6 +6927,7 @@ body::after {
         transition-duration: 0.01ms !important;
     }
 }
+
 /* ==================== Welcome Page Game Cards (Desktop Only) ==================== */
 @media (min-width: 769px) {
     .welcome-page {
@@ -6607,8 +6961,8 @@ body::after {
 
     .welcome-card {
         background: linear-gradient(135deg,
-            rgba(255, 255, 255, 0.05) 0%,
-            rgba(255, 255, 255, 0.02) 100%);
+                rgba(255, 255, 255, 0.05) 0%,
+                rgba(255, 255, 255, 0.02) 100%);
         border: 2px solid rgba(255, 255, 255, 0.1);
         border-radius: 15px;
         padding: 2rem 3rem;
@@ -6616,7 +6970,7 @@ body::after {
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         backdrop-filter: blur(10px);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
         overflow: hidden;
         width: 100%;
         display: flex;
@@ -6632,93 +6986,93 @@ body::after {
         border-color: var(--theme-accent);
     } */
 
-/* Roman numeral indicators */
-.card-number {
-    position: relative;
-    margin-right: 2.5rem;
-    font-family: 'Cinzel', 'Playfair Display', serif;
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: var(--theme-accent);
-    opacity: 0.3;
-    transition: all 0.3s ease;
-    flex-shrink: 0;
-}
+    /* Roman numeral indicators */
+    .card-number {
+        position: relative;
+        margin-right: 2.5rem;
+        font-family: 'Cinzel', 'Playfair Display', serif;
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--theme-accent);
+        opacity: 0.3;
+        transition: all 0.3s ease;
+        flex-shrink: 0;
+    }
 
-/* .welcome-card:hover .card-number {
+    /* .welcome-card:hover .card-number {
     opacity: 0.8;
     transform: scale(1.1);
 } */
 
-/* Card content styling */
-.card-content {
-    position: relative;
-    z-index: 2;
-    flex: 1;
-}
+    /* Card content styling */
+    .card-content {
+        position: relative;
+        z-index: 2;
+        flex: 1;
+    }
 
-.card-content p {
-    font-size: 1.1rem;
-    line-height: 1.8;
-    margin: 0;
-    color: var(--theme-text);
-    font-family: var(--font-body);
-}
+    .card-content p {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        margin: 0;
+        color: var(--theme-text);
+        font-family: var(--font-body);
+    }
 
-.card-content a.text-link {
-    color: var(--theme-accent);
-    text-decoration: none;
-    border-bottom: 1px solid transparent;
-    transition: all 0.3s ease;
-    font-weight: 500;
-}
+    .card-content a.text-link {
+        color: var(--theme-accent);
+        text-decoration: none;
+        border-bottom: 1px solid transparent;
+        transition: all 0.3s ease;
+        font-weight: 500;
+    }
 
-/* .card-content a.text-link:hover {
+    /* .card-content a.text-link:hover {
     border-bottom-color: var(--theme-accent);
     opacity: 0.8;
 } */
 
-/* Animated accent bars */
-.welcome-card::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 100%;
-    width: 4px;
-    background: var(--theme-accent);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
+    /* Animated accent bars */
+    .welcome-card::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 4px;
+        background: var(--theme-accent);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
 
-/* .welcome-card:hover::before {
+    /* .welcome-card:hover::before {
     opacity: 1;
 } */
 
-/* Glowing effect on hover */
-.welcome-card::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 100%;
-    height: 100%;
-    transform: translate(-50%, -50%);
-    background: radial-gradient(circle at center,
-        var(--theme-accent) 0%,
-        transparent 70%);
-    opacity: 0;
-    filter: blur(40px);
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-}
+    /* Glowing effect on hover */
+    .welcome-card::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 100%;
+        height: 100%;
+        transform: translate(-50%, -50%);
+        background: radial-gradient(circle at center,
+                var(--theme-accent) 0%,
+                transparent 70%);
+        opacity: 0;
+        filter: blur(40px);
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+    }
 
-/* .welcome-card:hover::after {
+    /* .welcome-card:hover::after {
     opacity: 0.1;
 } */
 
-/* Persona-specific card colors - DISABLED */
-/* body.persona-founder .welcome-card:hover {
+    /* Persona-specific card colors - DISABLED */
+    /* body.persona-founder .welcome-card:hover {
     border-color: #A0A453;
 }
 
@@ -6741,6 +7095,7 @@ body.persona-dad .welcome-card:hover {
             opacity: 0;
             transform: translateY(50px);
         }
+
         to {
             opacity: 1;
             transform: translateY(0);
@@ -6762,4 +7117,6 @@ body.persona-dad .welcome-card:hover {
     .welcome-card:nth-child(3) {
         animation-delay: 0.7s;
     }
-} /* End of desktop-only media query */
+}
+
+/* End of desktop-only media query */

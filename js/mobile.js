@@ -357,7 +357,8 @@
                     if (video) {
                         video.muted = true;  // Ensure muted
                         video.pause();
-                        video.currentTime = 0;
+                        // Reset founder video to 2 seconds, others to 0
+                        video.currentTime = card.dataset.persona === 'founder' ? 2 : 0;
                     }
                 }
             });
@@ -388,22 +389,52 @@
             }
         }
 
-        toggleFounderVideo(card) {  // Works for founder and dad videos
+        toggleFounderVideo(card) {  // Works for founder, dad, operator, and investor videos
             const video = card.querySelector('.character-video');
             if (!video) return;
 
             // Ensure video is muted
             video.muted = true;
-            // Auto-loop for founder and operator, handle dad manually
-            video.loop = card.dataset.persona === 'founder' || card.dataset.persona === 'operator';
-
+            
+            // Setup founder video to loop between 2-5 seconds
+            if (card.dataset.persona === 'founder' && !video.hasAttribute('data-listener-added')) {
+                video.loop = false; // Disable native loop
+                video.setAttribute('data-listener-added', 'true');
+                video.addEventListener('timeupdate', () => {
+                    if (video.currentTime < 2) {
+                        video.currentTime = 2; // Start from 2 seconds
+                    } else if (video.currentTime >= 5) {
+                        video.currentTime = 2; // Loop back to 2 seconds
+                    }
+                });
+            }
+            // Setup operator video to loop back at 4 seconds
+            else if (card.dataset.persona === 'operator' && !video.hasAttribute('data-listener-added')) {
+                video.loop = false; // Disable native loop
+                video.setAttribute('data-listener-added', 'true');
+                video.addEventListener('timeupdate', () => {
+                    if (video.currentTime >= 4) {
+                        video.currentTime = 0; // Loop back to start
+                    }
+                });
+            }
+            // Setup investor video to loop back at 4 seconds
+            else if (card.dataset.persona === 'investor' && !video.hasAttribute('data-listener-added')) {
+                video.loop = false; // Disable native loop
+                video.setAttribute('data-listener-added', 'true');
+                video.addEventListener('timeupdate', () => {
+                    if (video.currentTime >= 4) {
+                        video.currentTime = 0; // Loop back to start
+                    }
+                });
+            }
             // Setup dad video to loop back at 6 seconds
-            if (card.dataset.persona === 'dad' && !video.hasAttribute('data-listener-added')) {
+            else if (card.dataset.persona === 'dad' && !video.hasAttribute('data-listener-added')) {
+                video.loop = false; // Disable native loop
                 video.setAttribute('data-listener-added', 'true');
                 video.addEventListener('timeupdate', () => {
                     if (video.currentTime >= 6) {
                         video.currentTime = 0; // Loop back to start
-                        // Keep playing - no pause
                     }
                 });
             }
@@ -412,7 +443,8 @@
                 // Stop video and go back to image
                 card.classList.remove('video-playing');
                 video.pause();
-                video.currentTime = 0;
+                // Reset founder video to 2 seconds, others to 0
+                video.currentTime = card.dataset.persona === 'founder' ? 2 : 0;
 
                 // Remove any inline styles that might override CSS
                 video.removeAttribute('style');
@@ -440,6 +472,10 @@
                     if (video.readyState === 0) {
                         video.load();
                         video.addEventListener('loadeddata', () => {
+                            // Set founder video to start at 2 seconds
+                            if (card.dataset.persona === 'founder') {
+                                video.currentTime = 2;
+                            }
                             card.classList.add('video-playing');
                             video.play().catch((e) => {
                                 console.log('Video play failed:', e);
@@ -447,6 +483,10 @@
                             });
                         }, { once: true });
                     } else {
+                        // Set founder video to start at 2 seconds
+                        if (card.dataset.persona === 'founder') {
+                            video.currentTime = 2;
+                        }
                         // Video already loaded, play immediately
                         card.classList.add('video-playing');
                         video.play().catch((e) => {
