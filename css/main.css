@@ -95,10 +95,10 @@ body {
 }
 
 /* Remove body background - will be handled per page */
-body::before,
-body::after {
+body::before {
     display: none;
 }
+/* body::after is used for persona background images, so don't hide it by default */
 
 /* ==================== Persona-Specific Backgrounds ==================== */
 /* Common background image styles for all personas */
@@ -113,46 +113,61 @@ body.persona-dad::after {
     width: 100vw;
     height: 100vh;
     background-size: cover;
+    -webkit-background-size: cover; /* Safari support */
     background-position: center center;
+    -webkit-background-position: center center; /* Safari support */
     background-repeat: no-repeat;
+    -webkit-background-repeat: no-repeat; /* Safari support */
     opacity: 0.1;
-    z-index: -1;
+    z-index: 1;
     pointer-events: none;
-    display: block;
+    display: block !important; /* Force display for Safari */
+    visibility: visible !important; /* Force visibility for Safari */
     /* Safari Rendering Fixes */
     -webkit-transform: translateZ(0);
     transform: translateZ(0);
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     perspective: 1000px;
+    /* Force hardware acceleration for Safari */
+    will-change: transform;
+    -webkit-will-change: transform;
 }
 
-/* Safari-specific: Force opacity recalculation */
+/* Safari-specific: Force opacity and display recalculation */
 @supports (-webkit-appearance: none) {
-
     body.persona-founder::after,
     body.persona-operator::after,
     body.persona-investor::after,
     body.persona-dad::after {
         opacity: 0.1 !important;
+        display: block !important;
+        visibility: visible !important;
+        z-index: 1 !important;
+        -webkit-transform: translateZ(0) !important;
+        transform: translateZ(0) !important;
     }
 }
 
 /* Persona-specific background images */
 body.persona-founder::after {
     background-image: url('/assets/founderbg1.png');
+    -webkit-background-image: url('/assets/founderbg1.png'); /* Safari support */
 }
 
 body.persona-operator::after {
     background-image: url('/assets/operatorbg1.png');
+    -webkit-background-image: url('/assets/operatorbg1.png'); /* Safari support */
 }
 
 body.persona-investor::after {
     background-image: url('/assets/investorbg1.png');
+    -webkit-background-image: url('/assets/investorbg1.png'); /* Safari support */
 }
 
 body.persona-dad::after {
     background-image: url('/assets/dadbg1.jpg');
+    -webkit-background-image: url('/assets/dadbg1.jpg'); /* Safari support */
 }
 
 /* Hide background images on mobile */
@@ -1189,6 +1204,8 @@ body.persona-dad .nav-link:hover {
     flex: 1;
     padding: 40px;
     background: transparent;
+    position: relative;
+    z-index: 2;
     overflow-y: auto;
     position: relative;
     z-index: 2;
