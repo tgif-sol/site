@@ -143,7 +143,9 @@
         });
 
         // Update navigation icons after changing active state
-        if (window.bustlingWorld && window.bustlingWorld.updateNavigationIcons) {
+        if (window.bustlingWorldV2 && window.bustlingWorldV2.updateNavigationIcons) {
+            window.bustlingWorldV2.updateNavigationIcons(true);
+        } else if (window.bustlingWorld && window.bustlingWorld.updateNavigationIcons) {
             window.bustlingWorld.updateNavigationIcons();
         }
     }

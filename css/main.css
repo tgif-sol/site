@@ -119,7 +119,7 @@ body.persona-dad::after {
     background-repeat: no-repeat;
     -webkit-background-repeat: no-repeat; /* Safari support */
     opacity: 0.1;
-    z-index: 1;
+    z-index: -1;
     pointer-events: none;
     display: block !important; /* Force display for Safari */
     visibility: visible !important; /* Force visibility for Safari */
@@ -143,7 +143,6 @@ body.persona-dad::after {
         opacity: 0.1 !important;
         display: block !important;
         visibility: visible !important;
-        z-index: 1 !important;
         -webkit-transform: translateZ(0) !important;
         transform: translateZ(0) !important;
     }
@@ -622,9 +621,9 @@ body.persona-dad::after {
     width: 200%;
     height: 100%;
     background: linear-gradient(135deg,
-            transparent 30%,
-            var(--theme-accent) 50%,
-            transparent 70%);
+        transparent 30%,
+        var(--theme-accent) 50%,
+        transparent 70%);
     opacity: 0.05;
     transform: translateX(-100%);
     animation: shimmer 8s infinite;
@@ -638,9 +637,9 @@ body.persona-dad::after {
     width: 100%;
     height: 3px;
     background: linear-gradient(90deg,
-            transparent,
-            var(--theme-accent),
-            transparent);
+        transparent,
+        var(--theme-accent),
+        transparent);
     animation: scan 3s infinite;
 }
 
@@ -699,12 +698,12 @@ body.persona-dad::after {
     bottom: 50px;
     width: 1px;
     background: linear-gradient(to bottom,
-            transparent 0%,
-            rgba(var(--theme-accent-rgb), 0.1) 5%,
-            rgba(var(--theme-accent-rgb), 0.2) 15%,
-            rgba(var(--theme-accent-rgb), 0.3) 50%,
-            rgba(var(--theme-accent-rgb), 0.2) 85%,
-            rgba(var(--theme-accent-rgb), 0.1) 95%,
+        transparent 0%,
+        rgba(var(--theme-accent-rgb), 0.1) 5%,
+        rgba(var(--theme-accent-rgb), 0.2) 15%,
+        rgba(var(--theme-accent-rgb), 0.3) 50%,
+        rgba(var(--theme-accent-rgb), 0.2) 85%,
+        rgba(var(--theme-accent-rgb), 0.1) 95%,
             transparent 100%);
     z-index: 1;
 }
@@ -742,8 +741,8 @@ body.persona-dad::after {
     line-height: 1;
     color: var(--theme-accent);
     background: linear-gradient(135deg,
-            rgba(var(--theme-accent-rgb), 0.02) 0%,
-            rgba(var(--theme-accent-rgb), 0.05) 100%);
+        rgba(var(--theme-accent-rgb), 0.02) 0%,
+        rgba(var(--theme-accent-rgb), 0.05) 100%);
     border: 1px solid rgba(var(--theme-accent-rgb), 0.15);
     border-radius: 50%;
     z-index: 3;
@@ -776,8 +775,8 @@ body.persona-dad::after {
     width: 70%;
     height: 70%;
     background: radial-gradient(circle,
-            rgba(var(--theme-accent-rgb), 0.05) 0%,
-            transparent 70%);
+        rgba(var(--theme-accent-rgb), 0.05) 0%,
+        transparent 70%);
     border-radius: 50%;
     pointer-events: none;
 }
@@ -794,8 +793,8 @@ body.persona-dad .timeline-year {
     position: relative;
     padding: 1.5rem 2rem;
     background: linear-gradient(135deg,
-            rgba(var(--theme-accent-rgb), 0.02) 0%,
-            rgba(var(--theme-accent-rgb), 0.04) 100%);
+        rgba(var(--theme-accent-rgb), 0.02) 0%,
+        rgba(var(--theme-accent-rgb), 0.04) 100%);
     border: 1px solid rgba(var(--theme-accent-rgb), 0.1);
     border-left: 2px solid rgba(var(--theme-accent-rgb), 0.3);
     border-radius: 8px;
@@ -807,8 +806,8 @@ body.persona-dad .timeline-year {
 body.persona-investor .timeline-content,
 body.persona-dad .timeline-content {
     background: linear-gradient(135deg,
-            rgba(var(--theme-accent-rgb), 0.03) 0%,
-            rgba(var(--theme-accent-rgb), 0.06) 100%);
+        rgba(var(--theme-accent-rgb), 0.03) 0%,
+        rgba(var(--theme-accent-rgb), 0.06) 100%);
     border: 1px solid rgba(var(--theme-accent-rgb), 0.15);
     border-left: 2px solid rgba(var(--theme-accent-rgb), 0.4);
 }
@@ -1204,8 +1203,6 @@ body.persona-dad .nav-link:hover {
     flex: 1;
     padding: 40px;
     background: transparent;
-    position: relative;
-    z-index: 2;
     overflow-y: auto;
     position: relative;
     z-index: 2;
@@ -1551,8 +1548,8 @@ body.persona-investor .persona-profile-img[src*="investor"] {
     margin: 0 0 24px 0;
     padding: 20px 24px;
     background: linear-gradient(135deg,
-            rgba(255, 255, 255, 0.02) 0%,
-            rgba(255, 255, 255, 0.04) 100%);
+        rgba(255, 255, 255, 0.02) 0%,
+        rgba(255, 255, 255, 0.04) 100%);
     border-left: 3px solid rgba(var(--theme-accent-rgb), 0.5);
     border-radius: 8px;
     position: relative;
@@ -1583,8 +1580,8 @@ body.persona-investor .persona-profile-img[src*="investor"] {
 body.persona-investor .question-item,
 body.persona-dad .question-item {
     background: linear-gradient(135deg,
-            rgba(0, 0, 0, 0.02) 0%,
-            rgba(0, 0, 0, 0.04) 100%);
+        rgba(0, 0, 0, 0.02) 0%,
+        rgba(0, 0, 0, 0.04) 100%);
     border-left: 3px solid rgba(var(--theme-accent-rgb), 0.5);
     border-radius: 8px;
 }
@@ -4055,9 +4052,9 @@ body.persona-dad .nav-list a.active {
     right: 0;
     bottom: 0;
     background: linear-gradient(to bottom,
-            rgba(0, 0, 0, 0) 0%,
-            rgba(0, 0, 0, 0.3) 70%,
-            rgba(0, 0, 0, 0.7) 100%);
+        rgba(0, 0, 0, 0) 0%,
+        rgba(0, 0, 0, 0.3) 70%,
+        rgba(0, 0, 0, 0.7) 100%);
     pointer-events: none;
 }
 
@@ -4448,9 +4445,9 @@ body.persona-dad .nav-list a.active {
     right: 11px;
     bottom: 11px;
     background: linear-gradient(180deg,
-            rgba(0, 0, 0, 0) 0%,
-            rgba(0, 0, 0, 0.1) 60%,
-            rgba(0, 0, 0, 0.6) 100%);
+        rgba(0, 0, 0, 0) 0%,
+        rgba(0, 0, 0, 0.1) 60%,
+        rgba(0, 0, 0, 0.6) 100%);
     z-index: 1;
 }
 
@@ -4637,9 +4634,9 @@ body.persona-dad .role-card::before {
     position: absolute;
     inset: -1px;
     background: linear-gradient(90deg,
-            transparent 0%,
-            rgba(var(--theme-rgb), 0.25) 50%,
-            transparent 100%);
+        transparent 0%,
+        rgba(var(--theme-rgb), 0.25) 50%,
+        transparent 100%);
     border-radius: 20px;
     opacity: 0;
     z-index: -1;
@@ -5885,8 +5882,8 @@ body::after {
         height: 3px !important;
         width: 24px;
         background: linear-gradient(90deg,
-                var(--theme-accent, #fff) 0%,
-                var(--theme-text, #fff) 100%);
+            var(--theme-accent, #fff) 0%,
+            var(--theme-text, #fff) 100%);
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         transform-origin: center center;
         border-radius: 3px;
@@ -7023,8 +7020,8 @@ body::after {
 
     .welcome-card {
         background: linear-gradient(135deg,
-                rgba(255, 255, 255, 0.05) 0%,
-                rgba(255, 255, 255, 0.02) 100%);
+            rgba(255, 255, 255, 0.05) 0%,
+            rgba(255, 255, 255, 0.02) 100%);
         border: 2px solid rgba(255, 255, 255, 0.1);
         border-radius: 15px;
         padding: 2rem 3rem;
@@ -7032,7 +7029,7 @@ body::after {
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         backdrop-filter: blur(10px);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1),
-            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
         overflow: hidden;
         width: 100%;
         display: flex;
@@ -7048,93 +7045,93 @@ body::after {
         border-color: var(--theme-accent);
     } */
 
-    /* Roman numeral indicators */
-    .card-number {
-        position: relative;
-        margin-right: 2.5rem;
-        font-family: 'Cinzel', 'Playfair Display', serif;
-        font-size: 2.5rem;
-        font-weight: 700;
-        color: var(--theme-accent);
-        opacity: 0.3;
-        transition: all 0.3s ease;
-        flex-shrink: 0;
-    }
+/* Roman numeral indicators */
+.card-number {
+    position: relative;
+    margin-right: 2.5rem;
+    font-family: 'Cinzel', 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--theme-accent);
+    opacity: 0.3;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
 
-    /* .welcome-card:hover .card-number {
+/* .welcome-card:hover .card-number {
     opacity: 0.8;
     transform: scale(1.1);
 } */
 
-    /* Card content styling */
-    .card-content {
-        position: relative;
-        z-index: 2;
-        flex: 1;
-    }
+/* Card content styling */
+.card-content {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+}
 
-    .card-content p {
-        font-size: 1.1rem;
-        line-height: 1.8;
-        margin: 0;
-        color: var(--theme-text);
-        font-family: var(--font-body);
-    }
+.card-content p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin: 0;
+    color: var(--theme-text);
+    font-family: var(--font-body);
+}
 
-    .card-content a.text-link {
-        color: var(--theme-accent);
-        text-decoration: none;
-        border-bottom: 1px solid transparent;
-        transition: all 0.3s ease;
-        font-weight: 500;
-    }
+.card-content a.text-link {
+    color: var(--theme-accent);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
 
-    /* .card-content a.text-link:hover {
+/* .card-content a.text-link:hover {
     border-bottom-color: var(--theme-accent);
     opacity: 0.8;
 } */
 
-    /* Animated accent bars */
-    .welcome-card::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0;
-        height: 100%;
-        width: 4px;
-        background: var(--theme-accent);
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
+/* Animated accent bars */
+.welcome-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 4px;
+    background: var(--theme-accent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
 
-    /* .welcome-card:hover::before {
+/* .welcome-card:hover::before {
     opacity: 1;
 } */
 
-    /* Glowing effect on hover */
-    .welcome-card::after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 100%;
-        height: 100%;
-        transform: translate(-50%, -50%);
-        background: radial-gradient(circle at center,
-                var(--theme-accent) 0%,
-                transparent 70%);
-        opacity: 0;
-        filter: blur(40px);
-        transition: opacity 0.3s ease;
-        pointer-events: none;
-    }
+/* Glowing effect on hover */
+.welcome-card::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle at center,
+        var(--theme-accent) 0%,
+        transparent 70%);
+    opacity: 0;
+    filter: blur(40px);
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
 
-    /* .welcome-card:hover::after {
+/* .welcome-card:hover::after {
     opacity: 0.1;
 } */
 
-    /* Persona-specific card colors - DISABLED */
-    /* body.persona-founder .welcome-card:hover {
+/* Persona-specific card colors - DISABLED */
+/* body.persona-founder .welcome-card:hover {
     border-color: #A0A453;
 }
 

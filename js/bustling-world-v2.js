@@ -124,11 +124,41 @@ class BustlingWorldV2 {
         this.setupEventListeners();
         this.setupMobileMenu();
 
+        // Setup hashchange listener to update navigation when URL hash changes
+        window.addEventListener('hashchange', () => {
+            this.setActiveNavigation();
+            this.updateNavigationIcons(true);
+        });
+
         // Update navigation icons after everything is initialized
         // This ensures the sword appears on the correct page
-        setTimeout(() => {
-            this.updateNavigationIcons();
-        }, 100);
+        // Check hash on initial load - wait for spa-navigation to process first
+        const checkHashAndUpdate = () => {
+            const hash = window.location.hash;
+            if (hash) {
+                // Extract page from hash
+                const hashParts = hash.substring(1).split('/');
+                const pageKey = hashParts[0];
+                
+                // Find and activate the correct nav link
+                const navLinks = document.querySelectorAll('.nav-link');
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.dataset.page === pageKey) {
+                        link.classList.add('active');
+                    }
+                });
+                
+                // Update icons after setting active state
+                this.updateNavigationIcons(true);
+            } else {
+                // No hash, just update icons normally
+                this.updateNavigationIcons();
+            }
+        };
+        
+        // Wait a bit longer to ensure spa-navigation has processed the hash
+        setTimeout(checkHashAndUpdate, 300);
     }
 
     /**
@@ -1168,14 +1198,27 @@ class BustlingWorldV2 {
      */
     setActiveNavigation() {
         const currentPath = window.location.pathname;
+        const hash = window.location.hash;
         const navLinks = document.querySelectorAll('.nav-link');
+
+        // Extract page from hash (e.g., #writing/user-manual -> writing)
+        let currentPage = null;
+        if (hash) {
+            const hashParts = hash.substring(1).split('/');
+            currentPage = hashParts[0]; // Get the first part (writing, bio, etc.)
+        }
 
         navLinks.forEach(link => {
             const href = link.getAttribute('href');
+            const dataPage = link.dataset.page;
             link.classList.remove('active');
 
-            // Check if this is the current page
-            if (currentPath === href ||
+            // Check if this is the current page based on hash
+            if (currentPage && dataPage === currentPage) {
+                link.classList.add('active');
+            }
+            // Fallback to pathname check
+            else if (currentPath === href ||
                 (currentPath === '/' && href === '/') ||
                 (currentPath === '/index.html' && href === '/') ||
                 (currentPath.includes(href) && href !== '/')) {
