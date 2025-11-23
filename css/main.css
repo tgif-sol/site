@@ -82,8 +82,8 @@
 
 html {
     overflow-x: hidden;
-    background-color: #1A1D20;
-    /* Prevent white flashes on Safari */
+    background-color: transparent;
+    /* Allow background images to show through */
 }
 
 body {
@@ -98,6 +98,7 @@ body {
 body::before {
     display: none;
 }
+
 /* body::after is used for persona background images, so don't hide it by default */
 
 /* ==================== Persona-Specific Backgrounds ==================== */
@@ -113,16 +114,21 @@ body.persona-dad::after {
     width: 100vw;
     height: 100vh;
     background-size: cover;
-    -webkit-background-size: cover; /* Safari support */
+    -webkit-background-size: cover;
+    /* Safari support */
     background-position: center center;
-    -webkit-background-position: center center; /* Safari support */
+    -webkit-background-position: center center;
+    /* Safari support */
     background-repeat: no-repeat;
-    -webkit-background-repeat: no-repeat; /* Safari support */
+    -webkit-background-repeat: no-repeat;
+    /* Safari support */
     opacity: 0.1;
-    z-index: -1;
+    z-index: 0;
     pointer-events: none;
-    display: block !important; /* Force display for Safari */
-    visibility: visible !important; /* Force visibility for Safari */
+    display: block !important;
+    /* Force display for Safari */
+    visibility: visible !important;
+    /* Force visibility for Safari */
     /* Safari Rendering Fixes */
     -webkit-transform: translateZ(0);
     transform: translateZ(0);
@@ -136,6 +142,7 @@ body.persona-dad::after {
 
 /* Safari-specific: Force opacity and display recalculation */
 @supports (-webkit-appearance: none) {
+
     body.persona-founder::after,
     body.persona-operator::after,
     body.persona-investor::after,
@@ -151,22 +158,26 @@ body.persona-dad::after {
 /* Persona-specific background images */
 body.persona-founder::after {
     background-image: url('/assets/founderbg1.png');
-    -webkit-background-image: url('/assets/founderbg1.png'); /* Safari support */
+    -webkit-background-image: url('/assets/founderbg1.png');
+    /* Safari support */
 }
 
 body.persona-operator::after {
     background-image: url('/assets/operatorbg1.png');
-    -webkit-background-image: url('/assets/operatorbg1.png'); /* Safari support */
+    -webkit-background-image: url('/assets/operatorbg1.png');
+    /* Safari support */
 }
 
 body.persona-investor::after {
     background-image: url('/assets/investorbg1.png');
-    -webkit-background-image: url('/assets/investorbg1.png'); /* Safari support */
+    -webkit-background-image: url('/assets/investorbg1.png');
+    /* Safari support */
 }
 
 body.persona-dad::after {
     background-image: url('/assets/dadbg1.jpg');
-    -webkit-background-image: url('/assets/dadbg1.jpg'); /* Safari support */
+    -webkit-background-image: url('/assets/dadbg1.jpg');
+    /* Safari support */
 }
 
 /* Hide background images on mobile */
@@ -621,9 +632,9 @@ body.persona-dad::after {
     width: 200%;
     height: 100%;
     background: linear-gradient(135deg,
-        transparent 30%,
-        var(--theme-accent) 50%,
-        transparent 70%);
+            transparent 30%,
+            var(--theme-accent) 50%,
+            transparent 70%);
     opacity: 0.05;
     transform: translateX(-100%);
     animation: shimmer 8s infinite;
@@ -637,9 +648,9 @@ body.persona-dad::after {
     width: 100%;
     height: 3px;
     background: linear-gradient(90deg,
-        transparent,
-        var(--theme-accent),
-        transparent);
+            transparent,
+            var(--theme-accent),
+            transparent);
     animation: scan 3s infinite;
 }
 
@@ -689,24 +700,6 @@ body.persona-dad::after {
 }
 
 
-/* Clean continuous gradient line */
-.bio-timeline::before {
-    content: '';
-    position: absolute;
-    left: 60px;
-    top: 50px;
-    bottom: 50px;
-    width: 1px;
-    background: linear-gradient(to bottom,
-        transparent 0%,
-        rgba(var(--theme-accent-rgb), 0.1) 5%,
-        rgba(var(--theme-accent-rgb), 0.2) 15%,
-        rgba(var(--theme-accent-rgb), 0.3) 50%,
-        rgba(var(--theme-accent-rgb), 0.2) 85%,
-        rgba(var(--theme-accent-rgb), 0.1) 95%,
-            transparent 100%);
-    z-index: 1;
-}
 
 .timeline-item {
     position: relative;
@@ -741,8 +734,8 @@ body.persona-dad::after {
     line-height: 1;
     color: var(--theme-accent);
     background: linear-gradient(135deg,
-        rgba(var(--theme-accent-rgb), 0.02) 0%,
-        rgba(var(--theme-accent-rgb), 0.05) 100%);
+            rgba(var(--theme-accent-rgb), 0.02) 0%,
+            rgba(var(--theme-accent-rgb), 0.05) 100%);
     border: 1px solid rgba(var(--theme-accent-rgb), 0.15);
     border-radius: 50%;
     z-index: 3;
@@ -775,8 +768,8 @@ body.persona-dad::after {
     width: 70%;
     height: 70%;
     background: radial-gradient(circle,
-        rgba(var(--theme-accent-rgb), 0.05) 0%,
-        transparent 70%);
+            rgba(var(--theme-accent-rgb), 0.05) 0%,
+            transparent 70%);
     border-radius: 50%;
     pointer-events: none;
 }
@@ -793,8 +786,8 @@ body.persona-dad .timeline-year {
     position: relative;
     padding: 1.5rem 2rem;
     background: linear-gradient(135deg,
-        rgba(var(--theme-accent-rgb), 0.02) 0%,
-        rgba(var(--theme-accent-rgb), 0.04) 100%);
+            rgba(var(--theme-accent-rgb), 0.02) 0%,
+            rgba(var(--theme-accent-rgb), 0.04) 100%);
     border: 1px solid rgba(var(--theme-accent-rgb), 0.1);
     border-left: 2px solid rgba(var(--theme-accent-rgb), 0.3);
     border-radius: 8px;
@@ -806,8 +799,8 @@ body.persona-dad .timeline-year {
 body.persona-investor .timeline-content,
 body.persona-dad .timeline-content {
     background: linear-gradient(135deg,
-        rgba(var(--theme-accent-rgb), 0.03) 0%,
-        rgba(var(--theme-accent-rgb), 0.06) 100%);
+            rgba(var(--theme-accent-rgb), 0.03) 0%,
+            rgba(var(--theme-accent-rgb), 0.06) 100%);
     border: 1px solid rgba(var(--theme-accent-rgb), 0.15);
     border-left: 2px solid rgba(var(--theme-accent-rgb), 0.4);
 }
@@ -1548,8 +1541,8 @@ body.persona-investor .persona-profile-img[src*="investor"] {
     margin: 0 0 24px 0;
     padding: 20px 24px;
     background: linear-gradient(135deg,
-        rgba(255, 255, 255, 0.02) 0%,
-        rgba(255, 255, 255, 0.04) 100%);
+            rgba(255, 255, 255, 0.02) 0%,
+            rgba(255, 255, 255, 0.04) 100%);
     border-left: 3px solid rgba(var(--theme-accent-rgb), 0.5);
     border-radius: 8px;
     position: relative;
@@ -1580,8 +1573,8 @@ body.persona-investor .persona-profile-img[src*="investor"] {
 body.persona-investor .question-item,
 body.persona-dad .question-item {
     background: linear-gradient(135deg,
-        rgba(0, 0, 0, 0.02) 0%,
-        rgba(0, 0, 0, 0.04) 100%);
+            rgba(0, 0, 0, 0.02) 0%,
+            rgba(0, 0, 0, 0.04) 100%);
     border-left: 3px solid rgba(var(--theme-accent-rgb), 0.5);
     border-radius: 8px;
 }
@@ -2582,7 +2575,30 @@ body.persona-dad .nav-list a.active {
     .character-card[data-persona="operator"] .character-photo,
     .character-card[data-persona="investor"] .character-photo,
     .character-card[data-persona="dad"] .character-photo {
-        transform: scale(1.1);
+        transform: scale(1.25);
+        object-fit: cover !important;
+    }
+
+    /* Unified Mobile Alignment - Founder (Move Down) */
+    .character-card[data-persona="founder"] .character-photo {
+        object-position: center top !important;
+        transform: scale(1.25) translateY(5%) !important;
+        object-fit: cover !important;
+    }
+
+    /* Unified Mobile Alignment - Dad & Investor (Move Up) */
+    .character-card[data-persona="dad"] .character-photo,
+    .character-card[data-persona="investor"] .character-photo {
+        object-position: center 10% !important;
+        transform: scale(1.25) !important;
+        object-fit: cover !important;
+    }
+
+    /* Unified Mobile Alignment - Operator Photo (Move Down slightly relative to video) */
+    .character-card[data-persona="operator"] .character-photo {
+        object-position: center 10% !important;
+        transform: scale(1.25) !important;
+        object-fit: cover !important;
     }
 
     /* Info section for main card - natural height, no scroll */
@@ -2766,6 +2782,11 @@ body.persona-dad .nav-list a.active {
         height: 100%;
         z-index: 2;
         transition: opacity 0.3s ease;
+        /* Override default transform and object-position for mobile */
+        transform: none !important;
+        -webkit-transform: none !important;
+        object-position: center center !important;
+        -webkit-object-position: center center !important;
     }
 
     /* Video filter and positioning for specific personas on mobile */
@@ -2775,21 +2796,27 @@ body.persona-dad .nav-list a.active {
         transition: opacity 0.3s ease;
     }
 
+    /* Founder video - move down on mobile using transform */
+    .character-card[data-persona="founder"] .character-video {
+        object-position: center top !important;
+        -webkit-object-position: center top !important;
+        transform: scale(1.15) translateY(5%) !important;
+        -webkit-transform: scale(1.15) translateY(5%) !important;
+    }
+
+    /* Dad and investor videos - move up on mobile using transform */
     .character-card[data-persona="dad"] .character-video {
-        object-position: center 30%;
-        /* Moved up to reduce black space at top */
-        -webkit-object-position: center 30%;
-        /* Safari support */
-        transform: scale(1.0);
-        -webkit-transform: scale(1.0);
-        /* Safari support */
+        object-position: center top !important;
+        -webkit-object-position: center top !important;
+        transform: scale(1.15) translateY(-5%) !important;
+        -webkit-transform: scale(1.15) translateY(-5%) !important;
     }
 
     .character-card[data-persona="investor"] .character-video {
-        object-position: center 25%;
-        /* Moved up to reduce black space at top */
-        -webkit-object-position: center 25%;
-        /* Safari support */
+        object-position: center top !important;
+        -webkit-object-position: center top !important;
+        transform: scale(1.15) translateY(-5%) !important;
+        -webkit-transform: scale(1.15) translateY(-5%) !important;
     }
 
     /* When card is active and playing, show video and hide photo */
@@ -2802,6 +2829,34 @@ body.persona-dad .nav-list a.active {
         display: block !important;
         pointer-events: auto !important;
         /* Enable clicks on mobile */
+        /* Override default transform for mobile */
+        transform: none !important;
+        -webkit-transform: none !important;
+        /* Remove mask when playing */
+        -webkit-mask-image: none !important;
+        mask-image: none !important;
+    }
+
+    /* Maintain object-position when video is playing on mobile */
+    .character-card[data-persona="founder"].video-playing .character-video {
+        object-position: center 35% !important;
+        -webkit-object-position: center 35% !important;
+        transform: none !important;
+        -webkit-transform: none !important;
+    }
+
+    .character-card[data-persona="dad"].video-playing .character-video {
+        object-position: center 20% !important;
+        -webkit-object-position: center 20% !important;
+        transform: scale(1.0) !important;
+        -webkit-transform: scale(1.0) !important;
+    }
+
+    .character-card[data-persona="investor"].video-playing .character-video {
+        object-position: center 15% !important;
+        -webkit-object-position: center 15% !important;
+        transform: none !important;
+        -webkit-transform: none !important;
     }
 
     .character-card[data-persona="founder"].video-playing .character-photo,
@@ -3000,6 +3055,14 @@ body.persona-dad .nav-list a.active {
         justify-content: space-between;
         padding: 5px var(--mobile-padding) 10px;
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        /* Don't block hamburger clicks */
+        pointer-events: none;
+    }
+
+    /* Allow clicks on mobile header content but not on the header itself */
+    .mobile-header>*,
+    .mobile-nav-header>* {
+        pointer-events: auto;
     }
 
     /* Adjust border for light themes on mobile */
@@ -3022,7 +3085,7 @@ body.persona-dad .nav-list a.active {
         background: transparent !important;
         border: none !important;
         cursor: pointer !important;
-        z-index: 10006 !important;
+        z-index: 10007 !important;
         position: fixed !important;
         top: 18px !important;
         left: 15px !important;
@@ -3036,8 +3099,10 @@ body.persona-dad .nav-list a.active {
         margin: 0 !important;
         /* Ensure hamburger is always visible even when container has opacity: 0 */
         isolation: isolate;
-        /* Ensure clicks work - hamburger should be above menu-overlay */
+        /* Ensure clicks work - hamburger should be above all other elements */
         pointer-events: auto !important;
+        /* Prevent any element from blocking clicks */
+        touch-action: manipulation !important;
     }
 
     /* Hover/Active state for hamburger */
@@ -4052,9 +4117,9 @@ body.persona-dad .nav-list a.active {
     right: 0;
     bottom: 0;
     background: linear-gradient(to bottom,
-        rgba(0, 0, 0, 0) 0%,
-        rgba(0, 0, 0, 0.3) 70%,
-        rgba(0, 0, 0, 0.7) 100%);
+            rgba(0, 0, 0, 0) 0%,
+            rgba(0, 0, 0, 0.3) 70%,
+            rgba(0, 0, 0, 0.7) 100%);
     pointer-events: none;
 }
 
@@ -4445,9 +4510,9 @@ body.persona-dad .nav-list a.active {
     right: 11px;
     bottom: 11px;
     background: linear-gradient(180deg,
-        rgba(0, 0, 0, 0) 0%,
-        rgba(0, 0, 0, 0.1) 60%,
-        rgba(0, 0, 0, 0.6) 100%);
+            rgba(0, 0, 0, 0) 0%,
+            rgba(0, 0, 0, 0.1) 60%,
+            rgba(0, 0, 0, 0.6) 100%);
     z-index: 1;
 }
 
@@ -4634,9 +4699,9 @@ body.persona-dad .role-card::before {
     position: absolute;
     inset: -1px;
     background: linear-gradient(90deg,
-        transparent 0%,
-        rgba(var(--theme-rgb), 0.25) 50%,
-        transparent 100%);
+            transparent 0%,
+            rgba(var(--theme-rgb), 0.25) 50%,
+            transparent 100%);
     border-radius: 20px;
     opacity: 0;
     z-index: -1;
@@ -5600,6 +5665,11 @@ body::after {
         height: 100%;
         z-index: 2;
         transition: opacity 0.3s ease;
+        /* Override default transform and object-position for mobile */
+        transform: none !important;
+        -webkit-transform: none !important;
+        object-position: center center !important;
+        -webkit-object-position: center center !important;
     }
 
     /* Video filter and positioning for specific personas on mobile */
@@ -5609,21 +5679,23 @@ body::after {
         transition: opacity 0.3s ease;
     }
 
-    .character-card[data-persona="dad"] .character-video {
-        object-position: center 30%;
-        /* Moved up to reduce black space at top */
-        -webkit-object-position: center 30%;
-        /* Safari support */
-        transform: scale(1.0);
-        -webkit-transform: scale(1.0);
-        /* Safari support */
+    /* Unified Mobile Alignment - Videos */
+    /* Founder - Move Down using translateY */
+    .character-card[data-persona="founder"] .character-video {
+        object-position: center top !important;
+        -webkit-object-position: center top !important;
+        transform: scale(1.25) translateY(5%) !important;
+        -webkit-transform: scale(1.25) translateY(5%) !important;
     }
 
-    .character-card[data-persona="investor"] .character-video {
-        object-position: center 25%;
-        /* Moved up to reduce black space at top */
-        -webkit-object-position: center 25%;
-        /* Safari support */
+    /* Dad, Investor & Operator - Move Up using object-position */
+    .character-card[data-persona="dad"] .character-video,
+    .character-card[data-persona="investor"] .character-video,
+    .character-card[data-persona="operator"] .character-video {
+        object-position: center 25% !important;
+        -webkit-object-position: center 25% !important;
+        transform: scale(1.25) !important;
+        -webkit-transform: scale(1.25) !important;
     }
 
     /* When card is active and playing, show video and hide photo */
@@ -5636,6 +5708,29 @@ body::after {
         display: block !important;
         pointer-events: auto !important;
         /* Enable clicks on mobile */
+        /* Override default transform for mobile */
+        transform: none !important;
+        -webkit-transform: none !important;
+        /* Remove mask when playing */
+        -webkit-mask-image: none !important;
+        mask-image: none !important;
+    }
+
+    /* Maintain alignment when video is playing */
+    .character-card[data-persona="founder"].video-playing .character-video {
+        transform: scale(1.25) translateY(5%) !important;
+        -webkit-transform: scale(1.25) translateY(5%) !important;
+        object-position: center top !important;
+        -webkit-object-position: center top !important;
+    }
+
+    .character-card[data-persona="dad"].video-playing .character-video,
+    .character-card[data-persona="investor"].video-playing .character-video,
+    .character-card[data-persona="operator"].video-playing .character-video {
+        transform: scale(1.25) !important;
+        -webkit-transform: scale(1.25) !important;
+        object-position: center 25% !important;
+        -webkit-object-position: center 25% !important;
     }
 
     .character-card[data-persona="founder"].video-playing .character-photo,
@@ -5822,6 +5917,14 @@ body::after {
         padding: 5px var(--mobile-padding) 10px;
         /* More padding at bottom */
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        /* Don't block hamburger clicks */
+        pointer-events: none;
+    }
+
+    /* Allow clicks on mobile header content but not on the header itself */
+    .mobile-header>*,
+    .mobile-nav-header>* {
+        pointer-events: auto;
     }
 
     /* Adjust border for light themes on mobile */
@@ -5844,7 +5947,7 @@ body::after {
         background: transparent !important;
         border: none !important;
         cursor: pointer !important;
-        z-index: 10006 !important;
+        z-index: 10007 !important;
         position: fixed !important;
         top: 18px !important;
         left: 15px !important;
@@ -5858,8 +5961,10 @@ body::after {
         margin: 0 !important;
         /* Ensure hamburger is always visible even when container has opacity: 0 */
         isolation: isolate;
-        /* Ensure clicks work - hamburger should be above menu-overlay */
+        /* Ensure clicks work - hamburger should be above all other elements */
         pointer-events: auto !important;
+        /* Prevent any element from blocking clicks */
+        touch-action: manipulation !important;
     }
 
     /* Container stays fixed, spans are positioned absolutely inside */
@@ -5882,8 +5987,8 @@ body::after {
         height: 3px !important;
         width: 24px;
         background: linear-gradient(90deg,
-            var(--theme-accent, #fff) 0%,
-            var(--theme-text, #fff) 100%);
+                var(--theme-accent, #fff) 0%,
+                var(--theme-text, #fff) 100%);
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         transform-origin: center center;
         border-radius: 3px;
@@ -7020,8 +7125,8 @@ body::after {
 
     .welcome-card {
         background: linear-gradient(135deg,
-            rgba(255, 255, 255, 0.05) 0%,
-            rgba(255, 255, 255, 0.02) 100%);
+                rgba(255, 255, 255, 0.05) 0%,
+                rgba(255, 255, 255, 0.02) 100%);
         border: 2px solid rgba(255, 255, 255, 0.1);
         border-radius: 15px;
         padding: 2rem 3rem;
@@ -7029,7 +7134,7 @@ body::after {
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         backdrop-filter: blur(10px);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
         overflow: hidden;
         width: 100%;
         display: flex;
@@ -7045,93 +7150,93 @@ body::after {
         border-color: var(--theme-accent);
     } */
 
-/* Roman numeral indicators */
-.card-number {
-    position: relative;
-    margin-right: 2.5rem;
-    font-family: 'Cinzel', 'Playfair Display', serif;
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: var(--theme-accent);
-    opacity: 0.3;
-    transition: all 0.3s ease;
-    flex-shrink: 0;
-}
+    /* Roman numeral indicators */
+    .card-number {
+        position: relative;
+        margin-right: 2.5rem;
+        font-family: 'Cinzel', 'Playfair Display', serif;
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--theme-accent);
+        opacity: 0.3;
+        transition: all 0.3s ease;
+        flex-shrink: 0;
+    }
 
-/* .welcome-card:hover .card-number {
+    /* .welcome-card:hover .card-number {
     opacity: 0.8;
     transform: scale(1.1);
 } */
 
-/* Card content styling */
-.card-content {
-    position: relative;
-    z-index: 2;
-    flex: 1;
-}
+    /* Card content styling */
+    .card-content {
+        position: relative;
+        z-index: 2;
+        flex: 1;
+    }
 
-.card-content p {
-    font-size: 1.1rem;
-    line-height: 1.8;
-    margin: 0;
-    color: var(--theme-text);
-    font-family: var(--font-body);
-}
+    .card-content p {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        margin: 0;
+        color: var(--theme-text);
+        font-family: var(--font-body);
+    }
 
-.card-content a.text-link {
-    color: var(--theme-accent);
-    text-decoration: none;
-    border-bottom: 1px solid transparent;
-    transition: all 0.3s ease;
-    font-weight: 500;
-}
+    .card-content a.text-link {
+        color: var(--theme-accent);
+        text-decoration: none;
+        border-bottom: 1px solid transparent;
+        transition: all 0.3s ease;
+        font-weight: 500;
+    }
 
-/* .card-content a.text-link:hover {
+    /* .card-content a.text-link:hover {
     border-bottom-color: var(--theme-accent);
     opacity: 0.8;
 } */
 
-/* Animated accent bars */
-.welcome-card::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 100%;
-    width: 4px;
-    background: var(--theme-accent);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
+    /* Animated accent bars */
+    .welcome-card::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 4px;
+        background: var(--theme-accent);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
 
-/* .welcome-card:hover::before {
+    /* .welcome-card:hover::before {
     opacity: 1;
 } */
 
-/* Glowing effect on hover */
-.welcome-card::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 100%;
-    height: 100%;
-    transform: translate(-50%, -50%);
-    background: radial-gradient(circle at center,
-        var(--theme-accent) 0%,
-        transparent 70%);
-    opacity: 0;
-    filter: blur(40px);
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-}
+    /* Glowing effect on hover */
+    .welcome-card::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 100%;
+        height: 100%;
+        transform: translate(-50%, -50%);
+        background: radial-gradient(circle at center,
+                var(--theme-accent) 0%,
+                transparent 70%);
+        opacity: 0;
+        filter: blur(40px);
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+    }
 
-/* .welcome-card:hover::after {
+    /* .welcome-card:hover::after {
     opacity: 0.1;
 } */
 
-/* Persona-specific card colors - DISABLED */
-/* body.persona-founder .welcome-card:hover {
+    /* Persona-specific card colors - DISABLED */
+    /* body.persona-founder .welcome-card:hover {
     border-color: #A0A453;
 }
 
