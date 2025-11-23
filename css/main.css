@@ -95,16 +95,82 @@ body::after {
     display: none;
 }
 
-/* Same for personas - remove body backgrounds */
-body.persona-founder::before,
-body.persona-operator::before,
-body.persona-investor::before,
-body.persona-dad::before,
-body.persona-founder::after,
-body.persona-operator::after,
-body.persona-investor::after,
+/* Persona-specific backgrounds */
+/* Background images for personas with opacity */
+body.persona-founder::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/assets/founderbg1.png');
+    background-size: cover;
+    background-attachment: fixed;
+    will-change: transform;
+    background-position: center center;
+    background-repeat: no-repeat;
+    opacity: 0.1;
+    z-index: -1;
+    pointer-events: none;
+    display: block;
+}
+
+body.persona-operator::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/assets/operatorbg1.png');
+    background-size: cover;
+    background-attachment: fixed;
+    will-change: transform;
+    background-position: center center;
+    background-repeat: no-repeat;
+    opacity: 0.1;
+    z-index: -1;
+    pointer-events: none;
+    display: block;
+}
+
+body.persona-investor::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/assets/investorbg1.png');
+    background-size: cover;
+    background-attachment: fixed;
+    will-change: transform;
+    background-position: center center;
+    background-repeat: no-repeat;
+    opacity: 0.1;
+    z-index: -1;
+    pointer-events: none;
+    display: block;
+}
+
 body.persona-dad::after {
-    display: none;
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/assets/dadbg1.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+    will-change: transform;
+    background-position: center center;
+    background-repeat: no-repeat;
+    opacity: 0.1;
+    z-index: -1;
+    pointer-events: none;
+    display: block;
 }
 
 .hidden {
@@ -463,16 +529,29 @@ body.persona-dad::after {
     pointer-events: none; /* Allow clicks to pass through on desktop */
 }
 
+.character-card[data-persona="investor"]:hover .character-video {
+    opacity: 1;
+    visibility: visible;
+    filter: brightness(1.05) contrast(1.05) saturate(1.05);
+    pointer-events: none; /* Allow clicks to pass through on desktop */
+}
+
 /* Adjust dad video position */
 .character-card[data-persona="dad"] .character-video {
-    object-position: center 10%;
-    transform: translateY(-15%);
+    object-position: center 45%;
+    transform: scale(1.0);
+}
+
+/* Adjust investor video position */
+.character-card[data-persona="investor"] .character-video {
+    object-position: center center;
 }
 
 /* Hide image when video is visible - only for cards with video */
 .character-card[data-persona="founder"]:hover .character-photo,
 .character-card[data-persona="dad"]:hover .character-photo,
-.character-card[data-persona="operator"]:hover .character-photo {
+.character-card[data-persona="operator"]:hover .character-photo,
+.character-card[data-persona="investor"]:hover .character-photo {
     opacity: 0;
     visibility: hidden;
 }
@@ -1006,6 +1085,7 @@ body.persona-dad .nav-link.active {
     align-items: center;
     justify-content: center;
     color: var(--theme-text, #D8D8D8);
+    position: relative;
 }
 
 .nav-text {
@@ -2366,8 +2446,8 @@ body.persona-dad .nav-list a.active {
     .swipe-indicators {
         display: flex;
         justify-content: center;
-        gap: 8px;
-        padding: 2px 5px 10px 5px;
+        gap: 6px;
+        padding: 2px 5px 5px 5px;
         margin-bottom: 0;
     }
 
@@ -2486,7 +2566,8 @@ body.persona-dad .nav-list a.active {
     /* Initially hide video for ALL cards with video including operator */
     .character-card[data-persona="founder"] .character-video,
     .character-card[data-persona="operator"] .character-video,
-    .character-card[data-persona="dad"] .character-video {
+    .character-card[data-persona="dad"] .character-video,
+    .character-card[data-persona="investor"] .character-video {
         opacity: 0;
         visibility: hidden;
         display: none;
@@ -2503,14 +2584,22 @@ body.persona-dad .nav-list a.active {
     .character-card[data-persona="dad"] .character-video {
         filter: brightness(1.05) contrast(1.05) saturate(1.05);
         transition: opacity 0.3s ease;
-        object-position: center 20%;
-        transform: scale(1.2) translateY(-5%);
+        object-position: center 45%;
+        transform: scale(1.0);
+    }
+
+    /* Add filter and position for investor video on mobile */
+    .character-card[data-persona="investor"] .character-video {
+        filter: brightness(1.05) contrast(1.05) saturate(1.05);
+        transition: opacity 0.3s ease;
+        object-position: center center;
     }
 
     /* When card is active and playing, show video and hide photo */
     .character-card[data-persona="founder"].video-playing .character-video,
     .character-card[data-persona="operator"].video-playing .character-video,
-    .character-card[data-persona="dad"].video-playing .character-video {
+    .character-card[data-persona="dad"].video-playing .character-video,
+    .character-card[data-persona="investor"].video-playing .character-video {
         opacity: 1 !important;
         visibility: visible !important;
         display: block !important;
@@ -2519,7 +2608,8 @@ body.persona-dad .nav-list a.active {
 
     .character-card[data-persona="founder"].video-playing .character-photo,
     .character-card[data-persona="operator"].video-playing .character-photo,
-    .character-card[data-persona="dad"].video-playing .character-photo {
+    .character-card[data-persona="dad"].video-playing .character-photo,
+    .character-card[data-persona="investor"].video-playing .character-photo {
         opacity: 0 !important;
         display: none !important;
     }
@@ -3977,23 +4067,18 @@ body.persona-dad .nav-list a.active {
     image-rendering: pixelated;
     image-rendering: -moz-crisp-edges;
     image-rendering: crisp-edges;
-    animation: coinFloat 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 3px rgba(255, 215, 0, 0.6));
+    animation: coinBounce 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
-@keyframes coinFloat {
+@keyframes coinBounce {
     0%, 100% {
         filter: drop-shadow(0 0 3px rgba(255, 215, 0, 0.4));
-        transform: translateY(0) rotateY(0deg);
-    }
-    25% {
-        transform: translateY(-2px) rotateY(90deg);
+        transform: translateY(0);
     }
     50% {
-        filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.9));
-        transform: translateY(-3px) rotateY(180deg);
-    }
-    75% {
-        transform: translateY(-2px) rotateY(270deg);
+        filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.7));
+        transform: translateY(-5px);
     }
 }
 
@@ -5198,7 +5283,8 @@ body::after {
     /* Initially hide video for ALL cards with video including operator */
     .character-card[data-persona="founder"] .character-video,
     .character-card[data-persona="operator"] .character-video,
-    .character-card[data-persona="dad"] .character-video {
+    .character-card[data-persona="dad"] .character-video,
+    .character-card[data-persona="investor"] .character-video {
         opacity: 0;
         visibility: hidden;
         display: none;
@@ -5215,14 +5301,22 @@ body::after {
     .character-card[data-persona="dad"] .character-video {
         filter: brightness(1.05) contrast(1.05) saturate(1.05);
         transition: opacity 0.3s ease;
-        object-position: center 20%;  /* Move video down */
-        transform: scale(1.2) translateY(-5%);  /* Zoom in 20% and move down slightly */
+        object-position: center 45%;  /* Show more of video including steak at bottom */
+        transform: scale(1.0);  /* Fill the container completely */
+    }
+
+    /* Add filter and position for investor video on mobile */
+    .character-card[data-persona="investor"] .character-video {
+        filter: brightness(1.05) contrast(1.05) saturate(1.05);
+        transition: opacity 0.3s ease;
+        object-position: center center;
     }
 
     /* When card is active and playing, show video and hide photo */
     .character-card[data-persona="founder"].video-playing .character-video,
     .character-card[data-persona="operator"].video-playing .character-video,
-    .character-card[data-persona="dad"].video-playing .character-video {
+    .character-card[data-persona="dad"].video-playing .character-video,
+    .character-card[data-persona="investor"].video-playing .character-video {
         opacity: 1 !important;
         visibility: visible !important;
         display: block !important;
@@ -5230,7 +5324,9 @@ body::after {
     }
 
     .character-card[data-persona="founder"].video-playing .character-photo,
-    .character-card[data-persona="dad"].video-playing .character-photo {
+    .character-card[data-persona="operator"].video-playing .character-photo,
+    .character-card[data-persona="dad"].video-playing .character-photo,
+    .character-card[data-persona="investor"].video-playing .character-photo {
         opacity: 0 !important; /* Hide photo when video is playing */
         display: none !important;
     }

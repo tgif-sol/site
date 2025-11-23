@@ -168,8 +168,8 @@
                     }
 
                     // For cards with video, toggle playback
-                    if (card.dataset.persona === 'founder' || card.dataset.persona === 'dad' || card.dataset.persona === 'operator') {
-                        this.toggleFounderVideo(card);  // Works for founder, dad, and operator
+                    if (card.dataset.persona === 'founder' || card.dataset.persona === 'dad' || card.dataset.persona === 'operator' || card.dataset.persona === 'investor') {
+                        this.toggleFounderVideo(card);  // Works for founder, dad, operator, and investor
                     }
                 });
 
@@ -338,7 +338,7 @@
             if (index === this.currentIndex) {
                 // If clicking the same card that's already active
                 const currentCard = this.cards[index];
-                if (currentCard.dataset.persona === 'founder' || currentCard.dataset.persona === 'dad' || currentCard.dataset.persona === 'operator') {
+                if (currentCard.dataset.persona === 'founder' || currentCard.dataset.persona === 'dad' || currentCard.dataset.persona === 'operator' || currentCard.dataset.persona === 'investor') {
                     // Toggle video playback for cards with video
                     this.toggleFounderVideo(currentCard);
                 }
@@ -351,7 +351,7 @@
                 card.style.display = 'none';
 
                 // Stop video and remove playing class
-                if (card.dataset.persona === 'founder' || card.dataset.persona === 'dad' || card.dataset.persona === 'operator') {
+                if (card.dataset.persona === 'founder' || card.dataset.persona === 'dad' || card.dataset.persona === 'operator' || card.dataset.persona === 'investor') {
                     card.classList.remove('video-playing');
                     const video = card.querySelector('.character-video');
                     if (video) {
@@ -429,24 +429,32 @@
                 }
             } else {
                 // Start video - only load when needed
-                if (!video.src || video.readyState === 0) {
-                    // Load from data-src if available, otherwise use src
-                    const videoSrc = video.getAttribute('data-src') || video.getAttribute('src');
-                    if (videoSrc && !video.src) {
+                const videoSrc = video.getAttribute('data-src') || video.getAttribute('src');
+                if (videoSrc) {
+                    // Always set src from data-src if it exists
+                    if (video.getAttribute('data-src') && video.src !== videoSrc) {
                         video.src = videoSrc;
                     }
-                    video.load();
+                    
+                    // Wait for video to be ready before playing
+                    if (video.readyState === 0) {
+                        video.load();
+                        video.addEventListener('loadeddata', () => {
+                            card.classList.add('video-playing');
+                            video.play().catch((e) => {
+                                console.log('Video play failed:', e);
+                                card.classList.remove('video-playing');
+                            });
+                        }, { once: true });
+                    } else {
+                        // Video already loaded, play immediately
+                        card.classList.add('video-playing');
+                        video.play().catch((e) => {
+                            console.log('Video play failed:', e);
+                            card.classList.remove('video-playing');
+                        });
+                    }
                 }
-
-                // Start video with a small delay for reliability
-                setTimeout(() => {
-                    card.classList.add('video-playing');
-
-                    video.play().catch((e) => {
-                        console.log('Video play failed:', e);
-                        card.classList.remove('video-playing');
-                    });
-                }, 50);
             }
         }
 

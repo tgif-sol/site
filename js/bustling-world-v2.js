@@ -159,16 +159,36 @@ class BustlingWorldV2 {
             const persona = card.dataset.persona;
 
             // Setup video for cards with video
-            if (card.dataset.persona === 'founder' || card.dataset.persona === 'dad' || card.dataset.persona === 'operator') {
+            if (card.dataset.persona === 'founder' || card.dataset.persona === 'dad' || card.dataset.persona === 'operator' || card.dataset.persona === 'investor') {
                 const video = card.querySelector('.character-video');
                 if (video) {
+                    console.log(`[setupCharacterSelection] Setting up video for ${persona}`, video);
                     // Ensure video is muted
                     video.muted = true;
-                    // Enable auto-loop for founder and operator, handle dad manually
-                    video.loop = card.dataset.persona === 'founder' || card.dataset.persona === 'operator';
-
+                    
+                    // Handle operator video - loop back to start at 4 seconds
+                    if (card.dataset.persona === 'operator') {
+                        video.loop = false; // Disable native loop
+                        video.addEventListener('timeupdate', () => {
+                            if (video.currentTime >= 4) {
+                                video.currentTime = 0; // Loop back to start
+                                // No pause - keep playing
+                            }
+                        });
+                    }
+                    // Handle investor video - loop back to start at 4 seconds
+                    else if (card.dataset.persona === 'investor') {
+                        video.loop = false; // Disable native loop
+                        video.addEventListener('timeupdate', () => {
+                            if (video.currentTime >= 4) {
+                                video.currentTime = 0; // Loop back to start
+                                // No pause - keep playing
+                            }
+                        });
+                    }
                     // Handle dad video - loop back to start at 6 seconds
-                    if (card.dataset.persona === 'dad') {
+                    else if (card.dataset.persona === 'dad') {
+                        video.loop = false; // Disable native loop
                         video.addEventListener('timeupdate', () => {
                             if (video.currentTime >= 6) {
                                 video.currentTime = 0; // Loop back to start
@@ -176,22 +196,38 @@ class BustlingWorldV2 {
                             }
                         });
                     }
+                    // Enable auto-loop for founder only
+                    else {
+                        video.loop = true;
+                    }
 
                     // DESKTOP behavior
                     if (!isMobile) {
                         // Hover to play video - only load when needed
                         card.addEventListener('mouseenter', () => {
-                            // Only load video source when first hovered
-                            if (!video.src || video.readyState === 0) {
-                                // Load from data-src if available, otherwise use src
-                                const videoSrc = video.getAttribute('data-src') || video.getAttribute('src');
-                                if (videoSrc && !video.src) {
+                            // Load from data-src if available, otherwise use src
+                            const videoSrc = video.getAttribute('data-src') || video.getAttribute('src');
+                            if (videoSrc) {
+                                // Always set src from data-src if it exists
+                                if (video.getAttribute('data-src') && video.src !== videoSrc) {
                                     video.src = videoSrc;
                                 }
+                                
+                                // Wait for video to be ready before playing
+                                if (video.readyState === 0) {
+                                    video.load();
+                                    video.addEventListener('loadeddata', () => {
+                                        video.play().catch(e => {
+                                            console.log('Video play failed:', e);
+                                        });
+                                    }, { once: true });
+                                } else {
+                                    // Video already loaded, play immediately
+                                    video.play().catch(e => {
+                                        console.log('Video play failed:', e);
+                                    });
+                                }
                             }
-                            video.play().catch(e => {
-                                console.log('Video play failed:', e);
-                            });
                         });
 
                         card.addEventListener('mouseleave', () => {
@@ -217,9 +253,27 @@ class BustlingWorldV2 {
                                 video.pause();
                                 video.currentTime = 0;
                             } else {
-                                // Switch to video
-                                card.classList.add('video-playing');
-                                video.play().catch(err => console.log('Video play failed:', err));
+                                // Switch to video - ensure video is loaded
+                                const videoSrc = video.getAttribute('data-src') || video.getAttribute('src');
+                                if (videoSrc) {
+                                    // Always set src from data-src if it exists
+                                    if (video.getAttribute('data-src') && video.src !== videoSrc) {
+                                        video.src = videoSrc;
+                                    }
+                                    
+                                    // Wait for video to be ready before playing
+                                    if (video.readyState === 0) {
+                                        video.load();
+                                        video.addEventListener('loadeddata', () => {
+                                            card.classList.add('video-playing');
+                                            video.play().catch(err => console.log('Video play failed:', err));
+                                        }, { once: true });
+                                    } else {
+                                        // Video already loaded, play immediately
+                                        card.classList.add('video-playing');
+                                        video.play().catch(err => console.log('Video play failed:', err));
+                                    }
+                                }
                             }
                         };
 
