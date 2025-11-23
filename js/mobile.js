@@ -396,14 +396,14 @@
             // Ensure video is muted
             video.muted = true;
             
-            // Setup founder video to loop between 2-5 seconds
+            // Setup founder video to loop between 2-6 seconds
             if (card.dataset.persona === 'founder' && !video.hasAttribute('data-listener-added')) {
                 video.loop = false; // Disable native loop
                 video.setAttribute('data-listener-added', 'true');
                 video.addEventListener('timeupdate', () => {
                     if (video.currentTime < 2) {
                         video.currentTime = 2; // Start from 2 seconds
-                    } else if (video.currentTime >= 5) {
+                    } else if (video.currentTime >= 6) {
                         video.currentTime = 2; // Loop back to 2 seconds
                     }
                 });

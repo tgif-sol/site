@@ -82,6 +82,8 @@
 
 html {
     overflow-x: hidden;
+    background-color: #1A1D20;
+    /* Prevent white flashes on Safari */
 }
 
 body {
@@ -108,18 +110,21 @@ body.persona-dad::after {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     background-size: cover;
-    /* background-attachment: fixed; - Removed for Safari compatibility */
-    /* will-change: transform; - Removed for Safari compatibility */
     background-position: center center;
     background-repeat: no-repeat;
     opacity: 0.1;
-    /* Direct value for Safari compatibility */
     z-index: -1;
     pointer-events: none;
     display: block;
+    /* Safari Rendering Fixes */
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    perspective: 1000px;
 }
 
 /* Safari-specific: Force opacity recalculation */
@@ -152,6 +157,7 @@ body.persona-dad::after {
 
 /* Hide background images on mobile */
 @media (max-width: 768px) {
+
     body.persona-founder::after,
     body.persona-operator::after,
     body.persona-investor::after,
@@ -196,8 +202,8 @@ body.persona-dad::after {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     background-image: url('/assets/bg3.png');
     background-size: cover;
     /* Optimize background image loading */
@@ -208,6 +214,12 @@ body.persona-dad::after {
     opacity: 0.5;
     z-index: -1;
     pointer-events: none;
+    /* Safari Rendering Fixes */
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    perspective: 1000px;
 }
 
 /* ==================== Selection Modal ==================== */

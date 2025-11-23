@@ -166,8 +166,22 @@ class BustlingWorldV2 {
                     // Ensure video is muted
                     video.muted = true;
                     
+                    // Handle founder video - loop between 2-6 seconds
+                    if (card.dataset.persona === 'founder') {
+                        video.loop = false; // Disable native loop
+                        video.addEventListener('loadeddata', () => {
+                            video.currentTime = 2; // Start from 2 seconds
+                        }, { once: true });
+                        video.addEventListener('timeupdate', () => {
+                            if (video.currentTime < 2) {
+                                video.currentTime = 2; // Start from 2 seconds
+                            } else if (video.currentTime >= 6) {
+                                video.currentTime = 2; // Loop back to 2 seconds
+                            }
+                        });
+                    }
                     // Handle operator video - loop back to start at 4 seconds
-                    if (card.dataset.persona === 'operator') {
+                    else if (card.dataset.persona === 'operator') {
                         video.loop = false; // Disable native loop
                         video.addEventListener('timeupdate', () => {
                             if (video.currentTime >= 4) {
@@ -196,10 +210,6 @@ class BustlingWorldV2 {
                             }
                         });
                     }
-                    // Enable auto-loop for founder only
-                    else {
-                        video.loop = true;
-                    }
 
                     // DESKTOP behavior
                     if (!isMobile) {
@@ -217,12 +227,19 @@ class BustlingWorldV2 {
                                 if (video.readyState === 0) {
                                     video.load();
                                     video.addEventListener('loadeddata', () => {
+                                        // Set founder video to start at 2 seconds
+                                        if (card.dataset.persona === 'founder') {
+                                            video.currentTime = 2;
+                                        }
                                         video.play().catch(e => {
                                             console.log('Video play failed:', e);
                                         });
                                     }, { once: true });
                                 } else {
-                                    // Video already loaded, play immediately
+                                    // Video already loaded, set founder video to start at 2 seconds
+                                    if (card.dataset.persona === 'founder') {
+                                        video.currentTime = 2;
+                                    }
                                     video.play().catch(e => {
                                         console.log('Video play failed:', e);
                                     });
@@ -232,7 +249,8 @@ class BustlingWorldV2 {
 
                         card.addEventListener('mouseleave', () => {
                             video.pause();
-                            video.currentTime = 0;
+                            // Reset founder video to 2 seconds, others to 0
+                            video.currentTime = card.dataset.persona === 'founder' ? 2 : 0;
                         });
                     }
                     // MOBILE behavior
@@ -251,7 +269,8 @@ class BustlingWorldV2 {
                                 // Switch to image
                                 card.classList.remove('video-playing');
                                 video.pause();
-                                video.currentTime = 0;
+                                // Reset founder video to 2 seconds, others to 0
+                                video.currentTime = card.dataset.persona === 'founder' ? 2 : 0;
                             } else {
                                 // Switch to video - ensure video is loaded
                                 const videoSrc = video.getAttribute('data-src') || video.getAttribute('src');
@@ -265,11 +284,18 @@ class BustlingWorldV2 {
                                     if (video.readyState === 0) {
                                         video.load();
                                         video.addEventListener('loadeddata', () => {
+                                            // Set founder video to start at 2 seconds
+                                            if (card.dataset.persona === 'founder') {
+                                                video.currentTime = 2;
+                                            }
                                             card.classList.add('video-playing');
                                             video.play().catch(err => console.log('Video play failed:', err));
                                         }, { once: true });
                                     } else {
-                                        // Video already loaded, play immediately
+                                        // Video already loaded, set founder video to start at 2 seconds
+                                        if (card.dataset.persona === 'founder') {
+                                            video.currentTime = 2;
+                                        }
                                         card.classList.add('video-playing');
                                         video.play().catch(err => console.log('Video play failed:', err));
                                     }
