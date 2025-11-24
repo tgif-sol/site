@@ -159,7 +159,7 @@ class GamingSystem {
                 // Extract page from hash
                 const hashParts = hash.substring(1).split('/');
                 const pageKey = hashParts[0];
-                
+
                 // Find and activate the correct nav link
                 const navLinks = document.querySelectorAll('.nav-link');
                 navLinks.forEach(link => {
@@ -168,7 +168,7 @@ class GamingSystem {
                         link.classList.add('active');
                     }
                 });
-                
+
                 // Update icons after setting active state
                 this.updateNavigationIcons(true);
             } else {
@@ -176,7 +176,7 @@ class GamingSystem {
                 this.updateNavigationIcons();
             }
         };
-        
+
         // Wait a bit longer to ensure spa-navigation has processed the hash
         setTimeout(checkHashAndUpdate, 300);
     }
@@ -217,7 +217,7 @@ class GamingSystem {
                 if (video) {
                     // Ensure video is muted
                     video.muted = true;
-                    
+
                     // Handle founder video - loop between 2-6 seconds
                     if (card.dataset.persona === 'founder') {
                         video.loop = false; // Disable native loop
@@ -272,14 +272,14 @@ class GamingSystem {
                                 if (video.getAttribute('data-src') && video.src !== videoSrc) {
                                     video.src = videoSrc;
                                 }
-                                
+
                                 video.muted = true;
                                 video.playsInline = true;
-                                
+
                                 if (video.readyState === 0) {
                                     video.load();
                                 }
-                                
+
                                 const playVideo = () => {
                                     if (card.dataset.persona === 'founder') {
                                         video.currentTime = 2;
@@ -291,7 +291,7 @@ class GamingSystem {
                                         });
                                     }
                                 };
-                                
+
                                 if (video.readyState >= 3) {
                                     playVideo();
                                 } else if (video.readyState >= 2) {
@@ -339,20 +339,28 @@ class GamingSystem {
                                     if (video.getAttribute('data-src') && video.src !== videoSrc) {
                                         video.src = videoSrc;
                                     }
-                                    
+
                                     // Wait for video to be ready before playing
-                                    if (video.readyState === 0) {
-                                        video.load();
-                                        video.addEventListener('loadeddata', () => {
+                                    // Check if video is ready to play (HAVE_FUTURE_DATA = 3)
+                                    if (video.readyState < 3) {
+                                        // Only call load if we haven't started loading
+                                        if (video.readyState === 0) {
+                                            video.load();
+                                        }
+
+                                        const playWhenReady = () => {
                                             // Set founder video to start at 2 seconds
                                             if (card.dataset.persona === 'founder') {
                                                 video.currentTime = 2;
                                             }
                                             card.classList.add('video-playing');
                                             video.play().catch(err => console.log('Video play failed:', err));
-                                        }, { once: true });
+                                        };
+
+                                        // Use canplay which fires when readyState becomes 3
+                                        video.addEventListener('canplay', playWhenReady, { once: true });
                                     } else {
-                                        // Video already loaded, set founder video to start at 2 seconds
+                                        // Video already loaded enough to play
                                         if (card.dataset.persona === 'founder') {
                                             video.currentTime = 2;
                                         }
@@ -647,7 +655,7 @@ class GamingSystem {
                     document.body.classList.remove('menu-open');
                 }
             };
-            
+
             // Remove existing listener if any, then add new one
             document.removeEventListener('click', handleOutsideClick);
             document.addEventListener('click', handleOutsideClick);
