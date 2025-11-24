@@ -482,8 +482,8 @@ body.persona-dad::after {
 }
 
 .character-card[data-persona="dad"] .character-photo {
-    transform: scale(1.1) translateY(-8%);
-    -webkit-transform: scale(1.1) translateY(-8%);
+    transform: scale(1.1) translateY(-3%);
+    -webkit-transform: scale(1.1) translateY(-3%);
     /* Safari support */
     object-position: center 25%;
     -webkit-object-position: center 25%;
@@ -2000,7 +2000,7 @@ body.persona-dad .nav-link:hover {
 .split-view {
     display: flex;
     gap: 30px;
-    height: calc(100vh - 80px);
+    height: 100vh;
     padding: 40px;
 }
 
@@ -5970,24 +5970,30 @@ body::after {
 
     /* Maintain alignment when video is playing */
     .character-card[data-persona="founder"].video-playing .character-video {
-        transform: scale(1.25) translateY(5%) !important;
-        -webkit-transform: scale(1.25) translateY(5%) !important;
+        transform: scale(1.25) translateY(8%) !important;
+        -webkit-transform: scale(1.25) translateY(8%) !important;
         object-position: center top !important;
         -webkit-object-position: center top !important;
     }
 
     .character-card[data-persona="dad"].video-playing .character-video {
-        transform: scale(1) !important;
-        -webkit-transform: scale(1) !important;
-        object-position: center 50% !important;
+        transform: scale(1.05) !important;
+        -webkit-transform: scale(1.05) !important;
+        object-position: center 43% !important;
         -webkit-object-position: center 25% !important;
     }
 
-    .character-card[data-persona="investor"].video-playing .character-video,
-    .character-card[data-persona="operator"].video-playing .character-video {
+    .character-card[data-persona="investor"].video-playing .character-video {
         transform: scale(1.25) !important;
         -webkit-transform: scale(1.25) !important;
         object-position: center 37% !important;
+        -webkit-object-position: center 25% !important;
+    }
+
+    .character-card[data-persona="operator"].video-playing .character-video {
+        transform: scale(1.25) !important;
+        -webkit-transform: scale(1.25) !important;
+        object-position: center 24% !important;
         -webkit-object-position: center 25% !important;
     }
 
