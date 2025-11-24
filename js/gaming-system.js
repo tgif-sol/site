@@ -130,11 +130,11 @@ class GamingSystem {
 
                     if (!hasWelcomeContent) {
                         if (window.loadPageContent) {
-                            window.loadPageContent('welcome');
+                        window.loadPageContent('welcome');
                         } else if (attempts < 10) {
                             // Retry if spa-navigation.js hasn't loaded yet
                             setTimeout(() => tryLoadWelcome(attempts + 1), 100);
-                        }
+                    }
                     }
                 };
                 setTimeout(() => tryLoadWelcome(), 200);
@@ -159,7 +159,7 @@ class GamingSystem {
                 // Extract page from hash
                 const hashParts = hash.substring(1).split('/');
                 const pageKey = hashParts[0];
-
+                
                 // Find and activate the correct nav link
                 const navLinks = document.querySelectorAll('.nav-link');
                 navLinks.forEach(link => {
@@ -168,7 +168,7 @@ class GamingSystem {
                         link.classList.add('active');
                     }
                 });
-
+                
                 // Update icons after setting active state
                 this.updateNavigationIcons(true);
             } else {
@@ -176,7 +176,7 @@ class GamingSystem {
                 this.updateNavigationIcons();
             }
         };
-
+        
         // Wait a bit longer to ensure spa-navigation has processed the hash
         setTimeout(checkHashAndUpdate, 300);
     }
@@ -217,7 +217,7 @@ class GamingSystem {
                 if (video) {
                     // Ensure video is muted
                     video.muted = true;
-
+                    
                     // Handle founder video - loop between 2-6 seconds
                     if (card.dataset.persona === 'founder') {
                         video.loop = false; // Disable native loop
@@ -265,42 +265,124 @@ class GamingSystem {
 
                     // DESKTOP behavior
                     if (!isMobile) {
-                        // Hover to play video - only load when needed
-                        card.addEventListener('mouseenter', () => {
+                        const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
                             const videoSrc = video.getAttribute('data-src') || video.getAttribute('src');
                             if (videoSrc) {
-                                if (video.getAttribute('data-src') && video.src !== videoSrc) {
+                            if (video.getAttribute('data-src')) {
                                     video.src = videoSrc;
                                 }
-
-                                video.muted = true;
-                                video.playsInline = true;
-
-                                if (video.readyState === 0) {
+                            video.muted = true;
+                            video.playsInline = true;
+                            video.preload = 'auto';
+                            
+                            if (isSafari) {
+                                video.setAttribute('webkit-playsinline', 'true');
+                                video.setAttribute('playsinline', 'true');
+                            }
+                            
                                     video.load();
-                                }
-
-                                const playVideo = () => {
-                                    if (card.dataset.persona === 'founder') {
-                                        video.currentTime = 2;
-                                    }
-                                    const playPromise = video.play();
-                                    if (playPromise !== undefined) {
-                                        playPromise.catch(e => {
-                                            console.log('Video play failed:', e);
-                                        });
+                            
+                            if (isSafari) {
+                                const warmUpVideo = () => {
+                                    if (video.readyState >= 2) {
+                                        if (card.dataset.persona === 'founder') {
+                                            video.currentTime = 2;
+                                        }
+                                        video.pause();
                                     }
                                 };
-
-                                if (video.readyState >= 3) {
-                                    playVideo();
-                                } else if (video.readyState >= 2) {
-                                    playVideo();
+                                
+                                video.addEventListener('loadedmetadata', warmUpVideo, { once: true });
+                                video.addEventListener('canplay', warmUpVideo, { once: true });
+                                video.addEventListener('canplaythrough', () => {
+                                    if (card.dataset.persona === 'founder') {
+                                        video.currentTime = 2;
+                                    } else {
+                                        video.currentTime = 0;
+                                    }
+                                    video.pause();
+                                }, { once: true });
+                                
+                                card.addEventListener('mouseenter', () => {
+                                    if (video.readyState >= 2 && video.paused) {
+                                        if (card.dataset.persona === 'founder' && video.currentTime !== 2) {
+                                            video.currentTime = 2;
+                                        }
+                                    }
+                                }, { passive: true });
+                            }
+                        }
+                        
+                        card.addEventListener('mouseenter', () => {
+                            let playAttempts = 0;
+                            const maxAttempts = 5;
+                            
+                            const playVideo = () => {
+                                if (card.dataset.persona === 'founder' && video.currentTime !== 2) {
+                                    video.currentTime = 2;
+                                }
+                                
+                                if (isSafari && video.readyState < 2) {
+                                    video.load();
+                                }
+                                
+                                const playPromise = video.play();
+                                if (playPromise !== undefined) {
+                                    playPromise.then(() => {
+                                        requestAnimationFrame(() => {
+                                            card.classList.add('video-playing');
+                                            if (isSafari) {
+                                                video.style.opacity = '';
+                                            }
+                                        });
+                                    }).catch(e => {
+                                        if (playAttempts < maxAttempts) {
+                                            playAttempts++;
+                                            const delay = isSafari ? Math.min(100 * playAttempts, 300) : 50;
+                                            setTimeout(() => {
+                                                if (video.readyState >= 2) {
+                                                    playVideo();
+                                                }
+                                            }, delay);
+                                        } else {
+                                            console.log('Video play failed after retries:', e);
+                                        }
+                                    });
                                 } else {
+                                    if (playAttempts < maxAttempts && video.readyState >= 2) {
+                                        playAttempts++;
+                                        setTimeout(() => {
+                                            playVideo();
+                                        }, 100);
+                                    }
+                                }
+                            };
+
+                            if (isSafari) {
+                                playVideo();
+                                
+                                if (video.readyState < 3) {
                                     const playWhenReady = () => {
-                                        playVideo();
+                                        if (video.paused && video.readyState >= 2) {
+                                            requestAnimationFrame(() => {
+                                                playVideo();
+                                            });
+                                        }
                                     };
                                     video.addEventListener('canplaythrough', playWhenReady, { once: true });
+                                    video.addEventListener('canplay', playWhenReady, { once: true });
+                                    video.addEventListener('loadeddata', playWhenReady, { once: true });
+                                }
+                            } else {
+                                if (video.readyState >= 2) {
+                                    playVideo();
+                                } else {
+                                    playVideo();
+                                    const playWhenReady = () => {
+                                        if (video.paused) {
+                                            playVideo();
+                                        }
+                                    };
                                     video.addEventListener('canplay', playWhenReady, { once: true });
                                     video.addEventListener('loadeddata', playWhenReady, { once: true });
                                 }
@@ -309,6 +391,7 @@ class GamingSystem {
 
                         card.addEventListener('mouseleave', () => {
                             video.pause();
+                            card.classList.remove('video-playing');
                             // Reset founder video to 2 seconds, others to 0
                             video.currentTime = card.dataset.persona === 'founder' ? 2 : 0;
                         });
@@ -339,13 +422,13 @@ class GamingSystem {
                                     if (video.getAttribute('data-src') && video.src !== videoSrc) {
                                         video.src = videoSrc;
                                     }
-
+                                    
                                     // Wait for video to be ready before playing
                                     // Check if video is ready to play (HAVE_FUTURE_DATA = 3)
                                     if (video.readyState < 3) {
                                         // Only call load if we haven't started loading
-                                        if (video.readyState === 0) {
-                                            video.load();
+                                    if (video.readyState === 0) {
+                                        video.load();
                                         }
 
                                         const playWhenReady = () => {
@@ -353,8 +436,19 @@ class GamingSystem {
                                             if (card.dataset.persona === 'founder') {
                                                 video.currentTime = 2;
                                             }
+
+                                            // Play first, THEN update UI
+                                            const playPromise = video.play();
+                                            if (playPromise !== undefined) {
+                                                playPromise.then(() => {
+                                                    // Video is playing, NOW show it
+                                                    requestAnimationFrame(() => {
                                             card.classList.add('video-playing');
-                                            video.play().catch(err => console.log('Video play failed:', err));
+                                                    });
+                                                }).catch(err => {
+                                                    console.log('Video play failed:', err);
+                                                });
+                                            }
                                         };
 
                                         // Use canplay which fires when readyState becomes 3
@@ -364,8 +458,19 @@ class GamingSystem {
                                         if (card.dataset.persona === 'founder') {
                                             video.currentTime = 2;
                                         }
+
+                                        // Play first, THEN update UI
+                                        const playPromise = video.play();
+                                        if (playPromise !== undefined) {
+                                            playPromise.then(() => {
+                                                // Video is playing, NOW show it
+                                                requestAnimationFrame(() => {
                                         card.classList.add('video-playing');
-                                        video.play().catch(err => console.log('Video play failed:', err));
+                                                });
+                                            }).catch(err => {
+                                                console.log('Video play failed:', err);
+                                            });
+                                        }
                                     }
                                 }
                             }
@@ -992,7 +1097,7 @@ class GamingSystem {
         if (isWelcomePage) {
             const tryLoadWelcome = (attempts = 0) => {
                 if (window.loadPageContent) {
-                    window.loadPageContent('welcome');
+                window.loadPageContent('welcome');
                 } else if (attempts < 10) {
                     setTimeout(() => tryLoadWelcome(attempts + 1), 100);
                 }
@@ -1180,11 +1285,11 @@ class GamingSystem {
                 if (isIndexPage) {
                     // If we have the SPA navigation function, use it
                     const tryLoadWelcome = (attempts = 0) => {
-                        if (window.loadPageContent) {
-                            window.loadPageContent('welcome');
+                    if (window.loadPageContent) {
+                        window.loadPageContent('welcome');
                         } else if (attempts < 10) {
                             setTimeout(() => tryLoadWelcome(attempts + 1), 100);
-                        }
+                    }
                     };
                     tryLoadWelcome();
 
