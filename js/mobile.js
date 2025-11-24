@@ -773,7 +773,6 @@
             // Use existing hamburger from HTML - don't create new one
             const hamburger = document.getElementById('hamburger');
             if (hamburger) {
-                console.log('[MobileNavigation] Using existing hamburger from HTML');
                 // Make sure it's visible and properly positioned
                 hamburger.style.display = 'flex';
                 hamburger.style.visibility = 'visible';
@@ -788,9 +787,9 @@
         }
 
         setupHamburgerMenu() {
-            console.log('[MobileNavigation] setupHamburgerMenu called - using existing HTML hamburger');
             // Don't create new hamburger - use the one from HTML
             // gaming-system.js will handle the click events
+            // This method is intentionally empty to avoid conflicts
         }
 
         setupPersonaSwitcher() {

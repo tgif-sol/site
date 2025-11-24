@@ -603,15 +603,21 @@ class GamingSystem {
             }
 
             // Close menu when clicking outside
-            document.addEventListener('click', (e) => {
+            // Use a named function so we can remove it later if needed
+            const handleOutsideClick = (e) => {
                 if (sidebar.classList.contains('open') &&
                     !sidebar.contains(e.target) &&
-                    !hamburger.contains(e.target)) {
+                    !hamburger.contains(e.target) &&
+                    !overlay?.contains(e.target)) {
                     sidebar.classList.remove('open');
                     hamburger.classList.remove('active');
                     document.body.classList.remove('menu-open');
                 }
-            });
+            };
+            
+            // Remove existing listener if any, then add new one
+            document.removeEventListener('click', handleOutsideClick);
+            document.addEventListener('click', handleOutsideClick);
 
             // Close menu when clicking on a nav link
             const navLinks = sidebar.querySelectorAll('.nav-link');
