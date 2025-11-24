@@ -34,6 +34,15 @@
     --dad-accent-rgb: 255, 127, 80;
     --dad-text: #4A4A4A;
 
+    /* Mobile Variables */
+    --mobile-navbar-height: 60px;
+    --mobile-bottom-nav: 70px;
+    --mobile-padding: 15px;
+    --mobile-card-gap: 15px;
+    --swipe-threshold: 50px;
+    --mobile-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+
     /* Typography - Professional Classic Business (Active) */
     --font-primary: 'Libre Baskerville', serif;
     /* Authoritative, classic headers */
@@ -150,6 +159,7 @@ body.persona-dad::after {
         -webkit-transform: translateZ(0) !important;
         transform: translateZ(0) !important;
     }
+
     body.persona-founder::after,
     body.persona-investor::after,
     body.persona-dad::after {
@@ -224,7 +234,7 @@ body.persona-dad::after {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #1A1D20;
+    background-color: var(--operator-bg);
     z-index: -2;
     pointer-events: none;
 }
@@ -594,6 +604,7 @@ body.persona-dad::after {
     -webkit-transform: translateY(-10%);
     /* Safari support */
 }
+
 
 /* Show video on hover for cards with video */
 .character-card[data-persona="founder"]:hover .character-video,
@@ -1360,19 +1371,19 @@ body.persona-dad .page-header {
 
     /* Persona-specific hover border colors */
     .persona-founder .persona-icon-btn:hover {
-        border-color: #A0A453;
+        border-color: var(--founder-accent);
     }
 
     .persona-operator .persona-icon-btn:hover {
-        border-color: #FFB800;
+        border-color: var(--operator-accent);
     }
 
     .persona-investor .persona-icon-btn:hover {
-        border-color: #C39F47;
+        border-color: var(--investor-accent);
     }
 
     .persona-dad .persona-icon-btn:hover {
-        border-color: #FF7F50;
+        border-color: var(--dad-accent);
     }
 
     /* Hide current persona in the options */
@@ -2036,14 +2047,14 @@ body.persona-dad .nav-link:hover {
 
 .post-list a:hover {
     background: rgba(255, 255, 255, 0.05);
-    border-left-color: var(--theme-accent, #A0A453);
+    border-left-color: var(--theme-accent, var(--founder-accent));
     padding-left: 20px;
 }
 
 .post-list a.active {
     background: rgba(255, 255, 255, 0.08);
-    border-left-color: var(--theme-accent, #A0A453);
-    color: var(--theme-accent, #A0A453);
+    border-left-color: var(--theme-accent, var(--founder-accent));
+    color: var(--theme-accent, var(--founder-accent));
 }
 
 /* Adjust for light themes */
@@ -2086,13 +2097,13 @@ body.persona-dad .post-list a.active {
 
 .category-btn:hover {
     background: rgba(255, 255, 255, 0.1);
-    border-color: var(--theme-accent, #A0A453);
+    border-color: var(--theme-accent, var(--founder-accent));
 }
 
 .category-btn.active {
-    background: var(--theme-accent, #A0A453);
-    color: var(--theme-primary, #1E2C23);
-    border-color: var(--theme-accent, #A0A453);
+    background: var(--theme-accent, var(--founder-accent));
+    color: var(--theme-primary, var(--founder-bg));
+    border-color: var(--theme-accent, var(--founder-accent));
 }
 
 body.persona-investor .category-btn,
@@ -2168,7 +2179,7 @@ body.persona-dad .empty-state {
 }
 
 /* Apply h3 style to p tags containing only strong (section headings) */
-.article-content p > strong:only-child {
+.article-content p>strong:only-child {
     display: block;
     font-family: var(--font-display);
     font-size: 20px;
@@ -2251,12 +2262,12 @@ body.persona-dad .empty-state {
 }
 
 .article-content li::marker {
-    color: var(--theme-accent, #A0A453);
+    color: var(--theme-accent, var(--founder-accent));
 }
 
 /* Style numbered paragraphs (1. 2. 3. 4. etc.) with accent color - same as Asset Classes */
 .article-content .number {
-    color: var(--theme-accent, #A0A453);
+    color: var(--theme-accent, var(--founder-accent));
     font-weight: 600;
 }
 
@@ -2586,1727 +2597,11 @@ body.persona-dad .nav-list a.active {
     color: var(--theme-accent);
 }
 
-/* ==================== MOBILE STYLES START HERE ==================== */
+
+/* ==================== Mobile & Responsive Styles ==================== */
+/* Unified mobile styles */
+
 /* ==================== Mobile Character Selection ==================== */
-@media (max-width: 768px) {
-
-    /* Character Selection */
-    .character-select-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 9999;
-        background: transparent;
-        overflow-y: scroll;
-        overflow-x: hidden;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    /* Dark background base layer for mobile character selection */
-    .character-select-overlay::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: #1A1D20;
-        z-index: -2;
-        pointer-events: none;
-    }
-
-    /* Background image for mobile character selection */
-    .character-select-overlay::after {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-image: url('/assets/character-selection-background.png');
-        background-size: cover;
-        background-position: center center;
-        background-repeat: no-repeat;
-        opacity: 0.5;
-        z-index: -1;
-        pointer-events: none;
-    }
-
-    /* Hide container when character select is visible */
-    .character-select-overlay:not(.hidden)~.container {
-        display: none;
-    }
-
-    .character-select-modal {
-        width: 100%;
-        min-height: 100%;
-        padding: 0;
-        margin: 0;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        overflow: visible;
-        background: transparent;
-        padding-bottom: 50px;
-        padding-bottom: calc(50px + env(safe-area-inset-bottom));
-    }
-
-    .scroll-header {
-        padding: 20px 15px 15px 15px;
-        text-align: center;
-    }
-
-    .select-title {
-        font-size: 19px;
-        letter-spacing: 1.5px;
-        margin-bottom: 8px;
-        margin-top: 5px;
-        color: #F0F2F5 !important;
-        text-transform: uppercase;
-        font-weight: 700;
-    }
-
-    .select-subtitle {
-        font-size: 12px;
-        font-weight: 300;
-        margin-top: 0;
-        margin-bottom: 5px;
-        color: rgba(216, 216, 216, 0.5) !important;
-        letter-spacing: 0.3px;
-    }
-
-    /* Character Selection - One main card with thumbnails */
-    .character-grid {
-        display: flex;
-        flex-direction: column;
-        padding: 0;
-        gap: 0px;
-        overflow: visible;
-        min-height: auto;
-        /* Fix size for Safari when video is playing */
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-    /* Main character display area */
-    .character-main-display {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 10px;
-        min-height: auto;
-        margin-bottom: 0;
-        position: relative;
-        touch-action: pan-y;
-    }
-
-    /* Character cards */
-    .character-card {
-        display: none !important;
-        width: 95%;
-        max-width: 380px;
-        height: auto;
-        min-height: 480px;
-        padding: 0;
-        flex-direction: column;
-        border-radius: 12px;
-        position: relative;
-        overflow: visible;
-        margin: 0 auto;
-        /* Fix size for Safari when video is playing */
-        box-sizing: border-box;
-        flex-shrink: 0;
-    }
-
-    /* Ensure card size doesn't change when video is playing (Safari fix) */
-    .character-card.video-playing {
-        width: 95% !important;
-        max-width: 380px !important;
-        min-height: 480px !important;
-        height: auto !important;
-        flex-shrink: 0 !important;
-    }
-
-
-    /* Only active card is visible with smooth transition */
-    .character-card.active {
-        display: flex !important;
-        animation: slideIn 0.3s ease-out;
-    }
-
-    @keyframes slideIn {
-        from {
-            opacity: 0;
-            transform: translateX(50px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
-    }
-
-
-    /* Adjust portrait for mobile cards */
-    .character-portrait {
-        height: 320px;
-        width: 100%;
-        position: relative;
-        margin: 0;
-        border-radius: 12px 12px 0 0;
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        -webkit-mask-image: linear-gradient(to bottom,
-                rgba(0, 0, 0, 1) 0%,
-                rgba(0, 0, 0, 1) 80%,
-                rgba(0, 0, 0, 0.98) 82%,
-                rgba(0, 0, 0, 0.95) 84%,
-                rgba(0, 0, 0, 0.90) 86%,
-                rgba(0, 0, 0, 0.82) 88%,
-                rgba(0, 0, 0, 0.70) 90%,
-                rgba(0, 0, 0, 0.55) 92%,
-                rgba(0, 0, 0, 0.38) 94%,
-                rgba(0, 0, 0, 0.20) 96%,
-                rgba(0, 0, 0, 0.08) 98%,
-                rgba(0, 0, 0, 0) 100%);
-        mask-image: linear-gradient(to bottom,
-                rgba(0, 0, 0, 1) 0%,
-                rgba(0, 0, 0, 1) 80%,
-                rgba(0, 0, 0, 0.98) 82%,
-                rgba(0, 0, 0, 0.95) 84%,
-                rgba(0, 0, 0, 0.90) 86%,
-                rgba(0, 0, 0, 0.82) 88%,
-                rgba(0, 0, 0, 0.70) 90%,
-                rgba(0, 0, 0, 0.55) 92%,
-                rgba(0, 0, 0, 0.38) 94%,
-                rgba(0, 0, 0, 0.20) 96%,
-                rgba(0, 0, 0, 0.08) 98%,
-                rgba(0, 0, 0, 0) 100%);
-    }
-
-    .character-photo,
-    .character-video {
-        width: 100%;
-        height: 100%;
-        max-width: 380px;
-        max-height: 480px;
-        object-fit: cover;
-        object-position: center top;
-        transform: scale(1.15);
-        /* Optimize image rendering */
-        image-rendering: -webkit-optimize-contrast;
-        image-rendering: crisp-edges;
-    }
-
-    /* Keep same zoom for all cards on mobile for consistency */
-    .character-card[data-persona="founder"] .character-photo,
-    .character-card[data-persona="operator"] .character-photo,
-    .character-card[data-persona="investor"] .character-photo,
-    .character-card[data-persona="dad"] .character-photo {
-        transform: scale(1.25);
-        object-fit: cover !important;
-    }
-
-    /* Unified Mobile Alignment - Founder (Move Down) */
-    .character-card[data-persona="founder"] .character-photo {
-        object-position: center top !important;
-        transform: scale(1.25) translateY(5%) !important;
-        object-fit: cover !important;
-    }
-
-    /* Unified Mobile Alignment - Dad & Investor (Move Up) */
-    .character-card[data-persona="dad"] .character-photo {
-        object-position: center 16% !important;
-        transform: scale(1.2) !important;
-        object-fit: cover !important;
-    }
-
-    .character-card[data-persona="investor"] .character-photo {
-        object-position: center 32% !important;
-        transform: scale(1.25) !important;
-        object-fit: cover !important;
-    }
-
-    /* Unified Mobile Alignment - Operator Photo (Move Down slightly relative to video) */
-    .character-card[data-persona="operator"] .character-photo {
-        object-position: center 10% !important;
-        transform: scale(1.25) !important;
-        object-fit: cover !important;
-    }
-
-    /* Info section for main card - natural height, no scroll */
-    .character-info {
-        height: auto;
-        padding: 30px 20px 10px 20px;
-        margin-top: -60px;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        width: 100%;
-        box-sizing: border-box;
-        position: relative;
-        z-index: 1;
-        overflow: visible;
-        background: transparent;
-        border-radius: 0 0 12px 12px;
-    }
-
-    .character-name {
-        font-size: 22px !important;
-        font-weight: 700;
-        letter-spacing: 1.5px;
-        text-transform: uppercase;
-        margin-top: 5px;
-        margin-bottom: 0px;
-        color: #F0F2F5 !important;
-        width: auto !important;
-        display: block !important;
-    }
-
-    .character-title {
-        font-size: 14px !important;
-        font-weight: 400 !important;
-        margin: 0 0 8px 0;
-        color: #D8D8D8 !important;
-        letter-spacing: 0.3px;
-    }
-
-    .character-desc {
-        font-size: 12px !important;
-        line-height: 1.4;
-        margin: 12px 0 10px 0;
-        min-height: unset;
-        color: rgba(234, 234, 234, 0.8) !important;
-    }
-
-    /* Swipe Indicators */
-    .swipe-indicators {
-        display: flex;
-        justify-content: center;
-        gap: 6px;
-        padding: 2px 5px 5px 5px;
-        margin-bottom: 0;
-    }
-
-    .swipe-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.3);
-        transition: all 0.3s ease;
-    }
-
-    .swipe-dot.active {
-        width: 24px;
-        border-radius: 4px;
-        background: var(--theme-accent, #A0A453);
-    }
-
-    /* Swipe Hint - Hidden */
-    .swipe-hint {
-        display: none;
-    }
-
-    /* Select Role Button */
-    .select-role-container {
-        padding: 15px 15px 25px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-bottom: 20px;
-        /* Fix size for Safari when video is playing */
-        width: 95%;
-        max-width: 380px;
-        margin-left: auto;
-        margin-right: auto;
-        box-sizing: border-box;
-        flex-shrink: 0;
-    }
-
-    .select-role-btn {
-        background: linear-gradient(135deg, var(--theme-accent, #A0A453), var(--theme-secondary, #8B8F4E));
-        color: #1a1a2e;
-        border: none;
-        border-radius: 8px;
-        padding: 12px 40px;
-        margin: 0;
-        font-size: 16px;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 1.5px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        font-family: 'Cinzel', serif;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        position: relative;
-        overflow: hidden;
-        /* Fix size for Safari when video is playing */
-        width: 100%;
-        max-width: 100%;
-        box-sizing: border-box;
-        flex-shrink: 0;
-    }
-
-    .select-role-btn::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-        transition: left 0.5s ease;
-    }
-
-    .select-role-btn:hover::before {
-        left: 100%;
-    }
-
-    .select-role-btn:active {
-        transform: scale(0.95);
-        box-shadow: 0 2px 8px rgba(160, 164, 83, 0.2);
-    }
-
-    .select-role-btn:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
-
-    /* Footer text inside button container */
-    .mobile-footer-text {
-        font-size: 12px;
-        color: rgba(234, 234, 234, 0.5);
-        margin: 4px 0 0 0;
-        font-style: italic;
-        letter-spacing: 0.5px;
-        text-align: center;
-    }
-
-    /* Immediate animations on mobile */
-    .character-card .character-video {
-        display: block;
-        opacity: 1;
-    }
-
-    /* Initially show photo for all cards */
-    .character-card[data-persona="founder"] .character-photo,
-    .character-card[data-persona="operator"] .character-photo,
-    .character-card[data-persona="dad"] .character-photo,
-    .character-card[data-persona="investor"] .character-photo {
-        opacity: 1 !important;
-        visibility: visible !important;
-        display: block !important;
-        position: relative;
-        z-index: 1;
-    }
-
-    /* Initially hide video for ALL cards with video including operator */
-    .character-card[data-persona="founder"] .character-video,
-    .character-card[data-persona="operator"] .character-video,
-    .character-card[data-persona="dad"] .character-video,
-    .character-card[data-persona="investor"] .character-video {
-        opacity: 0;
-        visibility: hidden;
-        display: none;
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 2;
-        transition: opacity 0.3s ease;
-        /* Override default transform and object-position for mobile */
-        transform: none !important;
-        -webkit-transform: none !important;
-        object-position: center center !important;
-        -webkit-object-position: center center !important;
-    }
-
-    /* Video filter and positioning for specific personas on mobile */
-    .character-card[data-persona="dad"] .character-video,
-    .character-card[data-persona="investor"] .character-video {
-        filter: brightness(1.05) contrast(1.05) saturate(1.05);
-        transition: opacity 0.3s ease;
-    }
-
-    /* Founder video - move down on mobile using transform */
-    .character-card[data-persona="founder"] .character-video {
-        object-position: center top !important;
-        -webkit-object-position: center top !important;
-        transform: scale(1.15) translateY(5%) !important;
-        -webkit-transform: scale(1.15) translateY(5%) !important;
-    }
-
-    /* Dad and investor videos - move up on mobile using transform */
-    .character-card[data-persona="dad"] .character-video {
-        object-position: center top !important;
-        -webkit-object-position: center top !important;
-        transform: scale(1.15) translateY(-5%) !important;
-        -webkit-transform: scale(1.15) translateY(-5%) !important;
-    }
-
-    .character-card[data-persona="investor"] .character-video {
-        object-position: center top !important;
-        -webkit-object-position: center top !important;
-        transform: scale(1.15) translateY(-5%) !important;
-        -webkit-transform: scale(1.15) translateY(-5%) !important;
-    }
-
-    /* When card is active and playing, show video and hide photo */
-    .character-card[data-persona="founder"].video-playing .character-video,
-    .character-card[data-persona="operator"].video-playing .character-video,
-    .character-card[data-persona="dad"].video-playing .character-video,
-    .character-card[data-persona="investor"].video-playing .character-video {
-        opacity: 1 !important;
-        visibility: visible !important;
-        display: block !important;
-        pointer-events: auto !important;
-        /* Enable clicks on mobile */
-        /* Override default transform for mobile */
-        transform: none !important;
-        -webkit-transform: none !important;
-        /* Remove mask when playing */
-        -webkit-mask-image: none !important;
-        mask-image: none !important;
-    }
-
-    /* Maintain object-position when video is playing on mobile */
-    .character-card[data-persona="founder"].video-playing .character-video {
-        object-position: center 35% !important;
-        -webkit-object-position: center 35% !important;
-        transform: none !important;
-        -webkit-transform: none !important;
-    }
-
-    .character-card[data-persona="dad"].video-playing .character-video {
-        object-position: center 20% !important;
-        -webkit-object-position: center 20% !important;
-        transform: scale(1.0) !important;
-        -webkit-transform: scale(1.0) !important;
-    }
-
-    .character-card[data-persona="investor"].video-playing .character-video {
-        object-position: center 15% !important;
-        -webkit-object-position: center 15% !important;
-        transform: none !important;
-        -webkit-transform: none !important;
-    }
-
-    .character-card[data-persona="founder"].video-playing .character-photo,
-    .character-card[data-persona="operator"].video-playing .character-photo,
-    .character-card[data-persona="dad"].video-playing .character-photo,
-    .character-card[data-persona="investor"].video-playing .character-photo {
-        opacity: 0 !important;
-        display: none !important;
-    }
-
-    /* Keep character-info and character-name in place when video is playing */
-    .character-card.video-playing .character-info {
-        padding: 30px 20px 10px 20px !important;
-        margin-top: -60px !important;
-        position: relative !important;
-        width: 100% !important;
-    }
-
-    /* Maintain the same fade gradient when video is playing */
-    .character-card.video-playing .character-portrait {
-        -webkit-mask-image: linear-gradient(to bottom,
-                rgba(0, 0, 0, 1) 0%,
-                rgba(0, 0, 0, 1) 80%,
-                rgba(0, 0, 0, 0.98) 82%,
-                rgba(0, 0, 0, 0.95) 84%,
-                rgba(0, 0, 0, 0.90) 86%,
-                rgba(0, 0, 0, 0.82) 88%,
-                rgba(0, 0, 0, 0.70) 90%,
-                rgba(0, 0, 0, 0.55) 92%,
-                rgba(0, 0, 0, 0.38) 94%,
-                rgba(0, 0, 0, 0.20) 96%,
-                rgba(0, 0, 0, 0.08) 98%,
-                rgba(0, 0, 0, 0) 100%) !important;
-        mask-image: linear-gradient(to bottom,
-                rgba(0, 0, 0, 1) 0%,
-                rgba(0, 0, 0, 1) 80%,
-                rgba(0, 0, 0, 0.98) 82%,
-                rgba(0, 0, 0, 0.95) 84%,
-                rgba(0, 0, 0, 0.90) 86%,
-                rgba(0, 0, 0, 0.82) 88%,
-                rgba(0, 0, 0, 0.70) 90%,
-                rgba(0, 0, 0, 0.55) 92%,
-                rgba(0, 0, 0, 0.38) 94%,
-                rgba(0, 0, 0, 0.20) 96%,
-                rgba(0, 0, 0, 0.08) 98%,
-                rgba(0, 0, 0, 0) 100%) !important;
-    }
-
-    .character-card.video-playing .character-name {
-        margin-top: 5px !important;
-        margin-bottom: 0px !important;
-        text-align: left !important;
-        position: relative !important;
-        width: auto !important;
-        display: block !important;
-    }
-
-    /* Ensure character-name stays consistent when video stops (after playing) */
-    .character-card:not(.video-playing) .character-name {
-        transform: none !important;
-        position: relative !important;
-        left: 0 !important;
-        width: auto !important;
-    }
-
-    /* Ensure padding stays consistent when card is active */
-    .character-card.active .character-info {
-        padding: 30px 20px 10px 20px !important;
-        margin-top: -60px !important;
-    }
-
-    /* Apply same tap effect to all cards on mobile - more specific selectors */
-    .character-card.active .character-name,
-    .character-card[data-persona="founder"].active .character-name,
-    .character-card[data-persona="operator"].active .character-name,
-    .character-card[data-persona="investor"].active .character-name,
-    .character-card[data-persona="dad"].active .character-name {
-        color: #FFFFFF !important;
-        text-shadow:
-            2px 2px 4px rgba(0, 0, 0, 0.5),
-            0 0 30px rgba(255, 255, 255, 0.6),
-            0 0 50px rgba(255, 255, 255, 0.3) !important;
-        font-size: 23px !important;
-        transform: none !important;
-    }
-
-    /* Maintain same glow effect when video is playing on mobile */
-    .character-card.video-playing .character-name {
-        color: #FFFFFF !important;
-        text-shadow:
-            2px 2px 4px rgba(0, 0, 0, 0.5),
-            0 0 30px rgba(255, 255, 255, 0.6),
-            0 0 50px rgba(255, 255, 255, 0.3) !important;
-        font-size: 23px !important;
-    }
-
-    /* Touch feedback - but no border on active */
-    .character-card:active {
-        transform: scale(0.98);
-        transition: transform 0.1s;
-        border: 1px solid rgba(255, 255, 255, 0.05) !important;
-        /* Keep default border, no highlight */
-    }
-
-    /* Ensure border is removed when video stops playing */
-    .character-card.active:not(.video-playing) {
-        border: 1px solid rgba(255, 255, 255, 0.05) !important;
-    }
-
-    /* Remove border on focus to prevent it from staying on */
-    .character-card:focus {
-        outline: none;
-        border: 1px solid rgba(255, 255, 255, 0.05) !important;
-    }
-
-    /* Hide scroll indicators - not needed with grid layout */
-    .scroll-indicators {
-        display: none;
-    }
-
-    /* Character grid responsive */
-    .character-grid {
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 20px;
-        padding: 20px;
-    }
-
-    /* Mobile hamburger and sidebar styles */
-    .hamburger,
-    #hamburger {
-        display: flex;
-    }
-
-    .sidebar {
-        position: fixed;
-        left: -280px;
-        top: 0;
-        height: 100vh;
-        z-index: 1000;
-        transition: left 0.3s;
-    }
-
-    .sidebar.open {
-        left: 0;
-    }
-
-    .content {
-        margin-left: 0;
-    }
-}
-
-/* ==================== Mobile Navigation ==================== */
-@media (max-width: 768px) {
-
-    /* Hide persona switcher when character selection is visible */
-    .character-select-overlay:not(.hidden)~* .persona-switcher,
-    .character-select-overlay:not(.hidden)~.persona-switcher,
-    #characterSelect:not(.hidden)~* .persona-switcher,
-    #characterSelect:not(.hidden)+* .persona-switcher,
-    body.character-select-active .persona-switcher,
-    .persona-switcher.hidden {
-        display: none !important;
-    }
-
-    /* Also hide hamburger during character selection */
-    body.character-select-active .hamburger,
-    body.character-select-active #hamburger,
-    #characterSelect:not(.hidden)~.hamburger,
-    #characterSelect:not(.hidden)~#hamburger,
-    .character-select-overlay:not(.hidden)~.hamburger,
-    .character-select-overlay:not(.hidden)~#hamburger {
-        display: none !important;
-        visibility: hidden !important;
-        opacity: 0 !important;
-        pointer-events: none !important;
-    }
-
-    /* Create mobile header if it doesn't exist */
-    body:not(.character-select-active) {
-        padding-top: var(--mobile-navbar-height);
-    }
-
-    /* Mobile header bar */
-    .mobile-header,
-    .mobile-nav-header {
-        display: flex;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: calc(var(--mobile-navbar-height) + 10px);
-        background: var(--theme-primary, #1E2C23);
-        backdrop-filter: blur(10px);
-        z-index: 1000;
-        align-items: center;
-        justify-content: space-between;
-        padding: 5px var(--mobile-padding) 10px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        /* Don't block hamburger clicks */
-        pointer-events: none;
-    }
-
-    /* Allow clicks on mobile header content but not on the header itself */
-    .mobile-header>*,
-    .mobile-nav-header>* {
-        pointer-events: auto;
-    }
-
-    /* Adjust border for light themes on mobile */
-    body.persona-investor .mobile-header,
-    body.persona-investor .mobile-nav-header,
-    body.persona-dad .mobile-header,
-    body.persona-dad .mobile-nav-header {
-        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    }
-
-    /* Hamburger menu button - always visible on mobile */
-    .hamburger,
-    #hamburger {
-        display: flex !important;
-        flex-direction: column !important;
-        justify-content: center !important;
-        gap: 5px !important;
-        width: 30px !important;
-        height: 30px !important;
-        background: transparent !important;
-        border: none !important;
-        cursor: pointer !important;
-        z-index: 10007 !important;
-        position: fixed !important;
-        top: 18px !important;
-        left: 15px !important;
-        right: auto !important;
-        padding: 5px !important;
-        opacity: 1 !important;
-        visibility: visible !important;
-        transition: transform 0.3s ease !important;
-        align-items: center !important;
-        transform: none !important;
-        margin: 0 !important;
-        /* Ensure hamburger is always visible even when container has opacity: 0 */
-        isolation: isolate;
-        /* Ensure clicks work - hamburger should be above all other elements */
-        pointer-events: auto !important;
-        /* Prevent any element from blocking clicks */
-        touch-action: manipulation !important;
-    }
-
-    /* Hover/Active state for hamburger */
-    .hamburger:hover,
-    #hamburger:hover {
-        transform: scale(1.1);
-    }
-
-    .hamburger:active,
-    #hamburger:active {
-        transform: scale(0.95);
-    }
-
-    /* Hamburger lines - with gradient matching theme */
-    .hamburger span,
-    #hamburger span {
-        display: block !important;
-        height: 3px !important;
-        width: 24px;
-        background: linear-gradient(90deg,
-                var(--theme-accent, #fff) 0%,
-                var(--theme-text, #fff) 100%);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        transform-origin: center center;
-        border-radius: 3px;
-        position: absolute !important;
-        opacity: 1 !important;
-        visibility: visible !important;
-        left: 50%;
-        transform: translateX(-50%);
-    }
-
-    /* First line - shorter */
-    .hamburger span:first-child,
-    #hamburger span:first-child {
-        width: 20px;
-        top: 6px;
-    }
-
-    /* Middle line - full width */
-    .hamburger span:nth-child(2),
-    #hamburger span:nth-child(2) {
-        width: 24px;
-        top: 13px;
-    }
-
-    /* Last line - shorter, aligned right */
-    .hamburger span:last-child,
-    #hamburger span:last-child {
-        width: 16px;
-        top: 20px;
-        left: auto;
-        right: 3px;
-        transform: none;
-    }
-
-    /* Active state - transforms into perfect centered X */
-    .hamburger.active span:first-child,
-    #hamburger.active span:first-child {
-        width: 24px !important;
-        top: 13px !important;
-        transform: translateX(-50%) rotate(45deg);
-    }
-
-    .hamburger.active span:nth-child(2),
-    #hamburger.active span:nth-child(2) {
-        opacity: 0;
-        transform: translateX(-50%) scale(0);
-    }
-
-    .hamburger.active span:last-child,
-    #hamburger.active span:last-child {
-        width: 24px !important;
-        top: 13px !important;
-        left: 50% !important;
-        right: auto !important;
-        transform: translateX(-50%) rotate(-45deg);
-    }
-
-    /* Persona-specific hamburger colors on mobile */
-    body.persona-founder .hamburger span,
-    body.persona-founder #hamburger span {
-        background: linear-gradient(90deg, #A0A453 0%, rgba(160, 164, 83, 0.9) 100%);
-    }
-
-    body.persona-operator .hamburger span,
-    body.persona-operator #hamburger span {
-        background: linear-gradient(90deg, #FFB800 0%, rgba(255, 184, 0, 0.9) 100%);
-    }
-
-    body.persona-investor .hamburger span,
-    body.persona-investor #hamburger span {
-        background: linear-gradient(90deg, #C39F47 0%, rgba(195, 159, 71, 0.9) 100%);
-    }
-
-    body.persona-dad .hamburger span,
-    body.persona-dad #hamburger span {
-        background: linear-gradient(90deg, #FF7F50 0%, rgba(255, 127, 80, 0.9) 100%);
-    }
-
-    /* Mobile role title display - next to hamburger on the left */
-    .mobile-role-title {
-        display: flex !important;
-        position: fixed;
-        top: 22px;
-        left: 59px;
-        z-index: 1001;
-        align-items: center;
-    }
-
-    .mobile-role-title .role-text {
-        font-family: 'Cinzel', serif;
-        color: var(--color-primary);
-        font-size: 16px;
-        font-weight: 600;
-        text-transform: capitalize;
-        letter-spacing: 1px;
-    }
-
-    /* Hide role title during character selection */
-    body.character-select-active .mobile-role-title,
-    #characterSelect:not(.hidden)~* .mobile-role-title {
-        display: none !important;
-    }
-
-    /* Persona-specific role title colors */
-    body.persona-founder .mobile-role-title .role-text {
-        color: #A0A453;
-    }
-
-    body.persona-operator .mobile-role-title .role-text {
-        color: #FFB800;
-    }
-
-    body.persona-investor .mobile-role-title .role-text {
-        color: #C39F47;
-    }
-
-    body.persona-dad .mobile-role-title .role-text {
-        color: #FF7F50;
-    }
-
-    /* Mobile site title in center - now hidden */
-    .mobile-site-title {
-        font-family: var(--font-primary);
-        font-size: 18px;
-        font-weight: 600;
-        letter-spacing: 1px;
-        color: var(--theme-text);
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        display: none !important;
-    }
-
-    /* Persona switcher on mobile - top right */
-    .persona-switcher {
-        position: fixed !important;
-        right: 15px !important;
-        top: 10px !important;
-        transform: none !important;
-        display: block !important;
-        /* Show on mobile */
-        width: 48px !important;
-        height: 48px !important;
-        margin-bottom: 20px !important;
-        z-index: 10000 !important;
-        /* Increased z-index to ensure it's clickable */
-    }
-
-    /* Sidebar as Full-Screen Overlay */
-    .sidebar {
-        position: fixed !important;
-        top: 0 !important;
-        left: -100%;
-        width: 85%;
-        max-width: 320px;
-        height: 100vh !important;
-        background: rgba(30, 44, 35, 0.98);
-        z-index: 10001;
-        transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease;
-        display: flex !important;
-        flex-direction: column;
-        padding-top: calc(var(--mobile-navbar-height) + 20px);
-        box-shadow: 2px 0 20px rgba(0, 0, 0, 0.3);
-        opacity: 1 !important;
-        visibility: visible !important;
-        backdrop-filter: blur(10px);
-    }
-
-    /* Persona-specific sidebar backgrounds */
-    body.persona-founder .sidebar {
-        background: rgba(30, 44, 35, 0.98);
-    }
-
-    body.persona-operator .sidebar {
-        background: rgba(26, 29, 32, 0.98);
-    }
-
-    body.persona-investor .sidebar {
-        background: rgba(239, 235, 228, 0.98);
-    }
-
-    body.persona-dad .sidebar {
-        background: rgba(255, 251, 239, 0.98);
-    }
-
-    /* Light theme adjustments for mobile navigation */
-    body.persona-investor .nav-link,
-    body.persona-dad .nav-link {
-        color: #0A1D1A !important;
-    }
-
-    body.persona-investor .nav-link:hover,
-    body.persona-investor .nav-link:active,
-    body.persona-dad .nav-link:hover,
-    body.persona-dad .nav-link:active {
-        background: rgba(0, 0, 0, 0.05);
-        color: var(--theme-accent) !important;
-    }
-
-    body.persona-investor .nav-link.active,
-    body.persona-dad .nav-link.active {
-        /* background removed for cleaner look */
-        /* border-left-color removed */
-        color: var(--theme-accent) !important;
-    }
-
-    body.persona-investor .site-title-link,
-    body.persona-dad .site-title-link {
-        color: #0A1D1A !important;
-    }
-
-    body.persona-investor .persona-badge,
-    body.persona-dad .persona-badge {
-        background: rgba(0, 0, 0, 0.05);
-    }
-
-    .sidebar.open {
-        left: 0 !important;
-        display: flex !important;
-    }
-
-    /* Dark overlay when menu is open */
-    .menu-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 0;
-        display: none;
-        opacity: 0;
-        transition: opacity 0.3s;
-        /* Don't block hamburger clicks */
-        pointer-events: auto;
-    }
-
-    body.menu-open .menu-overlay {
-        display: block;
-        opacity: 1;
-    }
-
-    .sidebar-header {
-        padding: 20px;
-        text-align: center;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        display: block !important;
-    }
-
-    .site-title {
-        font-size: 20px;
-        margin-bottom: 10px;
-    }
-
-    .site-title-link {
-        color: rgba(255, 255, 255, 0.95) !important;
-        text-decoration: none;
-        font-family: 'Cinzel', serif;
-        font-weight: 600;
-        letter-spacing: 1px;
-    }
-
-    .persona-badge {
-        display: inline-block;
-        padding: 4px 12px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 0px;
-        margin-top: 8px;
-    }
-
-    .badge-text {
-        color: var(--theme-accent, #A0A453);
-        font-size: 12px;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-
-    .navigation {
-        flex: 1;
-        overflow-y: auto;
-        padding: 0 0 20px 0;
-        display: block !important;
-    }
-
-    .nav-list {
-        padding: 0;
-        margin: 0;
-        list-style: none !important;
-        display: block !important;
-    }
-
-    .nav-item {
-        margin: 0;
-        display: block !important;
-    }
-
-    .nav-link {
-        padding: 15px 20px;
-        font-size: 16px;
-        display: flex !important;
-        align-items: center;
-        gap: 15px;
-        border-left: 3px solid transparent;
-        text-decoration: none;
-        color: rgba(255, 255, 255, 0.9) !important;
-        transition: all 0.3s ease;
-    }
-
-    .nav-link:hover,
-    .nav-link:active {
-        background: rgba(255, 255, 255, 0.05);
-        color: var(--theme-accent, #A0A453) !important;
-    }
-
-    .nav-link.active {
-        /* background removed for cleaner look */
-        /* border-left-color removed */
-        color: var(--theme-accent, #A0A453) !important;
-    }
-
-    /* Navigation icons and text visibility */
-    .nav-icon {
-        display: inline-flex !important;
-        width: 20px;
-        height: 20px;
-        flex-shrink: 0;
-    }
-
-    .nav-text {
-        display: inline-block !important;
-        font-family: 'Montserrat', sans-serif;
-        font-weight: 500;
-    }
-
-    /* Content Area */
-    .container {
-        padding-top: calc(var(--mobile-navbar-height) - 15px);
-        min-height: 100vh;
-    }
-
-    .content {
-        margin-left: 0;
-        padding: var(--mobile-padding);
-        padding-top: 0;
-    }
-
-    /* Remove top margins from content grids on mobile */
-    .writing-grid,
-    .quotes-container,
-    .questions-container,
-    .investments-grid,
-    .article-grid {
-        margin-top: 0 !important;
-        padding-top: 0 !important;
-    }
-
-    /* Reduce page header spacing on mobile to move content up */
-    .page-header {
-        margin-bottom: 5px !important;
-        padding-bottom: 5px !important;
-        margin-top: 0 !important;
-        padding-top: 0 !important;
-    }
-
-    /* Move page title up */
-    .page-title {
-        margin-top: 0 !important;
-        margin-bottom: 10px !important;
-        padding-top: 0 !important;
-    }
-
-    /* Remove ALL top spacing from intro text */
-    .intro-text {
-        margin-top: 0 !important;
-        padding-top: 0 !important;
-    }
-
-    /* Remove spacing from content-body */
-    .content-body {
-        margin-top: 0 !important;
-        padding-top: 0 !important;
-    }
-
-    /* Force all article and content items to start at top */
-    .article-item,
-    .quote-item,
-    .question-item,
-    .investment-item,
-    .content-item {
-        margin-top: 0 !important;
-    }
-
-    /* Make first child of any content container start at top */
-    .content>*:first-child,
-    .content-body>*:first-child,
-    .writing-grid>*:first-child,
-    .quotes-container>*:first-child,
-    .questions-container>*:first-child,
-    .investments-grid>*:first-child {
-        margin-top: 0 !important;
-        padding-top: 15px !important;
-    }
-
-    /* Container for persona icons - horizontal layout */
-    .persona-icons-container {
-        display: flex !important;
-        flex-direction: row-reverse !important;
-        align-items: center !important;
-        gap: 8px !important;
-        position: relative !important;
-        width: auto !important;
-        height: 48px !important;
-        margin-bottom: 15px !important;
-        z-index: 10001 !important;
-        /* Ensure it's above other elements */
-    }
-
-    /* Options container that slides out */
-    .persona-options {
-        display: flex !important;
-        flex-direction: row-reverse !important;
-        gap: 6px !important;
-        overflow: hidden !important;
-        max-width: 0 !important;
-        opacity: 0 !important;
-        transition: max-width 0.5s cubic-bezier(0.4, 0.0, 0.2, 1), opacity 0.4s ease !important;
-        margin-right: 0 !important;
-    }
-
-    /* Show options when container has show-options class */
-    .persona-icons-container.show-options .persona-options {
-        max-width: 250px !important;
-        opacity: 1 !important;
-        overflow: visible !important;
-        transition: max-width 0.5s cubic-bezier(0.4, 0.0, 0.2, 1), opacity 0.4s ease !important;
-    }
-
-    /* Individual persona option buttons */
-    .persona-icon-btn {
-        width: 48px !important;
-        height: 48px !important;
-        min-width: 48px !important;
-        min-height: 48px !important;
-        border-radius: 50% !important;
-        background: rgba(255, 255, 255, 0.95) !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
-        cursor: pointer !important;
-        padding: 0 !important;
-        transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1) !important;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
-        overflow: hidden !important;
-        opacity: 0 !important;
-        transform: translateX(20px) scale(0.8) !important;
-        display: block !important;
-        flex-shrink: 0 !important;
-        position: relative !important;
-        z-index: 10002 !important;
-    }
-
-    /* Animate icons when showing with smooth bounce */
-    .persona-icons-container.show-options .persona-icon-btn {
-        opacity: 1 !important;
-        transform: translateX(0) scale(1) !important;
-    }
-
-    /* Staggered animation delay */
-    .persona-icons-container.show-options .persona-icon-btn:nth-child(1) {
-        transition-delay: 0.05s !important;
-    }
-
-    .persona-icons-container.show-options .persona-icon-btn:nth-child(2) {
-        transition-delay: 0.1s !important;
-    }
-
-    .persona-icons-container.show-options .persona-icon-btn:nth-child(3) {
-        transition-delay: 0.15s !important;
-    }
-
-    .persona-icons-container.show-options .persona-icon-btn:nth-child(4) {
-        transition-delay: 0.2s !important;
-    }
-
-    /* Selected state with role-specific colors for mobile */
-    .persona-icon-btn[data-persona="founder"].current-role {
-        border-color: #A0A453 !important;
-        border-width: 2px !important;
-        box-shadow: 0 0 0 2px rgba(160, 164, 83, 0.2) !important;
-    }
-
-    .persona-icon-btn[data-persona="operator"].current-role {
-        border-color: #FFB800 !important;
-        border-width: 2px !important;
-        box-shadow: 0 0 0 2px rgba(255, 184, 0, 0.2) !important;
-    }
-
-    .persona-icon-btn[data-persona="investor"].current-role {
-        border-color: #C39F47 !important;
-        border-width: 2px !important;
-        box-shadow: 0 0 0 2px rgba(195, 159, 71, 0.2) !important;
-    }
-
-    .persona-icon-btn[data-persona="dad"].current-role {
-        border-color: #FF7F50 !important;
-        border-width: 2px !important;
-        box-shadow: 0 0 0 2px rgba(255, 127, 80, 0.2) !important;
-    }
-
-    /* Hide current role in options */
-    .persona-icon-btn.current-role {
-        display: none !important;
-    }
-
-    /* Images in option buttons - scaled up and positioned to show faces */
-    .persona-icon-img {
-        width: 100% !important;
-        height: 100% !important;
-        object-fit: cover !important;
-        object-position: center 15% !important;
-        display: block !important;
-        border-radius: 50% !important;
-        transform: scale(1.3) !important;
-    }
-
-    /* Main persona button */
-    .persona-btn {
-        width: 48px !important;
-        height: 48px !important;
-        min-width: 48px !important;
-        min-height: 48px !important;
-        max-width: 48px !important;
-        max-height: 48px !important;
-        padding: 0 !important;
-        border-radius: 50% !important;
-        overflow: hidden !important;
-        flex-shrink: 0 !important;
-        aspect-ratio: 1 / 1 !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
-        display: block !important;
-        background: rgba(255, 255, 255, 0.95) !important;
-        cursor: pointer !important;
-        position: relative !important;
-        z-index: 2 !important;
-    }
-
-    /* Role-specific border colors for main button on mobile */
-    body.persona-founder .persona-btn {
-        border-color: #A0A453 !important;
-        border-width: 2px !important;
-    }
-
-    body.persona-operator .persona-btn {
-        border-color: #FFB800 !important;
-        border-width: 2px !important;
-    }
-
-    body.persona-investor .persona-btn {
-        border-color: #C39F47 !important;
-        border-width: 2px !important;
-    }
-
-    body.persona-dad .persona-btn {
-        border-color: #FF7F50 !important;
-        border-width: 2px !important;
-    }
-
-    /* Mobile only dropdown - should be hidden by default, shown when needed */
-    .persona-dropdown.mobile-only {
-        display: none;
-    }
-
-    /* Mobile persona options are already defined above - no need to override */
-
-    /* Ensure persona image fills the whole circle on mobile - scaled and positioned for faces */
-    .persona-profile-img {
-        width: 100% !important;
-        height: 100% !important;
-        object-fit: cover !important;
-        object-position: center 15% !important;
-        display: block !important;
-        border-radius: 0 !important;
-        transform: scale(1.3) !important;
-    }
-
-    .current-persona-avatar {
-        display: block !important;
-        width: 100% !important;
-        height: 100% !important;
-        line-height: 0 !important;
-        border-radius: 0 !important;
-        overflow: hidden !important;
-    }
-
-    .persona-dropdown {
-        right: 0;
-        left: auto;
-        top: 50px;
-        width: 200px;
-    }
-}
-
-/* ==================== Mobile Split View ==================== */
-@media (max-width: 768px) {
-    .split-view {
-        flex-direction: column;
-        height: auto;
-        min-height: auto !important;
-        padding: var(--mobile-padding) !important;
-        padding-top: 0 !important;
-        gap: 0;
-        align-items: flex-start !important;
-        justify-content: flex-start !important;
-    }
-
-    .list-pane {
-        width: 100%;
-        min-width: 100%;
-        max-height: none !important;
-        height: auto !important;
-        border-right: none;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        padding: var(--mobile-padding);
-        padding-top: 0 !important;
-        position: relative !important;
-        top: 0 !important;
-        background: var(--theme-primary);
-        z-index: 10;
-    }
-
-    .reading-pane {
-        width: 100%;
-        padding: var(--mobile-padding);
-        min-height: 60vh;
-    }
-
-    /* Collapsible list on mobile */
-    .list-pane.collapsed {
-        max-height: 60px;
-        overflow: hidden;
-    }
-
-    .list-toggle {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px;
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 5px;
-        margin-bottom: 10px;
-        cursor: pointer;
-    }
-
-    .list-toggle::after {
-        content: '▼';
-        transition: transform 0.3s;
-    }
-
-    .list-pane.collapsed .list-toggle::after {
-        transform: rotate(-90deg);
-    }
-
-    .post-list {
-        margin: 10px 0;
-    }
-
-    .post-list a {
-        padding: 12px 10px;
-        font-size: 14px;
-    }
-}
-
-/* ==================== Mobile Forms and Typography ==================== */
-@media (max-width: 768px) {
-
-    input,
-    textarea,
-    select {
-        font-size: 16px;
-        padding: 12px;
-        width: 100%;
-        border-radius: 8px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        background: rgba(255, 255, 255, 0.05);
-        color: var(--theme-text);
-    }
-
-    button,
-    .btn {
-        min-height: 44px;
-        padding: 12px 20px;
-        font-size: 16px;
-        border-radius: 8px;
-        width: 100%;
-        margin: 10px 0;
-    }
-
-    h1 {
-        font-size: 28px;
-        line-height: 1.2;
-    }
-
-    h2 {
-        font-size: 24px;
-        line-height: 1.3;
-    }
-
-    h3 {
-        font-size: 20px;
-        line-height: 1.4;
-    }
-
-    p,
-    li {
-        font-size: 16px;
-        line-height: 1.6;
-    }
-
-    .page-title {
-        font-size: 24px;
-        margin-bottom: 15px;
-    }
-
-    .article-title {
-        font-size: 24px;
-    }
-
-    blockquote {
-        margin: 20px 0;
-        padding: 15px;
-        font-size: 16px;
-    }
-}
-
-/* ==================== Mobile Card Layouts ==================== */
-@media (max-width: 768px) {
-    .card-grid {
-        grid-template-columns: 1fr;
-        gap: var(--mobile-card-gap);
-        padding: 0;
-    }
-
-    .card {
-        margin: 0;
-        border-radius: 12px;
-        padding: 15px;
-    }
-
-    .investment-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .question-category {
-        margin: 20px 0;
-        padding: 15px;
-    }
-}
-
-/* ==================== Touch and Gesture Support ==================== */
-.touchable {
-    -webkit-tap-highlight-color: transparent;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    user-select: none;
-    cursor: pointer;
-}
-
-.swipeable {
-    touch-action: pan-y;
-}
-
-.draggable {
-    touch-action: none;
-}
-
-/* ==================== Loading States ==================== */
-.mobile-loading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 200px;
-}
-
-.mobile-spinner {
-    width: 40px;
-    height: 40px;
-    border: 3px solid rgba(255, 255, 255, 0.2);
-    border-top-color: var(--theme-accent);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-}
-
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-/* ==================== Landscape and Small Phones ==================== */
-@media (max-width: 768px) and (orientation: landscape) {
-    .character-select-modal {
-        padding: 0;
-    }
-
-    .scroll-header {
-        padding: 5px;
-    }
-
-    .select-title {
-        font-size: 16px;
-    }
-
-    .select-subtitle {
-        display: none;
-    }
-
-    .character-grid {
-        flex-direction: row;
-        padding: 0;
-        gap: 10px;
-    }
-
-    .character-main-display {
-        flex: 1;
-    }
-
-    .character-card {
-        max-height: 100%;
-    }
-
-    .character-portrait {
-        height: 40%;
-    }
-
-    .character-name {
-        font-size: 18px !important;
-    }
-
-    .character-title {
-        font-size: 12px !important;
-    }
-
-    .character-desc {
-        font-size: 11px !important;
-        -webkit-line-clamp: 2;
-        line-clamp: 2;
-    }
-
-    .swipe-indicators {
-        padding: 10px;
-    }
-
-    .swipe-hint {
-        font-size: 12px;
-        padding: 3px;
-    }
-
-    .mobile-header {
-        height: 50px;
-    }
-
-    .container {
-        padding-top: 50px;
-    }
-}
-
-@media (max-width: 375px) {
-    :root {
-        --mobile-padding: 12px;
-    }
-
-    .select-title {
-        font-size: 17.6px;
-    }
-
-    .character-grid {
-        gap: 8px;
-        padding: 0;
-    }
-
-    .character-card {
-        padding: 8px;
-    }
-
-    .character-name {
-        font-size: 16px !important;
-    }
-
-    .character-title {
-        font-size: 10px !important;
-    }
-
-    .character-desc {
-        font-size: 10px !important;
-        -webkit-line-clamp: 2;
-    }
-
-    h1 {
-        font-size: 24px;
-    }
-
-    h2 {
-        font-size: 20px;
-    }
-
-    p,
-    li {
-        font-size: 14px;
-    }
-
-    .nav-link {
-        padding: 12px 15px;
-        font-size: 14px;
-    }
-}
-
-/* ==================== Tablets ==================== */
-@media (min-width: 768px) and (max-width: 1024px) {
-    .character-select-modal {
-        max-width: 90%;
-        max-height: 90vh;
-    }
-
-    .character-grid {
-        grid-template-columns: repeat(2, minmax(300px, 1fr));
-        gap: 20px;
-        padding: 20px;
-    }
-
-    .character-card {
-        height: auto;
-        min-height: 350px;
-    }
-}
-
-/* ==================== Accessibility for Mobile ==================== */
-@media (prefers-reduced-motion: reduce) {
-    * {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-    }
-}
 
 /* Hearthstone Card Deck Styles */
 .card-deck-container {
@@ -4484,7 +2779,7 @@ body.persona-dad .nav-list a.active {
 }
 
 .progress-percentage {
-    color: var(--theme-accent, #A0A453);
+    color: var(--theme-accent, var(--founder-accent));
     font-weight: bold;
     font-family: 'Courier New', monospace;
     font-size: 0.75rem;
@@ -4505,42 +2800,42 @@ body.persona-dad .nav-list a.active {
 .progress-bar-fill {
     height: 100%;
     width: 0%;
-    background: var(--theme-accent, #A0A453);
+    background: var(--theme-accent, var(--founder-accent));
     transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
 }
 
 /* Persona-specific progress bar colors */
 .persona-founder .progress-percentage {
-    color: #A0A453;
+    color: var(--founder-accent);
 }
 
 .persona-founder .progress-bar-fill {
-    background: #A0A453;
+    background: var(--founder-accent);
 }
 
 .persona-operator .progress-percentage {
-    color: #FFB800;
+    color: var(--operator-accent);
 }
 
 .persona-operator .progress-bar-fill {
-    background: #FFB800;
+    background: var(--operator-accent);
 }
 
 .persona-investor .progress-percentage {
-    color: #C39F47;
+    color: var(--investor-accent);
 }
 
 .persona-investor .progress-bar-fill {
-    background: #C39F47;
+    background: var(--investor-accent);
 }
 
 .persona-dad .progress-percentage {
-    color: #FF7F50;
+    color: var(--dad-accent);
 }
 
 .persona-dad .progress-bar-fill {
-    background: #FF7F50;
+    background: var(--dad-accent);
 }
 
 /* Founder persona sword icon styling */
@@ -4855,7 +3150,7 @@ body.persona-founder .role-card-subtitle-banner {
 /* Persona-specific theme RGB values for gradients */
 body.persona-founder {
     --theme-rgb: 160, 164, 83;
-    /* #A0A453 */
+    /* var(--founder-accent) */
 }
 
 /* Founder card specific border colors */
@@ -4865,29 +3160,29 @@ body.persona-founder .role-card {
 }
 
 body.persona-founder .role-card::before {
-    border-color: #A0A453;
+    border-color: var(--founder-accent);
     /* Accent color full */
 }
 
 body.persona-operator {
     --theme-rgb: 255, 184, 0;
-    /* #FFB800 */
+    /* var(--operator-accent) */
 }
 
 /* Operator card specific border colors */
 body.persona-operator .role-card {
     border-color: rgba(255, 184, 0, 0.3);
-    /* #FFB800 with transparency */
+    /* var(--operator-accent) with transparency */
 }
 
 body.persona-operator .role-card::before {
-    border-color: #FFB800;
+    border-color: var(--operator-accent);
     /* Accent color full */
 }
 
 body.persona-investor {
     --theme-rgb: 195, 159, 71;
-    /* #C39F47 */
+    /* var(--investor-accent) */
 }
 
 /* Investor card specific border colors */
@@ -4897,23 +3192,23 @@ body.persona-investor .role-card {
 }
 
 body.persona-investor .role-card::before {
-    border-color: #C39F47;
+    border-color: var(--investor-accent);
     /* Accent color full */
 }
 
 body.persona-dad {
     --theme-rgb: 255, 127, 80;
-    /* #FF7F50 */
+    /* var(--dad-accent) */
 }
 
 /* Dad card specific border colors */
 body.persona-dad .role-card {
     border-color: rgba(255, 127, 80, 0.3);
-    /* #FF7F50 with transparency */
+    /* var(--dad-accent) with transparency */
 }
 
 body.persona-dad .role-card::before {
-    border-color: #FF7F50;
+    border-color: var(--dad-accent);
     /* Accent color full */
 }
 
@@ -5082,73 +3377,73 @@ body.persona-dad .role-option {
 
 /* Persona-specific hover states */
 .role-option[data-role="founder"]:hover {
-    background: #A0A453;
-    border-color: #A0A453;
+    background: var(--founder-accent);
+    border-color: var(--founder-accent);
     box-shadow: 0 0 10px rgba(160, 164, 83, 0.4);
 }
 
 .role-option[data-role="founder"]:not(.active):hover::before {
-    color: #A0A453;
+    color: var(--founder-accent);
 }
 
 .role-option[data-role="operator"]:hover {
-    background: #FFB800;
-    border-color: #FFB800;
+    background: var(--operator-accent);
+    border-color: var(--operator-accent);
     box-shadow: 0 0 10px rgba(255, 184, 0, 0.4);
 }
 
 .role-option[data-role="operator"]:not(.active):hover::before {
-    color: #FFB800;
+    color: var(--operator-accent);
 }
 
 .role-option[data-role="investor"]:hover {
-    background: #C39F47;
-    border-color: #C39F47;
+    background: var(--investor-accent);
+    border-color: var(--investor-accent);
     box-shadow: 0 0 10px rgba(195, 159, 71, 0.4);
 }
 
 .role-option[data-role="investor"]:not(.active):hover::before {
-    color: #C39F47;
+    color: var(--investor-accent);
 }
 
 .role-option[data-role="dad"]:hover {
-    background: #FF7F50;
-    border-color: #FF7F50;
+    background: var(--dad-accent);
+    border-color: var(--dad-accent);
     box-shadow: 0 0 10px rgba(255, 127, 80, 0.4);
 }
 
 .role-option[data-role="dad"]:not(.active):hover::before {
-    color: #FF7F50;
+    color: var(--dad-accent);
 }
 
 /* Active states for each persona */
 body.persona-founder .role-option[data-role="founder"].active {
-    background: #A0A453;
-    border-color: #A0A453;
-    --theme-accent: #A0A453;
+    background: var(--founder-accent);
+    border-color: var(--founder-accent);
+    --theme-accent: var(--founder-accent);
     --theme-rgb: 160, 164, 83;
 }
 
 body.persona-operator .role-option[data-role="operator"].active {
-    background: #FFB800;
-    border-color: #FFB800;
-    --theme-accent: #FFB800;
+    background: var(--operator-accent);
+    border-color: var(--operator-accent);
+    --theme-accent: var(--operator-accent);
     --theme-rgb: 255, 184, 0;
 }
 
 body.persona-investor .role-option[data-role="investor"].active {
-    background: #C39F47;
-    border-color: #C39F47;
+    background: var(--investor-accent);
+    border-color: var(--investor-accent);
     box-shadow: 0 0 8px rgba(195, 159, 71, 0.5), inset 0 0 3px rgba(0, 0, 0, 0.2);
-    --theme-accent: #C39F47;
+    --theme-accent: var(--investor-accent);
     --theme-rgb: 195, 159, 71;
 }
 
 body.persona-dad .role-option[data-role="dad"].active {
-    background: #FF7F50;
-    border-color: #FF7F50;
+    background: var(--dad-accent);
+    border-color: var(--dad-accent);
     box-shadow: 0 0 8px rgba(255, 127, 80, 0.5), inset 0 0 3px rgba(0, 0, 0, 0.1);
-    --theme-accent: #FF7F50;
+    --theme-accent: var(--dad-accent);
     --theme-rgb: 255, 127, 80;
 }
 
@@ -5160,7 +3455,9 @@ body.persona-dad .role-option[data-role="dad"].active {
 }
 
 
-/* ==================== MOBILE STYLES FROM MOBILE.CSS ==================== */
+
+/* ==================== Additional Mobile Components ==================== */
+
 
 /**
  * Mobile-Specific Styles
@@ -5170,15 +3467,7 @@ body.persona-dad .role-option[data-role="dad"].active {
  * @version 2.0.0
  */
 
-/* ==================== Mobile Variables ==================== */
-:root {
-    --mobile-navbar-height: 60px;
-    --mobile-bottom-nav: 70px;
-    --mobile-padding: 15px;
-    --mobile-card-gap: 15px;
-    --swipe-threshold: 50px;
-    --mobile-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
+
 
 /* ==================== Viewport and Base Mobile Styles ==================== */
 @viewport {
@@ -5208,58 +3497,7 @@ body::after {
 /* ==================== Mobile Character Selection ==================== */
 @media (max-width: 768px) {
 
-    /* Full screen overlay - now scrollable */
-    .character-select-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 9999;
-        background: transparent;
-        /* Make transparent to show backgrounds */
-        overflow-y: scroll;
-        /* Force scrollbar always */
-        overflow-x: hidden;
-        -webkit-overflow-scrolling: touch;
-        /* Remove overscroll-behavior as it can cause issues on iOS */
-        pointer-events: auto;
-    }
 
-    /* Dark background base layer for mobile character selection */
-    .character-select-overlay::before {
-        content: '';
-        position: fixed;
-        /* Fixed to cover whole viewport */
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: #1A1D20;
-        z-index: -2;
-        pointer-events: none;
-    }
-
-    /* Background image for mobile character selection */
-    .character-select-overlay::after {
-        content: '';
-        position: fixed;
-        /* Fixed to cover whole viewport */
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-image: url('/assets/character-selection-background.png');
-        background-size: cover;
-        background-position: center center;
-        background-repeat: no-repeat;
-        opacity: 0.5;
-        /* Subtle but visible effect */
-        z-index: -1;
-        pointer-events: none;
-    }
 
     /* Hide container when character select is visible */
     .character-select-overlay:not(.hidden)~.container {
@@ -5704,7 +3942,7 @@ body::after {
         font-size: 11px;
         font-weight: bold;
         color: #333;
-        background: #A0A453;
+        background: var(--founder-accent);
         padding: 2px 6px;
         border-radius: 3px;
         z-index: 2;
@@ -5716,7 +3954,7 @@ body::after {
         font-size: 11px;
         font-weight: bold;
         color: #333;
-        background: #FFB800;
+        background: var(--operator-accent);
         padding: 2px 6px;
         border-radius: 3px;
         z-index: 2;
@@ -5728,7 +3966,7 @@ body::after {
         font-size: 11px;
         font-weight: bold;
         color: #333;
-        background: #C39F47;
+        background: var(--investor-accent);
         padding: 2px 6px;
         border-radius: 3px;
         z-index: 2;
@@ -5740,23 +3978,23 @@ body::after {
         font-size: 11px;
         font-weight: bold;
         color: #fff;
-        background: #FF7F50;
+        background: var(--dad-accent);
         padding: 2px 6px;
         border-radius: 3px;
         z-index: 2;
     }
 
     .character-card[data-persona="founder"].active .stat-item span {
-        background: #A0A453 !important;
+        background: var(--founder-accent) !important;
     }
     .character-card[data-persona="operator"].active .stat-item span {
-        background: #FFB800 !important;
+        background: var(--operator-accent) !important;
     }
     .character-card[data-persona="investor"].active .stat-item span {
-        background: #C39F47 !important;
+        background: var(--investor-accent) !important;
     }
     .character-card[data-persona="dad"].active .stat-item span {
-        background: #FF7F50 !important;
+        background: var(--dad-accent) !important;
         color: #fff !important;
     }
 
@@ -5795,7 +4033,7 @@ body::after {
     .swipe-dot.active {
         width: 24px;
         border-radius: 4px;
-        background: var(--theme-accent, #A0A453);
+        background: var(--theme-accent, var(--founder-accent));
     }
 
     /* Swipe Hint - Hidden */
@@ -5816,7 +4054,7 @@ body::after {
     }
 
     .select-role-btn {
-        background: linear-gradient(135deg, var(--theme-accent, #A0A453), var(--theme-secondary, #8B8F4E));
+        background: linear-gradient(135deg, var(--theme-accent, var(--founder-accent)), var(--theme-secondary, #8B8F4E));
         color: #1a1a2e;
         border: none;
         border-radius: 8px;
@@ -6160,7 +4398,7 @@ body::after {
         right: 0;
         height: calc(var(--mobile-navbar-height) + 10px);
         /* Slightly taller header */
-        background: var(--theme-primary, #1E2C23);
+        background: var(--theme-primary, var(--founder-bg));
         backdrop-filter: blur(10px);
         z-index: 1000;
         align-items: center;
@@ -6314,22 +4552,22 @@ body::after {
     /* Persona-specific hamburger colors on mobile */
     body.persona-founder .hamburger span,
     body.persona-founder #hamburger span {
-        background: linear-gradient(90deg, #A0A453 0%, rgba(160, 164, 83, 0.9) 100%);
+        background: linear-gradient(90deg, var(--founder-accent) 0%, rgba(160, 164, 83, 0.9) 100%);
     }
 
     body.persona-operator .hamburger span,
     body.persona-operator #hamburger span {
-        background: linear-gradient(90deg, #FFB800 0%, rgba(255, 184, 0, 0.9) 100%);
+        background: linear-gradient(90deg, var(--operator-accent) 0%, rgba(255, 184, 0, 0.9) 100%);
     }
 
     body.persona-investor .hamburger span,
     body.persona-investor #hamburger span {
-        background: linear-gradient(90deg, #C39F47 0%, rgba(195, 159, 71, 0.9) 100%);
+        background: linear-gradient(90deg, var(--investor-accent) 0%, rgba(195, 159, 71, 0.9) 100%);
     }
 
     body.persona-dad .hamburger span,
     body.persona-dad #hamburger span {
-        background: linear-gradient(90deg, #FF7F50 0%, rgba(255, 127, 80, 0.9) 100%);
+        background: linear-gradient(90deg, var(--dad-accent) 0%, rgba(255, 127, 80, 0.9) 100%);
     }
 
     /* Mobile role title display - next to hamburger on the left */
@@ -6360,19 +4598,19 @@ body::after {
 
     /* Persona-specific role title colors */
     body.persona-founder .mobile-role-title .role-text {
-        color: #A0A453;
+        color: var(--founder-accent);
     }
 
     body.persona-operator .mobile-role-title .role-text {
-        color: #FFB800;
+        color: var(--operator-accent);
     }
 
     body.persona-investor .mobile-role-title .role-text {
-        color: #C39F47;
+        color: var(--investor-accent);
     }
 
     body.persona-dad .mobile-role-title .role-text {
-        color: #FF7F50;
+        color: var(--dad-accent);
     }
 
 
@@ -6429,22 +4667,22 @@ body::after {
     /* Persona-specific sidebar backgrounds */
     body.persona-founder .sidebar {
         background: rgba(30, 44, 35, 0.98);
-        /* Founder green theme - matches #1E2C23 */
+        /* Founder green theme - matches var(--founder-bg) */
     }
 
     body.persona-operator .sidebar {
         background: rgba(26, 29, 32, 0.98);
-        /* Operator dark theme - matches #1A1D20 */
+        /* Operator dark theme - matches var(--operator-bg) */
     }
 
     body.persona-investor .sidebar {
         background: rgba(239, 235, 228, 0.98);
-        /* Investor light theme - matches #EFEBE4 */
+        /* Investor light theme - matches var(--investor-bg) */
     }
 
     body.persona-dad .sidebar {
         background: rgba(255, 251, 239, 0.98);
-        /* Dad warm light theme - matches #FFFBEF */
+        /* Dad warm light theme - matches var(--dad-bg) */
     }
 
     /* Light theme adjustments for mobile navigation */
@@ -6533,7 +4771,7 @@ body::after {
     }
 
     .badge-text {
-        color: var(--theme-accent, #A0A453);
+        color: var(--theme-accent, var(--founder-accent));
         font-size: 12px;
         font-weight: 600;
         text-transform: uppercase;
@@ -6575,12 +4813,12 @@ body::after {
     .nav-link:hover,
     .nav-link:active {
         background: rgba(255, 255, 255, 0.05);
-        color: var(--theme-accent, #A0A453) !important;
+        color: var(--theme-accent, var(--founder-accent)) !important;
     }
 
     .nav-link.active {
         background: rgba(255, 255, 255, 0.1);
-        color: var(--theme-accent, #A0A453) !important;
+        color: var(--theme-accent, var(--founder-accent)) !important;
     }
 
     /* Navigation icons and text visibility */
@@ -6754,25 +4992,25 @@ body::after {
 
     /* Selected state with role-specific colors for mobile */
     .persona-icon-btn[data-persona="founder"].current-role {
-        border-color: #A0A453 !important;
+        border-color: var(--founder-accent) !important;
         border-width: 2px !important;
         box-shadow: 0 0 0 2px rgba(160, 164, 83, 0.2) !important;
     }
 
     .persona-icon-btn[data-persona="operator"].current-role {
-        border-color: #FFB800 !important;
+        border-color: var(--operator-accent) !important;
         border-width: 2px !important;
         box-shadow: 0 0 0 2px rgba(255, 184, 0, 0.2) !important;
     }
 
     .persona-icon-btn[data-persona="investor"].current-role {
-        border-color: #C39F47 !important;
+        border-color: var(--investor-accent) !important;
         border-width: 2px !important;
         box-shadow: 0 0 0 2px rgba(195, 159, 71, 0.2) !important;
     }
 
     .persona-icon-btn[data-persona="dad"].current-role {
-        border-color: #FF7F50 !important;
+        border-color: var(--dad-accent) !important;
         border-width: 2px !important;
         box-shadow: 0 0 0 2px rgba(255, 127, 80, 0.2) !important;
     }
@@ -6819,22 +5057,22 @@ body::after {
 
     /* Role-specific border colors for main button on mobile */
     body.persona-founder .persona-btn {
-        border-color: #A0A453 !important;
+        border-color: var(--founder-accent) !important;
         border-width: 2px !important;
     }
 
     body.persona-operator .persona-btn {
-        border-color: #FFB800 !important;
+        border-color: var(--operator-accent) !important;
         border-width: 2px !important;
     }
 
     body.persona-investor .persona-btn {
-        border-color: #C39F47 !important;
+        border-color: var(--investor-accent) !important;
         border-width: 2px !important;
     }
 
     body.persona-dad .persona-btn {
-        border-color: #FF7F50 !important;
+        border-color: var(--dad-accent) !important;
         border-width: 2px !important;
     }
 
@@ -7228,8 +5466,9 @@ body::after {
 
     .character-desc {
         font-size: 11px !important;
-        -webkit-line-clamp: 2;
-        line-clamp: 2;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
+        -webkit-box-orient: vertical;
     }
 
     /* Swipe indicators in landscape */
@@ -7488,19 +5727,19 @@ body::after {
 
     /* Persona-specific card colors - DISABLED */
     /* body.persona-founder .welcome-card:hover {
-    border-color: #A0A453;
+    border-color: var(--founder-accent);
 }
 
 body.persona-operator .welcome-card:hover {
-    border-color: #FFB800;
+    border-color: var(--operator-accent);
 }
 
 body.persona-investor .welcome-card:hover {
-    border-color: #C39F47;
+    border-color: var(--investor-accent);
 }
 
 body.persona-dad .welcome-card:hover {
-    border-color: #FF7F50;
+    border-color: var(--dad-accent);
 } */
 
 
@@ -7546,7 +5785,7 @@ body.persona-dad .welcome-card:hover {
         font-size: 18px;
     }
 
-    .article-content p > strong:only-child {
+    .article-content p>strong:only-child {
         font-size: 18px;
     }
 
