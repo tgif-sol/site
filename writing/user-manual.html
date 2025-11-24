@@ -111,13 +111,13 @@
     </div>
 
     <script src="/js/utilities.js"></script>
-    <script src="/js/bustling-world-v2.js"></script>
+    <script src="/js/gaming-system.js"></script>
     <script src="/js/mobile.js"></script>
     <script src="/js/spa-navigation.js"></script>
     <script>
         // Apply saved persona theme
         document.addEventListener('DOMContentLoaded', () => {
-            const savedPersona = localStorage.getItem('bustling_v2_persona');
+            const savedPersona = localStorage.getItem('gaming_persona');
             if (savedPersona) {
                 document.body.className = `persona-${savedPersona}`;
             }

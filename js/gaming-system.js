@@ -1,13 +1,27 @@
 /**
- * The Bustling World v2 - Character Selection System
+ * Gaming System - Character Selection & Persona Management
  * Professional Game-Inspired Portfolio JavaScript
+ * @module GamingSystem
+ * @author Alan James Curtis
+ * @version 2.0.0
  */
 
-class BustlingWorldV2 {
+'use strict';
+
+/**
+ * Gaming System Class
+ * Manages character selection, persona switching, and navigation
+ */
+class GamingSystem {
+    /**
+     * @constructor
+     */
     constructor() {
-        // State management
+        /** @type {string|null} */
         this.currentPersona = null;
-        this.isFirstVisit = !localStorage.getItem('bustling_v2_visited');
+
+        /** @type {boolean} */
+        this.isFirstVisit = !Storage.hasVisited();
 
         // Persona configuration
         this.personaData = {
@@ -75,8 +89,7 @@ class BustlingWorldV2 {
             // Clear the reset parameter from URL
             window.history.replaceState({}, document.title, window.location.pathname);
             // Clear localStorage
-            localStorage.removeItem('bustling_v2_visited');
-            localStorage.removeItem('bustling_v2_persona');
+            Storage.clearAll();
             this.isFirstVisit = true;
         }
 
@@ -89,7 +102,7 @@ class BustlingWorldV2 {
                 window.location.href = '/?reset=true';
             }
         } else {
-            const savedPersona = localStorage.getItem('bustling_v2_persona') || 'founder';
+            const savedPersona = Storage.getPersona();
             // Set persona - this will also dispatch the personaChanged event for XP system
             this.setPersona(savedPersona);
             this.hideCharacterSelection();
@@ -110,14 +123,21 @@ class BustlingWorldV2 {
                 // Load welcome content on index page after showing main content
                 // This ensures the cards appear on refresh
                 // But only if the welcome content doesn't already exist
-                setTimeout(() => {
+                // Wait for spa-navigation.js to load
+                const tryLoadWelcome = (attempts = 0) => {
                     const contentArea = document.querySelector('.content');
                     const hasWelcomeContent = contentArea && (contentArea.querySelector('.welcome-cards') || contentArea.querySelector('.welcome-page'));
 
-                    if (!hasWelcomeContent && window.loadPageContent) {
-                        window.loadPageContent('welcome');
+                    if (!hasWelcomeContent) {
+                        if (window.loadPageContent) {
+                            window.loadPageContent('welcome');
+                        } else if (attempts < 10) {
+                            // Retry if spa-navigation.js hasn't loaded yet
+                            setTimeout(() => tryLoadWelcome(attempts + 1), 100);
+                        }
                     }
-                }, 100);
+                };
+                setTimeout(() => tryLoadWelcome(), 200);
             }
         }
 
@@ -181,9 +201,12 @@ class BustlingWorldV2 {
     /**
      * Setup character selection cards
      */
+    /**
+     * Setup character selection cards
+     */
     setupCharacterSelection() {
         const characterCards = document.querySelectorAll('.character-card');
-        const isMobile = window.innerWidth <= 768;
+        const isMobile = Device.isMobile();
 
         characterCards.forEach(card => {
             const persona = card.dataset.persona;
@@ -192,7 +215,6 @@ class BustlingWorldV2 {
             if (card.dataset.persona === 'founder' || card.dataset.persona === 'dad' || card.dataset.persona === 'operator' || card.dataset.persona === 'investor') {
                 const video = card.querySelector('.character-video');
                 if (video) {
-                    console.log(`[setupCharacterSelection] Setting up video for ${persona}`, video);
                     // Ensure video is muted
                     video.muted = true;
                     
@@ -364,7 +386,6 @@ class BustlingWorldV2 {
                 card.addEventListener('click', (e) => {
                     // Always navigate on desktop, no exceptions
                     e.stopPropagation(); // Prevent bubbling
-                    console.log('Desktop card clicked, navigating to:', persona);
                     this.selectCharacter(persona);
                 });
             }
@@ -383,14 +404,13 @@ class BustlingWorldV2 {
         const personaContainer = personaSwitcher.querySelector('.persona-icons-container');
 
         // Handle both desktop and mobile with icon navigation
-        if (window.innerWidth <= 768) {
+        if (Device.isMobile()) {
             // Mobile: Use tap to show/hide icons
             if (personaBtn && personaContainer) {
                 // Add click event listener to the persona button
                 personaBtn.addEventListener('click', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    console.log('Mobile persona button clicked - toggling show-options');
                     personaContainer.classList.toggle('show-options');
                 });
 
@@ -398,7 +418,6 @@ class BustlingWorldV2 {
                 personaBtn.addEventListener('touchstart', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    console.log('Mobile persona button touched - toggling show-options');
                     personaContainer.classList.toggle('show-options');
                 }, { passive: false });
 
@@ -406,7 +425,6 @@ class BustlingWorldV2 {
                 document.addEventListener('click', (e) => {
                     // Check if click is outside the persona switcher
                     if (!personaSwitcher.contains(e.target)) {
-                        console.log('Clicked outside - removing show-options');
                         personaContainer.classList.remove('show-options');
                     }
                 });
@@ -426,7 +444,6 @@ class BustlingWorldV2 {
                 e.preventDefault();
                 e.stopPropagation();
                 const persona = e.currentTarget.dataset.persona;
-                console.log('Persona icon clicked:', persona);
                 if (persona) {
                     // Update current role indicator using all buttons
                     const allBtns = personaSwitcher.querySelectorAll('.persona-icon-btn');
@@ -463,7 +480,7 @@ class BustlingWorldV2 {
         });
 
         // Update current role indicator on load
-        const currentPersona = localStorage.getItem('bustling_v2_persona') || 'founder';
+        const currentPersona = Storage.getPersona();
         iconBtns.forEach(btn => {
             btn.classList.remove('current-role');
             if (btn.dataset.persona === currentPersona) {
@@ -535,9 +552,12 @@ class BustlingWorldV2 {
     /**
      * Setup mobile menu functionality
      */
+    /**
+     * Setup mobile menu functionality
+     */
     setupMobileMenu() {
         // Only setup mobile menu on mobile devices
-        if (window.innerWidth > 768) return;
+        if (!Device.isMobile()) return;
 
         // Use a small delay to ensure DOM is ready
         setTimeout(() => {
@@ -545,36 +565,17 @@ class BustlingWorldV2 {
             const sidebar = document.querySelector('.sidebar');
 
             if (!hamburger || !sidebar) {
-                console.log('Mobile menu elements not found - hamburger:', !!hamburger, 'sidebar:', !!sidebar);
                 // Try again if elements not found
                 setTimeout(() => this.setupMobileMenu(), 500);
                 return;
             }
 
-            // Debug hamburger visibility
-            console.log('[BustlingWorld] Hamburger found, checking visibility...');
+            // Fix hamburger position if needed
             const rect = hamburger.getBoundingClientRect();
-            const computedStyle = window.getComputedStyle(hamburger);
-            console.log('[BustlingWorld] Hamburger details:', {
-                position: rect,
-                display: computedStyle.display,
-                visibility: computedStyle.visibility,
-                opacity: computedStyle.opacity,
-                zIndex: computedStyle.zIndex,
-                width: rect.width,
-                height: rect.height,
-                hasSpans: hamburger.querySelectorAll('span').length,
-                parent: hamburger.parentElement ? hamburger.parentElement.tagName + '.' + hamburger.parentElement.className : 'body',
-                computedLeft: computedStyle.left,
-                computedTop: computedStyle.top
-            });
-
-            // Force position fix if needed
             if (rect.x < 0) {
-                console.log('[BustlingWorld] Fixing hamburger position - was at x:', rect.x);
-                hamburger.style.left = '15px !important';
-                hamburger.style.position = 'fixed !important';
-                hamburger.style.transform = 'none !important';
+                hamburger.style.left = '15px';
+                hamburger.style.position = 'fixed';
+                hamburger.style.transform = 'none';
             }
 
             // Don't remove event listeners, just add new one
@@ -585,7 +586,6 @@ class BustlingWorldV2 {
                 hamburger.addEventListener('click', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    console.log('Hamburger clicked - toggling sidebar');
                     sidebar.classList.toggle('open');
                     hamburger.classList.toggle('active');
                     document.body.classList.toggle('menu-open');
@@ -596,7 +596,6 @@ class BustlingWorldV2 {
             const overlay = document.querySelector('.menu-overlay');
             if (overlay) {
                 overlay.addEventListener('click', () => {
-                    console.log('Overlay clicked - closing sidebar');
                     sidebar.classList.remove('open');
                     hamburger.classList.remove('active');
                     document.body.classList.remove('menu-open');
@@ -608,7 +607,6 @@ class BustlingWorldV2 {
                 if (sidebar.classList.contains('open') &&
                     !sidebar.contains(e.target) &&
                     !hamburger.contains(e.target)) {
-                    console.log('Closing sidebar - clicked outside');
                     sidebar.classList.remove('open');
                     hamburger.classList.remove('active');
                     document.body.classList.remove('menu-open');
@@ -620,7 +618,6 @@ class BustlingWorldV2 {
             navLinks.forEach(link => {
                 link.addEventListener('click', () => {
                     if (window.innerWidth <= 768) {
-                        console.log('Nav link clicked - closing sidebar');
                         sidebar.classList.remove('open');
                         hamburger.classList.remove('active');
                         document.body.classList.remove('menu-open');
@@ -628,7 +625,6 @@ class BustlingWorldV2 {
                 });
             });
 
-            console.log('Mobile menu setup complete');
         }, 100); // Close the setTimeout
     }
 
@@ -665,9 +661,12 @@ class BustlingWorldV2 {
     /**
      * Render the Hearthstone-style card deck
      */
+    /**
+     * Render the Hearthstone-style card deck
+     */
     renderCardDeck() {
         // Don't render on mobile
-        if (window.innerWidth <= 768) return;
+        if (!Device.isDesktop()) return;
 
         const deckContainer = document.getElementById('cardDeck');
         if (!deckContainer) return;
@@ -850,12 +849,14 @@ class BustlingWorldV2 {
      * Select a character and initialize the site
      * @param {string} persona - The selected persona
      */
+    /**
+     * Select a character and initialize the site
+     * @param {string} persona - The selected persona
+     */
     selectCharacter(persona) {
-        console.log('selectCharacter called for:', persona);
-
         // Save selection
-        localStorage.setItem('bustling_v2_visited', 'true');
-        localStorage.setItem('bustling_v2_persona', persona);
+        Storage.markVisited();
+        Storage.setPersona(persona);
 
         // Apply persona
         this.setPersona(persona);
@@ -876,13 +877,14 @@ class BustlingWorldV2 {
         // After showing main content, load Welcome as the default page
         const isIndexPage = window.location.pathname === '/' || window.location.pathname === '/index.html';
         if (isIndexPage) {
-            // Load welcome content after animation
-            setTimeout(() => {
-                console.log('Loading welcome content after character selection');
+            const tryLoadWelcome = (attempts = 0) => {
                 if (window.loadPageContent) {
                     window.loadPageContent('welcome');
+                } else if (attempts < 10) {
+                    setTimeout(() => tryLoadWelcome(attempts + 1), 100);
                 }
-            }, 500);
+            };
+            setTimeout(() => tryLoadWelcome(), 500);
         }
 
         // Event dispatch is now handled in setPersona()
@@ -892,15 +894,17 @@ class BustlingWorldV2 {
      * Switch to a different persona
      * @param {string} persona - The persona to switch to
      */
+    /**
+     * Switch to a different persona
+     * @param {string} persona - The persona to switch to
+     */
     switchPersona(persona) {
-        console.log('[switchPersona] Switching from', this.currentPersona, 'to', persona);
         if (persona === this.currentPersona) {
-            console.log('[switchPersona] Same persona, skipping');
             return;
         }
 
         // Save to localStorage - this will trigger storage event for cross-tab sync
-        localStorage.setItem('bustling_v2_persona', persona);
+        Storage.setPersona(persona);
 
         // Set the persona which will dispatch the personaChanged event
         this.setPersona(persona);
@@ -926,13 +930,11 @@ class BustlingWorldV2 {
 
         // Force immediate navigation icon update after persona switch
         // Use requestAnimationFrame to ensure DOM is ready
-        console.log('[switchPersona] Scheduling navigation icon update');
+        // Force immediate navigation icon update after persona switch
         requestAnimationFrame(() => {
-            console.log('[switchPersona] First update call');
             this.updateNavigationIcons();
             // Double update to ensure it takes effect
             setTimeout(() => {
-                console.log('[switchPersona] Second update call');
                 this.updateNavigationIcons();
             }, 50);
         });
@@ -940,10 +942,15 @@ class BustlingWorldV2 {
         // If we're on the welcome page, reload it to update content and links
         const activeNav = document.querySelector('.nav-link.active');
         const isWelcomePage = !activeNav || activeNav.dataset.page === 'welcome';
-        if (isWelcomePage && window.loadPageContent) {
-            setTimeout(() => {
-                window.loadPageContent('welcome');
-            }, 100);
+        if (isWelcomePage) {
+            const tryLoadWelcome = (attempts = 0) => {
+                if (window.loadPageContent) {
+                    window.loadPageContent('welcome');
+                } else if (attempts < 10) {
+                    setTimeout(() => tryLoadWelcome(attempts + 1), 100);
+                }
+            };
+            setTimeout(() => tryLoadWelcome(), 100);
         }
 
         // Event dispatch is now handled in setPersona()
@@ -959,7 +966,6 @@ class BustlingWorldV2 {
             const roleOptions = document.querySelectorAll('.role-option');
 
             if (roleOptions.length === 0) {
-                console.log('No role options found, retrying...');
                 // Retry after a short delay if elements not found
                 setTimeout(() => {
                     const retryOptions = document.querySelectorAll('.role-option');
@@ -987,10 +993,12 @@ class BustlingWorldV2 {
     /**
      * Reset to character selection screen
      */
+    /**
+     * Reset to character selection screen
+     */
     resetToCharacterSelection() {
         // Clear localStorage
-        localStorage.removeItem('bustling_v2_visited');
-        localStorage.removeItem('bustling_v2_persona');
+        Storage.clearAll();
 
         // Check if we're on the main page with character selection
         const modal = document.getElementById('characterSelect');
@@ -1124,9 +1132,14 @@ class BustlingWorldV2 {
 
                 if (isIndexPage) {
                     // If we have the SPA navigation function, use it
-                    if (window.loadPageContent) {
-                        window.loadPageContent('welcome');
-                    }
+                    const tryLoadWelcome = (attempts = 0) => {
+                        if (window.loadPageContent) {
+                            window.loadPageContent('welcome');
+                        } else if (attempts < 10) {
+                            setTimeout(() => tryLoadWelcome(attempts + 1), 100);
+                        }
+                    };
+                    tryLoadWelcome();
 
                     // Update the navigation to show welcome as active
                     const navLinks = document.querySelectorAll('.nav-link');
@@ -1230,9 +1243,11 @@ class BustlingWorldV2 {
     /**
      * Update navigation icons based on persona
      */
+    /**
+     * Update navigation icons based on persona
+     * @param {boolean} skipActiveUpdate - Skip active state update
+     */
     updateNavigationIcons(skipActiveUpdate = false) {
-        console.log('[updateNavigationIcons] Called with persona:', this.currentPersona);
-        console.log('[updateNavigationIcons] skipActiveUpdate:', skipActiveUpdate);
 
         // Only set active navigation if not called from click handler
         if (!skipActiveUpdate) {
@@ -1240,13 +1255,11 @@ class BustlingWorldV2 {
         }
 
         const navItems = document.querySelectorAll('.nav-item');
-        console.log('[updateNavigationIcons] Found nav items:', navItems.length);
 
         const isFounder = this.currentPersona === 'founder';
         const isOperator = this.currentPersona === 'operator';
         const isInvestor = this.currentPersona === 'investor';
         const isDad = this.currentPersona === 'dad';
-        console.log('[updateNavigationIcons] Persona checks - Founder:', isFounder, 'Operator:', isOperator, 'Investor:', isInvestor, 'Dad:', isDad);
 
         // Pixel art sword SVG icon - diagonal design
         const swordSvg = `<svg width="20" height="20" viewBox="0 0 20 20" style="image-rendering: pixelated; image-rendering: crisp-edges;">
@@ -1440,51 +1453,27 @@ class BustlingWorldV2 {
                 }
 
                 const isActive = navLink.classList.contains('active');
-                const pageName = navLink.dataset.page || 'unknown';
-                console.log(`[updateNavigationIcons] Processing ${pageName} - Active: ${isActive}`);
 
                 if (isFounder) {
                     // For founder: ONLY show sword on active page, hide ALL other icons
-                    if (isActive) {
-                        console.log(`[updateNavigationIcons] Setting sword icon for active page: ${pageName}`);
-                        navIcon.innerHTML = swordSvg;
-                    } else {
-                        navIcon.innerHTML = '';
-                    }
+                    navIcon.innerHTML = isActive ? swordSvg : '';
                 } else if (isOperator) {
                     // For operator: ONLY show wrench on active page, hide ALL other icons
-                    if (isActive) {
-                        console.log(`[updateNavigationIcons] Setting screwdriver icon for active page: ${pageName}`);
-                        navIcon.innerHTML = screwdriverSvg;
-                    } else {
-                        navIcon.innerHTML = '';
-                    }
+                    navIcon.innerHTML = isActive ? screwdriverSvg : '';
                 } else if (isInvestor) {
                     // For investor: ONLY show money stack on active page, hide ALL other icons
-                    if (isActive) {
-                        console.log(`[updateNavigationIcons] Setting money stack icon for active page: ${pageName}`);
-                        navIcon.innerHTML = moneyStackSvg;
-                    } else {
-                        navIcon.innerHTML = '';
-                    }
+                    navIcon.innerHTML = isActive ? moneyStackSvg : '';
                 } else if (isDad) {
                     // For dad: ONLY show house on active page, hide ALL other icons
-                    if (isActive) {
-                        console.log(`[updateNavigationIcons] Setting house icon for active page: ${pageName}`);
-                        navIcon.innerHTML = houseSvg;
-                    } else {
-                        navIcon.innerHTML = '';
-                    }
+                    navIcon.innerHTML = isActive ? houseSvg : '';
                 } else {
                     // Restore original icons for other personas
                     if (navIcon.dataset.originalIcon) {
-                        console.log(`[updateNavigationIcons] Restoring original icon for ${pageName}`);
                         navIcon.innerHTML = navIcon.dataset.originalIcon;
                     }
                 }
             }
         });
-        console.log('[updateNavigationIcons] Update complete');
     }
 
     /**
@@ -1510,45 +1499,24 @@ class BustlingWorldV2 {
         }
 
         // Show card deck only on desktop
-        if (cardDeck && window.innerWidth > 768) {
+        if (cardDeck && Device.isDesktop()) {
             cardDeck.classList.remove('hidden');
         }
     }
 }
 
 // Initialize when DOM is ready
-function initializeBustlingWorld() {
-    window.bustlingWorldV2 = new BustlingWorldV2();
+function initializeGamingSystem() {
+    window.gamingSystem = new GamingSystem();
 
     // Initialize role selection options
-    if (window.bustlingWorldV2) {
-        window.bustlingWorldV2.initializeRoleOptions();
-    }
-
-    // Note: Removed duplicate mobile persona initialization
-    // It's already handled in the setupPersonaSwitcher method
-
-    // Debug: Check if background image is loading
-    if (window.innerWidth > 768) {
-        const img = new Image();
-        img.onload = function () {
-            console.log('Background image loaded successfully: /assets/character-selection-background.png');
-        };
-        img.onerror = function () {
-            console.error('Failed to load background image: /assets/character-selection-background.png');
-        };
-        img.src = '/assets/character-selection-background.png';
-
-        // Check computed styles
-        const bodyStyles = window.getComputedStyle(document.body, '::before');
-        console.log('Body::before background-image:', bodyStyles.backgroundImage);
-        console.log('Body::before opacity:', bodyStyles.opacity);
-        console.log('Body::before z-index:', bodyStyles.zIndex);
+    if (window.gamingSystem) {
+        window.gamingSystem.initializeRoleOptions();
     }
 }
 
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeBustlingWorld);
+    document.addEventListener('DOMContentLoaded', initializeGamingSystem);
 } else {
-    initializeBustlingWorld();
+    initializeGamingSystem();
 }

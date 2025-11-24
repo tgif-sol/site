@@ -1,5 +1,5 @@
 /**
- * Main CSS - Unified Styles for The Bustling World
+ * Main CSS - Unified Styles for Gaming System
  * Combines desktop and mobile styles
  * Professional Game-Inspired Portfolio
  *
@@ -1768,52 +1768,12 @@ body.persona-dad .investment-status {
 .investment-list li {
     opacity: 0;
     transform: translateY(-20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
 .investment-list li.visible {
     opacity: 1;
     transform: translateY(0);
-}
-
-/* Staggered animation delays */
-.investment-list li:nth-child(1) {
-    transition-delay: 0s;
-}
-
-.investment-list li:nth-child(2) {
-    transition-delay: 0.1s;
-}
-
-.investment-list li:nth-child(3) {
-    transition-delay: 0.2s;
-}
-
-.investment-list li:nth-child(4) {
-    transition-delay: 0.3s;
-}
-
-.investment-list li:nth-child(5) {
-    transition-delay: 0.4s;
-}
-
-.investment-list li:nth-child(6) {
-    transition-delay: 0.5s;
-}
-
-.investment-list li:nth-child(7) {
-    transition-delay: 0.6s;
-}
-
-.investment-list li:nth-child(8) {
-    transition-delay: 0.7s;
-}
-
-.investment-list li:nth-child(9) {
-    transition-delay: 0.8s;
-}
-
-.investment-list li:nth-child(10) {
-    transition-delay: 0.9s;
 }
 
 /* ==================== Mobile Responsive ==================== */

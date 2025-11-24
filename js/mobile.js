@@ -507,8 +507,8 @@
             if (!persona) return;
 
             // Save selection to localStorage (same as desktop)
-            localStorage.setItem('bustling_v2_visited', 'true');
-            localStorage.setItem('bustling_v2_persona', persona);
+            localStorage.setItem('gaming_visited', 'true');
+            localStorage.setItem('gaming_persona', persona);
             localStorage.setItem('selectedPersona', persona);
 
             // Hide character selection and show main content
@@ -790,7 +790,7 @@
         setupHamburgerMenu() {
             console.log('[MobileNavigation] setupHamburgerMenu called - using existing HTML hamburger');
             // Don't create new hamburger - use the one from HTML
-            // bustling-world-v2.js will handle the click events
+            // gaming-system.js will handle the click events
         }
 
         setupPersonaSwitcher() {
@@ -886,15 +886,15 @@
                         });
                         newOptionBtn.classList.add('current-role');
 
-                        // Call the main BustlingWorld switchPersona method to properly update everything
-                        console.log('[Mobile] Calling bustlingWorldV2.switchPersona:', persona);
-                        if (window.bustlingWorldV2 && window.bustlingWorldV2.switchPersona) {
-                            window.bustlingWorldV2.switchPersona(persona);
+                        // Call the main GamingSystem switchPersona method to properly update everything
+                        console.log('[Mobile] Calling gamingSystem.switchPersona:', persona);
+                        if (window.gamingSystem && window.gamingSystem.switchPersona) {
+                            window.gamingSystem.switchPersona(persona);
                             console.log('[Mobile] switchPersona called successfully');
                         } else {
-                            console.warn('[Mobile] bustlingWorldV2 not available, falling back to manual update');
-                            // Fallback: manual updates if bustlingWorldV2 is not available
-                            localStorage.setItem('bustling_v2_persona', persona);
+                            console.warn('[Mobile] gamingSystem not available, falling back to manual update');
+                            // Fallback: manual updates if gamingSystem is not available
+                            localStorage.setItem('gaming_persona', persona);
                             localStorage.setItem('selectedPersona', persona);
 
                             // Update body class
@@ -1066,7 +1066,7 @@
             document.body.classList.add('mobile-view');
 
             // Initialize mobile role title with correct persona
-            const savedPersona = localStorage.getItem('bustling_v2_persona') || 'founder';
+            const savedPersona = localStorage.getItem('gaming_persona') || 'founder';
             const mobileRoleTitle = document.querySelector('.mobile-role-title .role-text');
             if (mobileRoleTitle) {
                 mobileRoleTitle.textContent = savedPersona.charAt(0).toUpperCase() + savedPersona.slice(1);
@@ -1157,44 +1157,7 @@
         }
     }
 
-    /**
-     * Initialize Mobile Features (Legacy function for backward compatibility)
-     */
-    function initMobile() {
-        // Only run on mobile devices
-        if (!MobileDetect.isMobile() && !MobileDetect.isTablet()) {
-            return;
-        }
-
-        // Initialize mobile features
-        new CharacterSelectionMobile();
-        new MobileNavigation();
-        new TouchFeedback();
-
-        // Don't create hamburger - use the one from HTML
-        console.log('[Mobile.js] Using hamburger from HTML');
-
-        // Add viewport meta if not present
-        if (!document.querySelector('meta[name="viewport"]')) {
-            const viewport = document.createElement('meta');
-            viewport.name = 'viewport';
-            viewport.content = 'width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes';
-            document.head.appendChild(viewport);
-        }
-
-        // Handle orientation changes
-        window.addEventListener('orientationchange', () => {
-            // Force reflow after orientation change
-            setTimeout(() => {
-                window.scrollTo(0, 0);
-            }, 100);
-        });
-
-        // Removed pull-to-refresh prevention - was causing scroll issues
-    }
-
     // Initialize Responsive View Manager when DOM is ready
-    // This replaces the old initMobile approach with responsive handling
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => {
             new ResponsiveViewManager();

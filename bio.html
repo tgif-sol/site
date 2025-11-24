@@ -329,7 +329,7 @@
     </div>
 
     <script src="/js/utilities.js"></script>
-    <script src="/js/bustling-world-v2.js"></script>
+    <script src="/js/gaming-system.js"></script>
     <script src="/js/mobile.js"></script>
     <script src="/js/writing-content.js"></script>
     <script src="/js/spa-navigation.js"></script>
@@ -355,7 +355,7 @@
                 observer.observe(item);
             });
             // Check if character selection has been made
-            const savedPersona = localStorage.getItem('bustling_v2_persona');
+            const savedPersona = localStorage.getItem('gaming_persona');
             if (savedPersona) {
                 // Apply persona theme
                 document.body.className = `persona-${savedPersona}`;

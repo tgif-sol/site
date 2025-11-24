@@ -1,8 +1,22 @@
 /**
  * XP System - Game-like progression tracking for content reading
+ * @module XPSystem
+ * @author Alan James Curtis
+ * @version 2.0.0
+ */
+
+'use strict';
+
+/**
+ * XP System Class
+ * Tracks user progression through content with XP and leveling system
  */
 class XPSystem {
+    /**
+     * @constructor
+     */
     constructor() {
+        /** @type {string[]} */
         this.pages = [
             'welcome',
             'bio',
@@ -12,37 +26,37 @@ class XPSystem {
             'investments'
         ];
 
-        // XP configuration
+        /** @type {object} */
         this.config = {
-            xpPerScroll: 2, // XP gained per 10% of page scrolled
-            xpPerPageComplete: 50, // Bonus XP for completing a page
-            xpPerLevel: 100, // XP needed per level (increases by 50 each level)
-            levelMultiplier: 1.5 // Level requirement multiplier
+            xpPerScroll: 2,
+            xpPerPageComplete: 50,
+            xpPerLevel: 100,
+            levelMultiplier: 1.5
         };
 
-        // Get current persona
-        this.currentPersona = localStorage.getItem('bustling_v2_persona') || 'founder';
+        /** @type {string} */
+        this.currentPersona = Storage.getPersona();
 
-        // Load saved progress or initialize (now persona-specific)
+        /** @type {object} */
         this.progress = this.loadProgress() || this.initializeProgress();
 
-        // Initialize UI
+        /** @type {string} */
+        this.currentPage = this.getCurrentPage();
+
+        /** @type {number|null} */
+        this.scrollTimeout = null;
+
         this.initializeUI();
-
-        // Start tracking
         this.startTracking();
-
-        // Update UI immediately
         this.updateUI();
-
-        // Listen for persona changes
         this.listenForPersonaChanges();
     }
 
+    /**
+     * Initialize progress data structure
+     * @returns {object} Initial progress object
+     */
     initializeProgress() {
-        // Set expire date to 3 days from now
-        const expireDate = Date.now() + (3 * 24 * 60 * 60 * 1000); // 3 days in milliseconds
-        
         return {
             level: 1,
             currentXP: 0,
@@ -50,91 +64,100 @@ class XPSystem {
             pageProgress: {},
             completedPages: [],
             lastVisited: null,
-            expireDate: expireDate
+            expireDate: Storage.getExpirationDate()
         };
     }
 
+    /**
+     * Load progress from localStorage
+     * @returns {object|null} Progress data or null if not found/expired
+     */
     loadProgress() {
-        // Load persona-specific progress
-        const key = `xpSystemProgress_${this.currentPersona}`;
+        const key = AppConstants.STORAGE_KEYS.XP_PROGRESS(this.currentPersona);
         const saved = localStorage.getItem(key);
 
-        if (saved) {
-            try {
-                const data = JSON.parse(saved);
-                
-                // Check if progress has expired (3 days)
-                if (data.expireDate && Date.now() > data.expireDate) {
-                    console.log(`XP System: Progress expired for ${this.currentPersona}, resetting to 0%`);
-                    // Remove expired data
-                    localStorage.removeItem(key);
-                    return null; // Return null to trigger initialization
-                }
-                
-                // If expireDate doesn't exist (old data), add it
-                if (!data.expireDate) {
-                    data.expireDate = Date.now() + (3 * 24 * 60 * 60 * 1000); // 3 days from now
-                    // Save with new expireDate
-                    localStorage.setItem(key, JSON.stringify(data));
-                }
-                
-                console.log(`XP System: Loaded progress for ${this.currentPersona}`, data);
-                return data;
-            } catch (e) {
-                console.error('XP System: Error parsing saved progress', e);
-                return null;
-            }
+        if (!saved) {
+            return null;
         }
 
-        return null;
+        try {
+            const data = JSON.parse(saved);
+
+            // Check if progress has expired
+            if (data.expireDate && Date.now() > data.expireDate) {
+                localStorage.removeItem(key);
+                return null;
+            }
+
+            // Migrate old data: add expireDate if missing
+            if (!data.expireDate) {
+                data.expireDate = Storage.getExpirationDate();
+                this.saveProgress();
+            }
+
+            return data;
+        } catch (error) {
+            console.error('XP System: Error parsing saved progress', error);
+            return null;
+        }
     }
 
+    /**
+     * Save progress to localStorage
+     */
     saveProgress() {
-        // Save persona-specific progress (no timestamp, just data)
-        const key = `xpSystemProgress_${this.currentPersona}`;
+        const key = AppConstants.STORAGE_KEYS.XP_PROGRESS(this.currentPersona);
 
         try {
             localStorage.setItem(key, JSON.stringify(this.progress));
-            console.log(`XP System: Saved progress for ${this.currentPersona}`, this.progress);
-        } catch (e) {
-            console.error('XP System: Error saving progress', e);
+        } catch (error) {
+            console.error('XP System: Error saving progress', error);
         }
     }
 
+    /**
+     * Initialize UI elements
+     */
     initializeUI() {
-        // Add scroll tracking for current page
-        this.currentPage = this.getCurrentPage();
-
         // Initialize page progress if not exists
         if (!this.progress.pageProgress[this.currentPage]) {
             this.progress.pageProgress[this.currentPage] = 0;
         }
 
-        // Click handler for "Next Unread" button
+        // Setup "Next Unread" button
         const nextUnreadBtn = document.getElementById('nextUnread');
         if (nextUnreadBtn) {
             nextUnreadBtn.addEventListener('click', () => this.goToNextUnread());
         }
     }
 
+    /**
+     * Get current page from URL
+     * @returns {string} Current page name
+     */
     getCurrentPage() {
-        // Get current page from URL or active nav link
         const path = window.location.pathname;
-        if (path === '/' || path === '/index.html') return 'welcome';
+        if (path === '/' || path === '/index.html') {
+            return 'welcome';
+        }
 
         const pageName = path.replace('/', '').replace('.html', '');
         return this.pages.includes(pageName) ? pageName : 'welcome';
     }
 
+    /**
+     * Start tracking scroll and navigation
+     */
     startTracking() {
-        let scrollTimeout;
         let lastScrollPercentage = this.progress.pageProgress[this.currentPage] || 0;
 
         // Track scroll progress
         window.addEventListener('scroll', () => {
-            clearTimeout(scrollTimeout);
+            if (this.scrollTimeout) {
+                clearTimeout(this.scrollTimeout);
+            }
 
-            scrollTimeout = setTimeout(() => {
+            this.scrollTimeout = setTimeout(() => {
                 const scrollPercentage = this.calculateScrollPercentage();
                 const currentPageProgress = this.progress.pageProgress[this.currentPage] || 0;
 
@@ -161,7 +184,7 @@ class XPSystem {
                     this.saveProgress();
                     this.updateUI();
                 }
-            }, 200);
+            }, AppConstants.ANIMATION.FAST);
         });
 
         // Track page navigation
@@ -171,17 +194,27 @@ class XPSystem {
         });
     }
 
+    /**
+     * Calculate scroll percentage
+     * @returns {number} Scroll percentage (0-100)
+     */
     calculateScrollPercentage() {
         const windowHeight = window.innerHeight;
         const documentHeight = document.documentElement.scrollHeight - windowHeight;
         const scrolled = window.scrollY;
 
-        if (documentHeight <= 0) return 100;
+        if (documentHeight <= 0) {
+            return 100;
+        }
 
-        const percentage = Math.min(100, Math.floor((scrolled / documentHeight) * 100));
-        return percentage;
+        return Math.min(100, Math.floor((scrolled / documentHeight) * 100));
     }
 
+    /**
+     * Add XP to progress
+     * @param {number} amount - XP amount to add
+     * @param {boolean} showGain - Whether to show XP gain animation
+     */
     addXP(amount, showGain = true) {
         this.progress.currentXP += amount;
         this.progress.totalXP += amount;
@@ -200,10 +233,22 @@ class XPSystem {
         }
     }
 
+    /**
+     * Get required XP for a level
+     * @param {number} level - Level number
+     * @returns {number} Required XP
+     */
     getRequiredXPForLevel(level) {
-        return Math.floor(this.config.xpPerLevel * Math.pow(this.config.levelMultiplier, level - 1));
+        return Math.floor(
+            this.config.xpPerLevel * Math.pow(this.config.levelMultiplier, level - 1)
+        );
     }
 
+    /**
+     * Show XP gain animation
+     * @param {number} amount - XP amount gained
+     * @param {string} prefix - Prefix text
+     */
     showXPGain(amount, prefix = '') {
         const popup = document.createElement('div');
         popup.className = 'xp-gain-popup';
@@ -213,14 +258,17 @@ class XPSystem {
         const xpBar = document.querySelector('.xp-bar-container');
         if (xpBar) {
             const rect = xpBar.getBoundingClientRect();
-            popup.style.left = rect.left + rect.width / 2 + 'px';
-            popup.style.top = rect.top + 'px';
+            popup.style.left = `${rect.left + rect.width / 2}px`;
+            popup.style.top = `${rect.top}px`;
         }
 
         document.body.appendChild(popup);
         setTimeout(() => popup.remove(), 1500);
     }
 
+    /**
+     * Show level up notification
+     */
     showLevelUp() {
         const notification = document.createElement('div');
         notification.style.cssText = `
@@ -247,6 +295,10 @@ class XPSystem {
         setTimeout(() => notification.remove(), 3000);
     }
 
+    /**
+     * Show achievement notification
+     * @param {string} text - Achievement text
+     */
     showAchievement(text) {
         const achievement = document.createElement('div');
         achievement.style.cssText = `
@@ -270,6 +322,11 @@ class XPSystem {
         setTimeout(() => achievement.remove(), 3000);
     }
 
+    /**
+     * Get display name for a page
+     * @param {string} page - Page key
+     * @returns {string} Display name
+     */
     getPageDisplayName(page) {
         const names = {
             'welcome': 'Welcome',
@@ -282,40 +339,46 @@ class XPSystem {
         return names[page] || page;
     }
 
+    /**
+     * Navigate to next unread page
+     */
     goToNextUnread() {
-        // Find the next unread page
         const unreadPages = this.pages.filter(page =>
             !this.progress.completedPages.includes(page) && page !== this.currentPage
         );
 
-        if (unreadPages.length > 0) {
-            // Sort by least progress
-            unreadPages.sort((a, b) =>
-                (this.progress.pageProgress[a] || 0) - (this.progress.pageProgress[b] || 0)
-            );
-
-            const nextPage = unreadPages[0];
-
-            // Navigate to the page
-            if (nextPage === 'welcome') {
-                window.location.href = '/';
-            } else {
-                window.location.href = `/${nextPage}.html`;
-            }
-        } else {
+        if (unreadPages.length === 0) {
             this.showAchievement('🏆 All pages completed!');
+            return;
+        }
+
+        // Sort by least progress
+        unreadPages.sort((a, b) =>
+            (this.progress.pageProgress[a] || 0) - (this.progress.pageProgress[b] || 0)
+        );
+
+        const nextPage = unreadPages[0];
+
+        // Navigate to the page
+        if (nextPage === 'welcome') {
+            window.location.href = '/';
+        } else {
+            window.location.href = `/${nextPage}.html`;
         }
     }
 
+    /**
+     * Listen for persona changes
+     */
     listenForPersonaChanges() {
-        // Listen for storage changes (persona switches)
+        // Listen for storage changes (cross-tab sync)
         window.addEventListener('storage', (e) => {
-            if (e.key === 'bustling_v2_persona' && e.newValue !== this.currentPersona) {
+            if (e.key === AppConstants.STORAGE_KEYS.PERSONA && e.newValue !== this.currentPersona) {
                 this.handlePersonaChange(e.newValue);
             }
         });
 
-        // Also listen for custom persona change events
+        // Listen for custom persona change events
         window.addEventListener('personaChanged', (e) => {
             if (e.detail && e.detail.persona !== this.currentPersona) {
                 this.handlePersonaChange(e.detail.persona);
@@ -323,9 +386,11 @@ class XPSystem {
         });
     }
 
+    /**
+     * Handle persona change
+     * @param {string} newPersona - New persona name
+     */
     handlePersonaChange(newPersona) {
-        console.log(`XP System: Switching from ${this.currentPersona} to ${newPersona}`);
-
         // Save current progress before switching
         this.saveProgress();
 
@@ -345,20 +410,29 @@ class XPSystem {
         this.updateUI();
     }
 
+    /**
+     * Update UI elements
+     */
     updateUI() {
         const requiredXP = this.getRequiredXPForLevel(this.progress.level);
         const percentage = Math.floor((this.progress.currentXP / requiredXP) * 100);
 
         // Update level
         const levelElement = document.getElementById('currentLevel');
-        if (levelElement) levelElement.textContent = this.progress.level;
+        if (levelElement) {
+            levelElement.textContent = this.progress.level;
+        }
 
         // Update XP
         const currentXPElement = document.getElementById('currentXP');
-        if (currentXPElement) currentXPElement.textContent = this.progress.currentXP;
+        if (currentXPElement) {
+            currentXPElement.textContent = this.progress.currentXP;
+        }
 
         const maxXPElement = document.getElementById('maxXP');
-        if (maxXPElement) maxXPElement.textContent = requiredXP;
+        if (maxXPElement) {
+            maxXPElement.textContent = requiredXP;
+        }
 
         // Update XP bar
         const xpBarFill = document.getElementById('xpBarFill');
@@ -368,7 +442,9 @@ class XPSystem {
 
         // Update percentage
         const xpPercentage = document.getElementById('xpPercentage');
-        if (xpPercentage) xpPercentage.textContent = `${percentage}%`;
+        if (xpPercentage) {
+            xpPercentage.textContent = `${percentage}%`;
+        }
 
         // Update pages read
         const pagesRead = document.getElementById('pagesRead');
@@ -381,11 +457,17 @@ class XPSystem {
         if (nextUnread) {
             const unreadCount = this.pages.length - this.progress.completedPages.length;
             if (unreadCount === 0) {
-                nextUnread.querySelector('.stat-value').textContent = 'All Done!';
+                const statValue = nextUnread.querySelector('.stat-value');
+                if (statValue) {
+                    statValue.textContent = 'All Done!';
+                }
                 nextUnread.style.opacity = '0.5';
                 nextUnread.style.cursor = 'default';
             } else {
-                nextUnread.querySelector('.stat-value').textContent = `${unreadCount} left`;
+                const statValue = nextUnread.querySelector('.stat-value');
+                if (statValue) {
+                    statValue.textContent = `${unreadCount} left`;
+                }
                 nextUnread.style.opacity = '1';
                 nextUnread.style.cursor = 'pointer';
             }
@@ -424,18 +506,18 @@ style.textContent = `
 document.head.appendChild(style);
 
 // Initialize when DOM is ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-        // Clean up existing instance if any
+(function() {
+    function init() {
         if (window.xpSystem) {
-            console.log('XP System: Cleaning up existing instance');
+            // Clean up existing instance if any
+            return;
         }
         window.xpSystem = new XPSystem();
-    });
-} else {
-    // Clean up existing instance if any
-    if (window.xpSystem) {
-        console.log('XP System: Cleaning up existing instance');
     }
-    window.xpSystem = new XPSystem();
-}
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();

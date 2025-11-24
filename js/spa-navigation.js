@@ -143,20 +143,22 @@
         });
 
         // Update navigation icons after changing active state
-        if (window.bustlingWorldV2 && window.bustlingWorldV2.updateNavigationIcons) {
-            window.bustlingWorldV2.updateNavigationIcons(true);
-        } else if (window.bustlingWorld && window.bustlingWorld.updateNavigationIcons) {
-            window.bustlingWorld.updateNavigationIcons();
+        if (window.gamingSystem && window.gamingSystem.updateNavigationIcons) {
+            window.gamingSystem.updateNavigationIcons(true);
         }
     }
 
     /**
      * Load Welcome content
      */
+    /**
+     * Load Welcome content
+     * @param {HTMLElement} container - Container element
+     */
     function loadWelcomeContent(container) {
         // Get persona-specific content
-        const persona = localStorage.getItem('bustling_v2_persona') || 'founder';
-        const isMobile = window.innerWidth <= 768;
+        const persona = Storage.getPersona();
+        const isMobile = Device.isMobile();
 
         const personaData = {
             founder: {
@@ -245,21 +247,17 @@
     function setupWelcomeLinks() {
         // Handle all text links in the welcome content
         const textLinks = document.querySelectorAll('.text-link');
-        console.log('[SPA] Setting up welcome links, found:', textLinks.length, 'text-link elements');
 
         textLinks.forEach(link => {
             const href = link.getAttribute('href');
-            console.log('[SPA] Processing link:', href);
 
             // Skip external links (they should work normally)
             if (href && (href.startsWith('http') || href.startsWith('mailto:'))) {
-                console.log('[SPA] External link, skipping:', href);
                 return;
             }
 
             // Handle internal navigation links
             link.addEventListener('click', (e) => {
-                console.log('[SPA] Internal link clicked:', href);
                 e.preventDefault();
 
                 // Determine the page from the href
@@ -292,7 +290,6 @@
                     // If it's a specific article, load it after the writing page loads
                     if (page === 'writing' && article) {
                         setTimeout(() => {
-                            console.log(`Looking for article: ${article}`);
 
                             // Handle different naming conventions (e.g., lattice-work vs latticework)
                             let targetLink = document.querySelector(`[data-article="${article}"]`);
@@ -300,7 +297,6 @@
                             // If not found, try without hyphens
                             if (!targetLink && article.includes('-')) {
                                 const articleWithoutHyphens = article.replace(/-/g, '');
-                                console.log(`Trying without hyphens: ${articleWithoutHyphens}`);
                                 targetLink = document.querySelector(`[data-article="${articleWithoutHyphens}"]`);
                             }
 
@@ -308,18 +304,11 @@
                             if (!targetLink && !article.includes('-')) {
                                 // Try common hyphenation patterns
                                 const hyphenated = article.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
-                                console.log(`Trying with hyphens: ${hyphenated}`);
                                 targetLink = document.querySelector(`[data-article="${hyphenated}"]`);
                             }
 
                             if (targetLink) {
-                                console.log(`Found and clicking article link: ${article}`);
                                 targetLink.click();
-                            } else {
-                                console.warn(`Article link not found for: ${article}`);
-                                // Log all available article links for debugging
-                                const availableLinks = document.querySelectorAll('[data-article]');
-                                console.log('Available articles:', Array.from(availableLinks).map(el => el.dataset.article));
                             }
                         }, 200);
                     }
@@ -595,7 +584,6 @@
             if (window.quotesContent) {
                 initQuotesHandlers();
             } else {
-                console.log('quotesContent not found, trying again...');
                 setTimeout(() => {
                     if (window.quotesContent) {
                         initQuotesHandlers();
@@ -641,7 +629,6 @@
             if (window.questionsContent) {
                 initQuestionsHandlers();
             } else {
-                console.log('questionsContent not found, trying again...');
                 setTimeout(() => {
                     if (window.questionsContent) {
                         initQuestionsHandlers();
@@ -680,7 +667,6 @@
             if (window.investmentsContent) {
                 initInvestmentsHandlers();
             } else {
-                console.log('investmentsContent not found, trying again...');
                 setTimeout(() => {
                     if (window.investmentsContent) {
                         initInvestmentsHandlers();
@@ -690,73 +676,6 @@
         }, 100);
     }
 
-    // Keep the original Investment content structure for reference
-    function loadInvestmentsContentOld(container) {
-        container.className = 'content';
-        container.innerHTML = `
-            <div class="page-header">
-                <h1 class="page-title">Investments</h1>
-            </div>
-            <div class="content-body">
-                <div class="investment-grid">
-                    <div class="investment-category">
-                        <h2>Unicorns 🦄</h2>
-                        <ul class="investment-list">
-                            <li><a href="https://rippling.com" target="_blank">Rippling</a> - Employee management platform</li>
-                            <li><a href="https://deel.com" target="_blank">Deel</a> - Global payroll and compliance</li>
-                            <li><a href="https://ramp.com" target="_blank">Ramp</a> - Corporate cards and expense management</li>
-                            <li><a href="https://alchemy.com" target="_blank">Alchemy</a> - Blockchain developer platform</li>
-                            <li><a href="https://eigenlayer.xyz" target="_blank">EigenLayer</a> - Ethereum restaking protocol</li>
-                            <li><a href="https://fireblocks.com" target="_blank">Fireblocks</a> - Digital asset custody</li>
-                            <li><a href="https://bitwave.io" target="_blank">Bitwave</a> - Digital asset accounting</li>
-                        </ul>
-                    </div>
-
-                    <div class="investment-category">
-                        <h2>Exits 💰</h2>
-                        <ul class="investment-list">
-                            <li><strong>Rio Network</strong> → EigenLayer (2023)</li>
-                            <li><strong>ScaleIP</strong> → The Invention Network (2025)</li>
-                            <li><strong>Multisig Media</strong> → Bitwave (2022)</li>
-                            <li><strong>RADAR</strong> → Blockcap (2021)</li>
-                            <li><strong>The Horse and I</strong> → The Right Horse (2016)</li>
-                        </ul>
-                    </div>
-
-                    <div class="investment-category">
-                        <h2>Active Portfolio 🚀</h2>
-                        <ul class="investment-list">
-                            <li><a href="https://openai.com" target="_blank">OpenAI</a> - Artificial intelligence research</li>
-                            <li><a href="https://anthropic.com" target="_blank">Anthropic</a> - AI safety company</li>
-                            <li><a href="https://figma.com" target="_blank">Figma</a> - Collaborative design platform</li>
-                            <li><a href="https://notion.so" target="_blank">Notion</a> - Workspace and notes</li>
-                            <li><a href="https://airtable.com" target="_blank">Airtable</a> - Spreadsheet database hybrid</li>
-                            <li>+ 45 more companies...</li>
-                        </ul>
-                    </div>
-
-                    <div class="investment-stats">
-                        <div class="stat">
-                            <span class="stat-value">50+</span>
-                            <span class="stat-label">Companies</span>
-                        </div>
-                        <div class="stat">
-                            <span class="stat-value">7</span>
-                            <span class="stat-label">Unicorns</span>
-                        </div>
-                        <div class="stat">
-                            <span class="stat-value">5</span>
-                            <span class="stat-label">Exits</span>
-                        </div>
-                        <div class="stat">
-                            <span class="stat-value">300%+</span>
-                            <span class="stat-label">Lifetime IRR</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-    }
 
     /**
      * Initialize Writing article handlers
@@ -766,7 +685,6 @@
         const writingContentDiv = document.getElementById('writing-content');
 
         if (!writingContentDiv) {
-            console.warn('Writing content div not found');
             return;
         }
 
@@ -1182,24 +1100,21 @@
                         }, 150);
                     }
 
-                    // Add scroll animations for investment items
+                    // Add scroll animations for investment items - sequential animation from top to bottom
                     setTimeout(() => {
-                        const observerOptions = {
-                            threshold: 0.1,
-                            rootMargin: '0px 0px -50px 0px'
-                        };
-
-                        const observer = new IntersectionObserver((entries) => {
-                            entries.forEach(entry => {
-                                if (entry.isIntersecting) {
-                                    entry.target.classList.add('visible');
-                                }
-                            });
-                        }, observerOptions);
-
                         const investmentItems = investmentsContentDiv.querySelectorAll('.investment-list li');
+                        
+                        // Animate all items sequentially from top to bottom
+                        // Remove any existing visible class first to ensure clean animation
                         investmentItems.forEach(item => {
-                            observer.observe(item);
+                            item.classList.remove('visible');
+                        });
+                        
+                        // Add visible class sequentially with delay
+                        investmentItems.forEach((item, index) => {
+                            setTimeout(() => {
+                                item.classList.add('visible');
+                            }, index * 50); // 50ms delay between each item
                         });
                     }, 100);
                 } else {
@@ -1208,7 +1123,6 @@
             });
         });
 
-        console.log('Investments handlers initialized with', categoryLinks.length, 'category links');
     }
 
     /**
