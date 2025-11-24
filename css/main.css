@@ -2298,10 +2298,6 @@ body.persona-dad .empty-state {
     }
 }
 
-opacity: 0.7;
-transition: all 0.3s ease;
-}
-
 .article-content a[href^="http"]:hover,
 .article-content a[target="_blank"]:hover {
     color: #fff;
