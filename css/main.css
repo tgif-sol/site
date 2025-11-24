@@ -143,8 +143,14 @@ body.persona-dad::after {
 /* Safari-specific: Force opacity and display recalculation */
 @supports (-webkit-appearance: none) {
 
+    body.persona-operator::after {
+        opacity: 0.06 !important;
+        display: block !important;
+        visibility: visible !important;
+        -webkit-transform: translateZ(0) !important;
+        transform: translateZ(0) !important;
+    }
     body.persona-founder::after,
-    body.persona-operator::after,
     body.persona-investor::after,
     body.persona-dad::after {
         opacity: 0.1 !important;
