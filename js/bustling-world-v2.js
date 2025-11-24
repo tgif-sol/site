@@ -14,7 +14,7 @@ class BustlingWorldV2 {
             founder: {
                 name: 'Founder',
                 theme: 'persona-founder',
-                image: '/assets/alan-2.jpeg',
+                image: '/assets/founder-profile.jpeg',
                 content: {
                     title: 'Welcome to the War Room',
                     welcome: "Welcome to my personal website! This site's \"job to be done\" is to make me as legible as possible.",
@@ -1183,7 +1183,7 @@ class BustlingWorldV2 {
 
         // Update with character avatars - same as top-right corner
         const avatars = {
-            founder: '/assets/alan-2.jpeg',
+            founder: '/assets/founder-profile.jpeg',
             operator: '/assets/operator.png',
             investor: '/assets/investor.png',
             dad: '/assets/dad.png'
@@ -1532,12 +1532,12 @@ function initializeBustlingWorld() {
     if (window.innerWidth > 768) {
         const img = new Image();
         img.onload = function () {
-            console.log('Background image loaded successfully: /assets/bg3.png');
+            console.log('Background image loaded successfully: /assets/character-selection-background.png');
         };
         img.onerror = function () {
-            console.error('Failed to load background image: /assets/bg3.png');
+            console.error('Failed to load background image: /assets/character-selection-background.png');
         };
-        img.src = '/assets/bg3.png';
+        img.src = '/assets/character-selection-background.png';
 
         // Check computed styles
         const bodyStyles = window.getComputedStyle(document.body, '::before');

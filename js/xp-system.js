@@ -40,13 +40,17 @@ class XPSystem {
     }
 
     initializeProgress() {
+        // Set expire date to 3 days from now
+        const expireDate = Date.now() + (3 * 24 * 60 * 60 * 1000); // 3 days in milliseconds
+        
         return {
             level: 1,
             currentXP: 0,
             totalXP: 0,
             pageProgress: {},
             completedPages: [],
-            lastVisited: null
+            lastVisited: null,
+            expireDate: expireDate
         };
     }
 
@@ -58,6 +62,22 @@ class XPSystem {
         if (saved) {
             try {
                 const data = JSON.parse(saved);
+                
+                // Check if progress has expired (3 days)
+                if (data.expireDate && Date.now() > data.expireDate) {
+                    console.log(`XP System: Progress expired for ${this.currentPersona}, resetting to 0%`);
+                    // Remove expired data
+                    localStorage.removeItem(key);
+                    return null; // Return null to trigger initialization
+                }
+                
+                // If expireDate doesn't exist (old data), add it
+                if (!data.expireDate) {
+                    data.expireDate = Date.now() + (3 * 24 * 60 * 60 * 1000); // 3 days from now
+                    // Save with new expireDate
+                    localStorage.setItem(key, JSON.stringify(data));
+                }
+                
                 console.log(`XP System: Loaded progress for ${this.currentPersona}`, data);
                 return data;
             } catch (e) {

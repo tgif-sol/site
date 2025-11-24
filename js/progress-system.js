@@ -44,10 +44,14 @@ class ProgressSystem {
     }
 
     initializeProgress() {
+        // Set expire date to 3 days from now
+        const expireDate = Date.now() + (3 * 24 * 60 * 60 * 1000); // 3 days in milliseconds
+        
         return {
             initialized: false,
             pagesVisited: [],
-            totalProgress: 0
+            totalProgress: 0,
+            expireDate: expireDate
         };
     }
 
@@ -64,6 +68,21 @@ class ProgressSystem {
                 if (data.timestamp && data.progress) {
                     console.log(`Progress System: Migrating old format for ${this.currentPersona}`);
                     return data.progress;
+                }
+
+                // Check if progress has expired (3 days)
+                if (data.expireDate && Date.now() > data.expireDate) {
+                    console.log(`Progress System: Progress expired for ${this.currentPersona}, resetting to 0%`);
+                    // Remove expired data
+                    localStorage.removeItem(key);
+                    return null; // Return null to trigger initialization
+                }
+
+                // If expireDate doesn't exist (old data), add it
+                if (!data.expireDate) {
+                    data.expireDate = Date.now() + (3 * 24 * 60 * 60 * 1000); // 3 days from now
+                    // Save with new expireDate
+                    localStorage.setItem(key, JSON.stringify(data));
                 }
 
                 // Otherwise use data directly

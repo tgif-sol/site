@@ -34,13 +34,13 @@
             <!-- Other role icons that appear on hover -->
             <div class="persona-options">
                 <button data-persona="founder" class="persona-icon-btn" title="Founder">
-                    <img class="persona-icon-img" src="/assets/alan-2.jpeg" alt="Founder">
+                    <img class="persona-icon-img" src="/assets/founder-profile.jpeg" alt="Founder">
                 </button>
                 <button data-persona="operator" class="persona-icon-btn" title="Operator">
-                    <img class="persona-icon-img" src="/assets/alan-3.png" alt="Operator">
+                    <img class="persona-icon-img" src="/assets/operator.png" alt="Operator">
                 </button>
                 <button data-persona="investor" class="persona-icon-btn" title="Investor">
-                    <img class="persona-icon-img" src="/assets/alan-1.jpg" alt="Investor">
+                    <img class="persona-icon-img" src="/assets/investor.png" alt="Investor">
                 </button>
                 <button data-persona="dad" class="persona-icon-btn" title="Dad">
                     <img class="persona-icon-img" src="/assets/dad.png" alt="Dad">
@@ -49,7 +49,7 @@
             <!-- Current role icon (always visible) -->
             <button class="persona-btn" aria-label="Switch Persona">
                 <span class="current-persona-avatar">
-                    <img id="currentPersonaImage" class="persona-profile-img" src="/assets/alan-2.jpeg" alt="Current Persona">
+                    <img id="currentPersonaImage" class="persona-profile-img" src="/assets/founder-profile.jpeg" alt="Current Persona">
                 </span>
             </button>
         </div>
@@ -230,12 +230,12 @@
                 const profileImg = document.getElementById('currentPersonaImage');
                 if (profileImg) {
                     const imageMap = {
-                        'founder': '/assets/alan-2.jpeg',
-                        'operator': '/assets/alan-3.png',
-                        'investor': '/assets/alan-1.jpg',
+                        'founder': '/assets/founder-profile.jpeg',
+                        'operator': '/assets/operator.png',
+                        'investor': '/assets/investor.png',
                         'dad': '/assets/dad.png'
                     };
-                    profileImg.src = imageMap[savedPersona] || '/assets/alan-2.jpeg';
+                    profileImg.src = imageMap[savedPersona] || '/assets/founder-profile.jpeg';
                 }
             }
         });
