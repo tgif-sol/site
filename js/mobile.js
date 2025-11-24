@@ -534,31 +534,38 @@
                         video.src = videoSrc;
                     }
                     
-                    // Wait for video to be ready before playing
+                    // Start loading video immediately - CSS transition will handle smooth fade-in
                     if (video.readyState === 0) {
                         video.load();
-                        video.addEventListener('loadeddata', () => {
-                            // Set founder video to start at 2 seconds
-                            if (card.dataset.persona === 'founder') {
-                                video.currentTime = 2;
-                            }
-                            card.classList.add('video-playing');
-                            video.play().catch((e) => {
-                                console.log('Video play failed:', e);
-                                card.classList.remove('video-playing');
-                            });
-                        }, { once: true });
-                    } else {
+                    }
+                    
+                    // Add video-playing class immediately to start CSS transition
+                    // Don't wait for video to load - transition will be smooth regardless
+                    card.classList.add('video-playing');
+                    
+                    // Play video when ready
+                    const playVideo = () => {
                         // Set founder video to start at 2 seconds
                         if (card.dataset.persona === 'founder') {
                             video.currentTime = 2;
                         }
-                        // Video already loaded, play immediately
-                        card.classList.add('video-playing');
                         video.play().catch((e) => {
                             console.log('Video play failed:', e);
-                            card.classList.remove('video-playing');
+                            // Keep the class for smooth transition even if play fails
                         });
+                    };
+                    
+                    if (video.readyState >= 2) {
+                        // Video has enough data to play
+                        playVideo();
+                    } else {
+                        // Video is loading, play when ready
+                        // Use loadedmetadata for faster response
+                        const playWhenReady = () => {
+                            playVideo();
+                        };
+                        video.addEventListener('loadedmetadata', playWhenReady, { once: true });
+                        video.addEventListener('canplay', playWhenReady, { once: true });
                     }
                 }
             }

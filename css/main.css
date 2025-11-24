@@ -521,7 +521,6 @@ body.persona-dad::after {
     filter: brightness(1.05) contrast(1.05) saturate(1.05);
 }
 
-/* Video Animation */
 .character-video {
     position: absolute;
     top: 0;
@@ -530,42 +529,20 @@ body.persona-dad::after {
     height: 100%;
     object-fit: cover;
     -webkit-object-fit: cover;
-    /* Safari support */
     object-position: center 20%;
     -webkit-object-position: center 20%;
-    /* Safari support */
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-    /* Ensure video fills container completely */
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: opacity;
+    transform: translateZ(0) translateY(-5%);
+    -webkit-transform: translateZ(0) translateY(-5%);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
     min-height: 100%;
     min-width: 100%;
-    /* Move video up to eliminate black space at top (Safari fix) */
-    transform: translateY(-5%);
-    -webkit-transform: translateY(-5%);
-    /* Safari support */
     filter: brightness(0.9) contrast(1.1);
-    /* Hide black background while loading */
     background-color: transparent;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    -webkit-object-fit: cover;
-    /* Safari support */
-    object-position: center 20%;
-    -webkit-object-position: center 20%;
-    /* Safari support */
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-    /* Ensure video fills container completely */
-    min-height: 100%;
-    min-width: 100%;
-    /* Move video up to eliminate black space at top (Safari fix) */
-    transform: translateY(-5%);
-    -webkit-transform: translateY(-5%);
-    /* Safari support */
-    filter: brightness(0.9) contrast(1.1);
     -webkit-mask-image: linear-gradient(to bottom,
             rgba(0, 0, 0, 1) 0%,
             rgba(0, 0, 0, 1) 40%,
@@ -585,28 +562,20 @@ body.persona-dad::after {
             rgba(0, 0, 0, 0.1) 90%,
             rgba(0, 0, 0, 0) 100%);
     pointer-events: none;
-    /* Prevent video from blocking clicks on desktop */
 }
 
-/* Operator video positioning - same mask as other videos */
 .character-card[data-persona="operator"] .character-video {
     filter: brightness(0.9) contrast(1.1);
-    transition: opacity 0.1s ease, visibility 0.1s ease;
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     object-fit: cover;
     -webkit-object-fit: cover;
-    /* Safari support */
     object-position: center 5%;
-    /* Moved up more to reduce black space at top */
     -webkit-object-position: center 5%;
-    /* Safari support */
-    transform: translateY(-10%);
-    /* Move video up more to eliminate black space at top */
-    -webkit-transform: translateY(-10%);
-    /* Safari support */
+    transform: translateZ(0) translateY(-10%);
+    -webkit-transform: translateZ(0) translateY(-10%);
 }
 
 
-/* Show video on hover for cards with video */
 .character-card[data-persona="founder"]:hover .character-video,
 .character-card[data-persona="dad"]:hover .character-video,
 .character-card[data-persona="operator"]:hover .character-video,
@@ -615,32 +584,21 @@ body.persona-dad::after {
     visibility: visible;
     filter: brightness(1.05) contrast(1.05) saturate(1.05);
     pointer-events: none;
-    /* Allow clicks to pass through on desktop */
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Adjust dad video position */
 .character-card[data-persona="dad"] .character-video {
     object-position: center 30%;
-    /* Moved up to reduce black space at top */
     -webkit-object-position: center 30%;
-    /* Safari support */
-    transform: scale(1.0) translateY(-5%);
-    /* Move video up to eliminate black space at top */
-    -webkit-transform: scale(1.0) translateY(-5%);
-    /* Safari support */
-    /* Override default translateY to combine with scale */
+    transform: translateZ(0) scale(1.0) translateY(-5%);
+    -webkit-transform: translateZ(0) scale(1.0) translateY(-5%);
 }
 
-/* Adjust investor video position */
 .character-card[data-persona="investor"] .character-video {
     object-position: center 25%;
-    /* Moved up to reduce black space at top */
     -webkit-object-position: center 25%;
-    /* Safari support */
-    transform: translateY(-5%);
-    /* Move video up to eliminate black space at top (overrides default) */
-    -webkit-transform: translateY(-5%);
-    /* Safari support */
+    transform: translateZ(0) translateY(-5%);
+    -webkit-transform: translateZ(0) translateY(-5%);
 }
 
 /* Hide image when video is visible - only for cards with video */
@@ -4177,6 +4135,7 @@ body::after {
         display: block !important;
         position: relative;
         z-index: 1;
+        transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     /* Initially hide video for ALL cards with video including operator */
@@ -4193,8 +4152,7 @@ body::after {
         width: 100%;
         height: 100%;
         z-index: 2;
-        transition: opacity 0.3s ease;
-        /* Override default transform and object-position for mobile */
+        transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         transform: none !important;
         -webkit-transform: none !important;
         object-position: center center !important;
@@ -4205,11 +4163,10 @@ body::after {
     .character-card[data-persona="dad"] .character-video,
     .character-card[data-persona="investor"] .character-video {
         filter: brightness(1.05) contrast(1.05) saturate(1.05);
-        transition: opacity 0.3s ease;
+        transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     /* Unified Mobile Alignment - Videos */
-    /* Founder - Move Down using translateY */
     .character-card[data-persona="founder"] .character-video {
         object-position: center top !important;
         -webkit-object-position: center top !important;
@@ -4217,7 +4174,6 @@ body::after {
         -webkit-transform: scale(1.25) translateY(5%) !important;
     }
 
-    /* Dad, Investor & Operator - Move Up using object-position */
     .character-card[data-persona="dad"] .character-video,
     .character-card[data-persona="investor"] .character-video,
     .character-card[data-persona="operator"] .character-video {
@@ -4243,6 +4199,7 @@ body::after {
         /* Remove mask when playing */
         -webkit-mask-image: none !important;
         mask-image: none !important;
+        transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     /* Maintain alignment when video is playing */
@@ -4279,7 +4236,6 @@ body::after {
     .character-card[data-persona="dad"].video-playing .character-photo,
     .character-card[data-persona="investor"].video-playing .character-photo {
         opacity: 0 !important;
-        /* Hide photo when video is playing */
         display: none !important;
     }
 
