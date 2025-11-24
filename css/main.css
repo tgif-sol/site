@@ -2153,55 +2153,302 @@ body.persona-dad .empty-state {
 .article-content {
     font-family: var(--font-secondary);
     font-size: 17.6px;
-    line-height: 1.8;
+    line-height: 1.9;
     color: var(--theme-text, #D8D8D8);
+    max-width: 100%;
+    word-wrap: break-word;
+    hyphens: auto;
 }
 
 .article-content h3 {
     font-family: var(--font-display);
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 600;
-    margin: 30px 0 15px;
+    margin: 40px 0 18px 0;
+    padding-top: 8px;
+    padding-bottom: 12px;
+    padding-left: 16px;
+    color: var(--theme-text, #D8D8D8);
+    line-height: 1.4;
+    letter-spacing: 0.3px;
+    border-left: 3px solid var(--theme-accent);
+    background: rgba(255, 255, 255, 0.02);
+    position: relative;
+}
+
+.article-content h3:first-child {
+    margin-top: 0;
+}
+
+/* Apply h3 style to p tags containing only strong (section headings) */
+.article-content p > strong:only-child {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 600;
+    margin: 40px 0 18px 0;
+    padding-top: 8px;
+    padding-bottom: 12px;
+    padding-left: 16px;
+    color: var(--theme-text, #D8D8D8);
+    line-height: 1.4;
+    letter-spacing: 0.3px;
+    border-left: 3px solid var(--theme-accent);
+    background: rgba(255, 255, 255, 0.02);
+    position: relative;
+}
+
+.article-content p:has(> strong:only-child) {
+    margin: 0;
+    padding: 0;
+}
+
+.article-content p:has(> strong:only-child):first-child {
+    margin-top: 0;
+}
+
+.article-content p:has(> strong:only-child) strong {
+    font-weight: 600;
     color: var(--theme-text, #D8D8D8);
 }
 
+/* Apply h3 style to h2 in Leadership article */
+.article-content h2 {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 600;
+    margin: 40px 0 18px 0;
+    padding-top: 8px;
+    padding-bottom: 12px;
+    padding-left: 16px;
+    color: var(--theme-text, #D8D8D8);
+    line-height: 1.4;
+    letter-spacing: 0.3px;
+    border-left: 3px solid var(--theme-accent);
+    background: rgba(255, 255, 255, 0.02);
+    position: relative;
+}
+
+.article-content h2:first-child {
+    margin-top: 0;
+}
+
 .article-content p {
-    margin-bottom: 20px;
+    margin-bottom: 24px;
+    text-align: justify;
+    text-justify: inter-word;
+}
+
+.article-content p:last-child {
+    margin-bottom: 0;
 }
 
 .article-content ul,
 .article-content ol {
-    margin: 20px 0;
-    padding-left: 30px;
+    margin: 24px 0;
+    padding-left: 32px;
+    line-height: 1.9;
+}
+
+.article-content ul {
+    list-style-type: disc;
+}
+
+.article-content ol {
+    list-style-type: decimal;
 }
 
 .article-content li {
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+    padding-left: 8px;
+}
+
+.article-content li::marker {
+    color: var(--theme-accent, #A0A453);
+}
+
+/* Style numbered paragraphs (1. 2. 3. 4. etc.) with accent color - same as Asset Classes */
+.article-content .number {
+    color: var(--theme-accent, #A0A453);
+    font-weight: 600;
+}
+
+.article-content li p {
+    margin-bottom: 8px;
 }
 
 .article-content a {
     color: var(--theme-accent);
     text-decoration: underline;
-    transition: opacity 0.2s;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 3px;
+    transition: opacity 0.2s, color 0.2s;
 }
 
 .article-content a:hover {
-    opacity: 0.8;
+    opacity: 0.85;
+    color: var(--theme-accent);
+}
+
+/* External links in article content - same style as investments */
+.article-content a[href^="http"],
+.article-content a[target="_blank"] {
+    text-decoration: none;
+    font-weight: 500;
+    position: relative;
+    transition: all 0.3s ease;
+    color: var(--theme-accent);
+}
+
+.article-content a[href^="http"]::after,
+.article-content a[target="_blank"]::after {
+    content: "↗";
+    display: inline-block;
+    margin-left: 6px;
+    font-size: 14px;
+    opacity: 0.7;
+    transition: all 0.3s ease;
+}
+
+.article-content a[href^="http"]:hover,
+.article-content a[target="_blank"]:hover {
+    color: #fff;
+    padding-left: 4px;
+}
+
+.article-content a[href^="http"]:hover::after,
+.article-content a[target="_blank"]:hover::after {
+    transform: translate(2px, -2px);
+    opacity: 1;
 }
 
 .article-content strong {
     font-weight: 600;
     color: var(--theme-text);
+    letter-spacing: 0.2px;
 }
 
 .article-content em {
     font-style: italic;
+    color: var(--theme-text);
+}
+
+.article-content code {
+    font-family: 'Courier New', monospace;
+    font-size: 15.5px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 2px 6px;
+    border-radius: 3px;
+    color: var(--theme-accent);
+}
+
+.article-content blockquote {
+    margin: 24px 0;
+    padding: 16px 20px;
+    border-left: 4px solid var(--theme-accent);
+    background: rgba(255, 255, 255, 0.02);
+    font-style: italic;
+    color: var(--theme-text);
+}
+
+.article-content hr {
+    margin: 32px 0;
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    height: 0;
+}
+
+/* Table styles in article content - 14px font size */
+.article-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 24px 0;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.article-content table th,
+.article-content table td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 14px;
+}
+
+.article-content table th {
+    font-weight: 600;
+    color: var(--theme-accent);
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.article-content table tr:last-child td {
+    border-bottom: none;
+}
+
+.article-content table a {
+    font-size: 14px;
+    color: var(--theme-accent);
+    text-decoration: none;
+}
+
+.article-content table a:hover {
+    color: #fff;
+    opacity: 0.9;
 }
 
 /* Light theme adjustments */
 body.persona-investor .article-header,
 body.persona-dad .article-header {
     border-bottom-color: rgba(0, 0, 0, 0.1);
+}
+
+body.persona-investor .article-content code,
+body.persona-dad .article-content code {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+body.persona-investor .article-content blockquote,
+body.persona-dad .article-content blockquote {
+    background: rgba(0, 0, 0, 0.02);
+    border-left-color: var(--theme-accent);
+}
+
+body.persona-investor .article-content hr,
+body.persona-dad .article-content hr {
+    border-top-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Light theme adjustments for tables */
+body.persona-investor .article-content table th,
+body.persona-dad .article-content table th,
+body.persona-investor .article-content table td,
+body.persona-dad .article-content table td {
+    border-bottom-color: rgba(0, 0, 0, 0.1);
+}
+
+body.persona-investor .article-content table th,
+body.persona-dad .article-content table th {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+/* Light theme adjustments for h3, h2, and strong headings */
+body.persona-investor .article-content h3,
+body.persona-dad .article-content h3,
+body.persona-investor .article-content h2,
+body.persona-dad .article-content h2,
+body.persona-investor .article-content p:has(> strong:only-child),
+body.persona-dad .article-content p:has(> strong:only-child) {
+    background: rgba(0, 0, 0, 0.02);
+    border-left-color: var(--theme-accent);
+}
+
+/* Light theme adjustments for external links */
+body.persona-investor .article-content a[href^="http"]:hover,
+body.persona-dad .article-content a[href^="http"]:hover,
+body.persona-investor .article-content a[target="_blank"]:hover,
+body.persona-dad .article-content a[target="_blank"]:hover {
+    color: var(--theme-accent);
+    opacity: 0.8;
 }
 
 /* ==================== Quotes Styles ==================== */
@@ -2587,9 +2834,14 @@ body.persona-dad .nav-list a.active {
     }
 
     /* Unified Mobile Alignment - Dad & Investor (Move Up) */
-    .character-card[data-persona="dad"] .character-photo,
+    .character-card[data-persona="dad"] .character-photo {
+        object-position: center 16% !important;
+        transform: scale(1.2) !important;
+        object-fit: cover !important;
+    }
+
     .character-card[data-persona="investor"] .character-photo {
-        object-position: center 10% !important;
+        object-position: center 32% !important;
         transform: scale(1.25) !important;
         object-fit: cover !important;
     }
@@ -5724,12 +5976,18 @@ body::after {
         -webkit-object-position: center top !important;
     }
 
-    .character-card[data-persona="dad"].video-playing .character-video,
+    .character-card[data-persona="dad"].video-playing .character-video {
+        transform: scale(1) !important;
+        -webkit-transform: scale(1) !important;
+        object-position: center 50% !important;
+        -webkit-object-position: center 25% !important;
+    }
+
     .character-card[data-persona="investor"].video-playing .character-video,
     .character-card[data-persona="operator"].video-playing .character-video {
         transform: scale(1.25) !important;
         -webkit-transform: scale(1.25) !important;
-        object-position: center 25% !important;
+        object-position: center 37% !important;
         -webkit-object-position: center 25% !important;
     }
 
@@ -7284,3 +7542,23 @@ body.persona-dad .welcome-card:hover {
 }
 
 /* End of desktop-only media query */
+
+/* Mobile styles for article content headings - 18px */
+@media (max-width: 768px) {
+    .article-content h3 {
+        font-size: 18px;
+    }
+
+    .article-content h2 {
+        font-size: 18px;
+    }
+
+    .article-content p > strong:only-child {
+        font-size: 18px;
+    }
+
+    /* Annual Retro intro text - 16px on mobile */
+    .article-content .intro-text {
+        font-size: 16px;
+    }
+}

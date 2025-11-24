@@ -792,6 +792,42 @@
                         </div>
                     `;
 
+                    // Apply accent color to numbered paragraphs (1. 2. 3. 4. etc.)
+                    const articleContent = writingContentDiv.querySelector('.article-content');
+                    if (articleContent) {
+                        const paragraphs = articleContent.querySelectorAll('p');
+                        paragraphs.forEach(p => {
+                            const text = p.textContent.trim();
+                            // Match patterns like "1. ", "2. ", "3. ", etc. at the start
+                            const numberMatch = text.match(/^(\d+)\.\s/);
+                            if (numberMatch && !p.querySelector('.number')) {
+                                const number = numberMatch[1];
+                                const restOfText = text.substring(numberMatch[0].length);
+                                
+                                // Check if it's already wrapped in strong
+                                const strong = p.querySelector('strong');
+                                if (strong) {
+                                    const strongText = strong.textContent.trim();
+                                    const strongNumberMatch = strongText.match(/^(\d+)\.\s/);
+                                    if (strongNumberMatch) {
+                                        const strongNumber = strongNumberMatch[1];
+                                        const strongRest = strongText.substring(strongNumberMatch[0].length);
+                                        strong.innerHTML = `<span class="number">${strongNumber}.</span> ${strongRest}`;
+                                    }
+                                } else {
+                                    // Replace the entire paragraph content, preserving any HTML
+                                    const originalHTML = p.innerHTML;
+                                    const htmlMatch = originalHTML.match(/^(\d+)\.\s/);
+                                    if (htmlMatch) {
+                                        p.innerHTML = originalHTML.replace(/^(\d+)\.\s/, '<span class="number">$1.</span> ');
+                                    } else {
+                                        p.innerHTML = `<span class="number">${number}.</span> ${restOfText}`;
+                                    }
+                                }
+                            }
+                        });
+                    }
+
                     // Update active state
                     postLinks.forEach(l => l.classList.remove('active'));
                     link.classList.add('active');
