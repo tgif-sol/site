@@ -6,10 +6,17 @@
     <title>Investments - Alan James Curtis</title>
     <meta name="description" content="Portfolio of investments across funds, tech startups, and crypto projects by Alan James Curtis.">
 
-    <!-- Premium Fonts -->
+    <!-- Professional Classic Business Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&family=Merriweather:wght@300;400;700;900&family=Source+Serif+Pro:wght@400;600;700;900&family=Lora:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&family=Merriweather:wght@300;400;700;900&family=Source+Serif+Pro:wght@400;600;700;900&family=Lora:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap"
+            rel="stylesheet">
+    </noscript>
 
     <!-- Styles -->
     <link rel="stylesheet" href="/css/main.css">
@@ -110,20 +117,12 @@
 
     <!-- Main Site Container -->
     <div class="container" id="mainContainer">
-        <!-- Hamburger menu button - moved outside sidebar for mobile visibility -->
-        <button class="hamburger" id="hamburger" aria-label="Menu">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
-
-        <!-- Menu overlay for mobile -->
-        <div class="menu-overlay"></div>
-
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-header">
-                <h1 class="site-title">Alan James Curtis</h1>
+                <h1 class="site-title">
+                    <a href="/?reset=true" class="site-title-link">Alan James Curtis</a>
+                </h1>
                 <div class="persona-badge" id="personaBadge">
                     <span class="badge-text">Founder</span>
                 </div>
@@ -220,11 +219,22 @@
         </main>
     </div>
 
-    <script src="/js/utilities.js"></script>
-    <script src="/js/gaming-system.js"></script>
-    <script src="/js/mobile.js"></script>
-    <script src="/js/writing-content.js"></script>
-    <script src="/js/spa-navigation.js"></script>
+    <!-- Hamburger menu button - outside container for mobile visibility -->
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <!-- Menu overlay for mobile -->
+    <div class="menu-overlay"></div>
+
+    <!-- Scripts - Defer non-critical scripts -->
+    <script src="/js/utilities.js" defer></script>
+    <script src="/js/gaming-system.js" defer></script>
+    <script src="/js/mobile.js" defer></script>
+    <script src="/js/writing-content.js" defer></script>
+    <script src="/js/spa-navigation.js" defer></script>
     <script>
         const investments = {
             'funds': {
@@ -310,25 +320,27 @@
         };
 
         // Initialize router
-        Router.init({
-            attribute: 'data-category',
-            datasetKey: 'category',
-            contentId: 'investment-content',
-            data: investments,
-            render: (data) => `
-                <h1>${data.title}</h1>
-                <ul class="investment-list">
-                    ${data.items.map(item => `
-                        <li>
-                            <a href="${item.url}" class="external-link" target="_blank">${item.name}</a>
-                            ${item.status ? `<span class="investment-status">${item.status}</span>` : ''}
-                        </li>
-                    `).join('')}
-                </ul>
-            `
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.Router) {
+                Router.init({
+                    attribute: 'data-category',
+                    datasetKey: 'category',
+                    contentId: 'investment-content',
+                    data: investments,
+                    render: (data) => `
+                        <h1>${data.title}</h1>
+                        <ul class="investment-list">
+                            ${data.items.map(item => `
+                                <li>
+                                    <a href="${item.url}" class="external-link" target="_blank">${item.name}</a>
+                                    ${item.status ? `<span class="investment-status">${item.status}</span>` : ''}
+                                </li>
+                            `).join('')}
+                        </ul>
+                    `
+                });
+            }
         });
-
-        // Router init is sufficient, persona handling is done by gaming-system.js
     </script>
 </body>
 </html>

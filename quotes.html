@@ -6,10 +6,17 @@
     <title>Quotes - Alan James Curtis</title>
     <meta name="description" content="Collection of quotes on business, investing, leadership, and life philosophy by Alan James Curtis.">
 
-    <!-- Premium Fonts -->
+    <!-- Professional Classic Business Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&family=Merriweather:wght@300;400;700;900&family=Source+Serif+Pro:wght@400;600;700;900&family=Lora:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&family=Merriweather:wght@300;400;700;900&family=Source+Serif+Pro:wght@400;600;700;900&family=Lora:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap"
+            rel="stylesheet">
+    </noscript>
 
     <!-- Styles -->
     <link rel="stylesheet" href="/css/main.css">
@@ -121,12 +128,6 @@
                 </div>
             </div>
 
-            <button class="hamburger" id="hamburger" aria-label="Menu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-
             <nav id="nav" class="navigation">
                 <ul class="nav-list">
                     <li class="nav-item">
@@ -224,37 +225,49 @@
         </main>
     </div>
 
-    <script src="/js/utilities.js"></script>
-    <script src="/js/gaming-system.js"></script>
-    <script src="/js/mobile.js"></script>
-    <script src="/js/writing-content.js"></script>
-    <script src="/js/spa-navigation.js"></script>
-    <script src="/js/quotes-content.js"></script>
+    <!-- Hamburger menu button - outside container for mobile visibility -->
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <!-- Scripts - Defer non-critical scripts -->
+    <script src="/js/utilities.js" defer></script>
+    <script src="/js/gaming-system.js" defer></script>
+    <script src="/js/mobile.js" defer></script>
+    <script src="/js/writing-content.js" defer></script>
+    <script src="/js/spa-navigation.js" defer></script>
+    <script src="/js/quotes-content.js" defer></script>
     <script>
         // Initialize router with quotes data
-        Router.init({
-            attribute: 'data-category',
-            datasetKey: 'category',
-            contentId: 'quote-content',
-            data: window.quotesContent,
-            render: (data) => `
-                <div class="article-header">
-                    <h2 class="article-title">${data.title}</h2>
-                </div>
-                <div class="quotes-container">
-                    ${data.items.map(item => {
-                        const parts = item.split(' - ');
-                        const quote = parts[0];
-                        const author = parts[1] || '';
-                        return `
-                            <div class="quote-item">
-                                <blockquote class="quote-text">"${quote}"</blockquote>
-                                ${author ? `<cite class="quote-author">— ${author}</cite>` : ''}
-                            </div>
-                        `;
-                    }).join('')}
-                </div>
-            `
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.Router && window.quotesContent) {
+                Router.init({
+                    attribute: 'data-category',
+                    datasetKey: 'category',
+                    contentId: 'quote-content',
+                    data: window.quotesContent,
+                    render: (data) => `
+                        <div class="article-header">
+                            <h2 class="article-title">${data.title}</h2>
+                        </div>
+                        <div class="quotes-container">
+                            ${data.items.map(item => {
+                                const parts = item.split(' - ');
+                                const quote = parts[0];
+                                const author = parts[1] || '';
+                                return `
+                                    <div class="quote-item">
+                                        <blockquote class="quote-text">"${quote}"</blockquote>
+                                        ${author ? `<cite class="quote-author">— ${author}</cite>` : ''}
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    `
+                });
+            }
         });
     </script>
 </body>

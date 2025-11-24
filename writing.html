@@ -6,10 +6,17 @@
     <title>Writing - Alan James Curtis</title>
     <meta name="description" content="Essays and thoughts on entrepreneurship, leadership, business operating systems, and life philosophy by Alan James Curtis.">
 
-    <!-- Premium Fonts -->
+    <!-- Professional Classic Business Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&family=Merriweather:wght@300;400;700;900&family=Source+Serif+Pro:wght@400;600;700;900&family=Lora:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&family=Merriweather:wght@300;400;700;900&family=Source+Serif+Pro:wght@400;600;700;900&family=Lora:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap"
+            rel="stylesheet">
+    </noscript>
 
     <!-- Styles -->
     <link rel="stylesheet" href="/css/main.css">
@@ -121,12 +128,6 @@
                 </div>
             </div>
 
-            <button class="hamburger" id="hamburger" aria-label="Menu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-
             <nav id="nav" class="navigation">
                 <ul class="nav-list">
                     <li class="nav-item">
@@ -232,11 +233,19 @@
         </main>
     </div>
 
-    <script src="/js/utilities.js"></script>
-    <script src="/js/gaming-system.js"></script>
-    <script src="/js/mobile.js"></script>
-    <script src="/js/writing-content.js"></script>
-    <script src="/js/spa-navigation.js"></script>
-    <script src="/js/writing-spa.js"></script>
+    <!-- Hamburger menu button - outside container for mobile visibility -->
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <!-- Scripts - Defer non-critical scripts -->
+    <script src="/js/utilities.js" defer></script>
+    <script src="/js/gaming-system.js" defer></script>
+    <script src="/js/mobile.js" defer></script>
+    <script src="/js/writing-content.js" defer></script>
+    <script src="/js/spa-navigation.js" defer></script>
+    <script src="/js/writing-spa.js" defer></script>
 </body>
 </html>

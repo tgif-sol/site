@@ -6,10 +6,17 @@
     <title>Questions - Alan James Curtis</title>
     <meta name="description" content="Key questions for entrepreneurs, investors, and leaders on business formation, product, market, and execution.">
 
-    <!-- Premium Fonts -->
+    <!-- Professional Classic Business Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&family=Merriweather:wght@300;400;700;900&family=Source+Serif+Pro:wght@400;600;700;900&family=Lora:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&family=Merriweather:wght@300;400;700;900&family=Source+Serif+Pro:wght@400;600;700;900&family=Lora:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap"
+            rel="stylesheet">
+    </noscript>
 
     <!-- Styles -->
     <link rel="stylesheet" href="/css/main.css">
@@ -111,16 +118,6 @@
     <!-- Main Site Container -->
     <div class="container" id="mainContainer">
         <!-- Sidebar -->
-        <!-- Hamburger menu button - moved outside sidebar for mobile visibility -->
-        <button class="hamburger" id="hamburger" aria-label="Menu">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
-
-        <!-- Menu overlay for mobile -->
-        <div class="menu-overlay"></div>
-
         <aside class="sidebar">
             <div class="sidebar-header">
                 <h1 class="site-title">
@@ -229,11 +226,22 @@
         </main>
     </div>
 
-    <script src="/js/utilities.js"></script>
-    <script src="/js/gaming-system.js"></script>
-    <script src="/js/mobile.js"></script>
-    <script src="/js/writing-content.js"></script>
-    <script src="/js/spa-navigation.js"></script>
+    <!-- Hamburger menu button - outside container for mobile visibility -->
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <!-- Menu overlay for mobile -->
+    <div class="menu-overlay"></div>
+
+    <!-- Scripts - Defer non-critical scripts -->
+    <script src="/js/utilities.js" defer></script>
+    <script src="/js/gaming-system.js" defer></script>
+    <script src="/js/mobile.js" defer></script>
+    <script src="/js/writing-content.js" defer></script>
+    <script src="/js/spa-navigation.js" defer></script>
     <script>
         const questions = {
             'business-formation': {
@@ -468,45 +476,47 @@
         };
 
         // Initialize router
-        Router.init({
-            attribute: 'data-section',
-            datasetKey: 'section',
-            contentId: 'question-content',
-            data: questions,
-            render: (data) => {
-                let html = `<h1>${data.title}</h1>`;
-                let inList = false;
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.Router) {
+                Router.init({
+                    attribute: 'data-section',
+                    datasetKey: 'section',
+                    contentId: 'question-content',
+                    data: questions,
+                    render: (data) => {
+                        let html = `<h1>${data.title}</h1>`;
+                        let inList = false;
 
-                data.items.forEach(item => {
-                    if (item.startsWith('<strong>')) {
-                        // Close list if open
+                        data.items.forEach(item => {
+                            if (item.startsWith('<strong>')) {
+                                // Close list if open
+                                if (inList) {
+                                    html += '</ol>';
+                                    inList = false;
+                                }
+                                // Add section header
+                                html += `<h3>${item}</h3>`;
+                            } else {
+                                // Open list if needed
+                                if (!inList) {
+                                    html += '<ol>';
+                                    inList = true;
+                                }
+                                // Add list item
+                                html += `<li>${item}</li>`;
+                            }
+                        });
+
+                        // Close list if still open
                         if (inList) {
                             html += '</ol>';
-                            inList = false;
                         }
-                        // Add section header
-                        html += `<h3>${item}</h3>`;
-                    } else {
-                        // Open list if needed
-                        if (!inList) {
-                            html += '<ol>';
-                            inList = true;
-                        }
-                        // Add list item
-                        html += `<li>${item}</li>`;
+
+                        return html;
                     }
                 });
-
-                // Close list if still open
-                if (inList) {
-                    html += '</ol>';
-                }
-
-                return html;
             }
         });
-
-        // Router init is sufficient, persona handling is done by gaming-system.js
     </script>
 </body>
 </html>
