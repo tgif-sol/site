@@ -173,29 +173,9 @@
                     }
                 });
 
-                // Also add preventive handlers to the portrait, image and video elements
-                const portrait = card.querySelector('.character-portrait');
-                const img = card.querySelector('.character-photo');
-                const video = card.querySelector('.character-video');
-
-                if (portrait) {
-                    portrait.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                    });
-                }
-                if (img) {
-                    img.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                    });
-                }
-                if (video) {
-                    video.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                    });
-                }
+                // Remove click handlers from portrait, image and video elements
+                // to allow swipe gestures to work properly on the entire card
+                // The card-level click handler will handle video toggle when not swiping
 
                 mainDisplay.appendChild(card);
             });
@@ -265,14 +245,16 @@
             let startY = 0;
             let isSwiping = false;
             let hasMoved = false; // Track if user has moved during touch
+            let swipeHandled = false; // Track if we handled a swipe
 
-            // Touch events for mobile
+            // Touch events for mobile - apply to the entire display area including cards
             mainDisplay.addEventListener('touchstart', (e) => {
                 const touch = e.touches[0];
                 startX = touch.clientX;
                 startY = touch.clientY;
                 isSwiping = true;
                 hasMoved = false;
+                swipeHandled = false;
             }, { passive: true });
 
             mainDisplay.addEventListener('touchmove', (e) => {
@@ -302,6 +284,7 @@
                 if (Math.abs(deltaX) > 50 && Math.abs(deltaX) > Math.abs(deltaY)) {
                     e.preventDefault();
                     e.stopPropagation(); // Prevent click events
+                    swipeHandled = true;
                     if (deltaX > 0) {
                         // Swipe right - go to previous card
                         console.log('Swipe right detected, going to previous card');
@@ -322,6 +305,89 @@
                     e.stopPropagation();
                 }
             }, { passive: false });
+
+            // Also add touch events to individual cards and their child elements to ensure swipe works everywhere
+            this.cards.forEach(card => {
+                let cardStartX = 0;
+                let cardStartY = 0;
+                let cardIsSwiping = false;
+                let cardHasMoved = false;
+
+                const handleTouchStart = (e) => {
+                    const touch = e.touches[0];
+                    cardStartX = touch.clientX;
+                    cardStartY = touch.clientY;
+                    cardIsSwiping = true;
+                    cardHasMoved = false;
+                };
+
+                const handleTouchMove = (e) => {
+                    if (!cardIsSwiping) return;
+                    const touch = e.touches[0];
+                    const deltaX = Math.abs(touch.clientX - cardStartX);
+                    const deltaY = Math.abs(touch.clientY - cardStartY);
+                    
+                    if (deltaX > 10 || deltaY > 10) {
+                        cardHasMoved = true;
+                    }
+                };
+
+                const handleTouchEnd = (e) => {
+                    if (!cardIsSwiping) return;
+                    cardIsSwiping = false;
+
+                    const touch = e.changedTouches[0];
+                    const endX = touch.clientX;
+                    const endY = touch.clientY;
+
+                    const deltaX = endX - cardStartX;
+                    const deltaY = endY - cardStartY;
+
+                    // Only process horizontal swipes (minimum 50px, horizontal movement > vertical)
+                    if (Math.abs(deltaX) > 50 && Math.abs(deltaX) > Math.abs(deltaY)) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (deltaX > 0) {
+                            this.previousCard();
+                        } else {
+                            this.nextCard();
+                        }
+                        mainDisplay.setAttribute('data-swipe-handled', 'true');
+                        setTimeout(() => {
+                            mainDisplay.removeAttribute('data-swipe-handled');
+                        }, 300);
+                    } else if (cardHasMoved) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                };
+
+                // Add touch events to card
+                card.addEventListener('touchstart', handleTouchStart, { passive: true });
+                card.addEventListener('touchmove', handleTouchMove, { passive: true });
+                card.addEventListener('touchend', handleTouchEnd, { passive: false });
+
+                // Also add touch events to portrait, image, and video elements
+                const portrait = card.querySelector('.character-portrait');
+                const img = card.querySelector('.character-photo');
+                const video = card.querySelector('.character-video');
+
+                if (portrait) {
+                    portrait.addEventListener('touchstart', handleTouchStart, { passive: true });
+                    portrait.addEventListener('touchmove', handleTouchMove, { passive: true });
+                    portrait.addEventListener('touchend', handleTouchEnd, { passive: false });
+                }
+                if (img) {
+                    img.addEventListener('touchstart', handleTouchStart, { passive: true });
+                    img.addEventListener('touchmove', handleTouchMove, { passive: true });
+                    img.addEventListener('touchend', handleTouchEnd, { passive: false });
+                }
+                if (video) {
+                    video.addEventListener('touchstart', handleTouchStart, { passive: true });
+                    video.addEventListener('touchmove', handleTouchMove, { passive: true });
+                    video.addEventListener('touchend', handleTouchEnd, { passive: false });
+                }
+            });
         }
 
         nextCard() {

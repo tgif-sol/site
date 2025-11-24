@@ -356,17 +356,42 @@ class GamingSystem {
                         };
 
                         // Add handler to portrait container and all child elements
+                        // Only use click event - touchend is handled by mobile.js swipe detection
                         if (portrait) {
-                            portrait.addEventListener('click', handleToggle);
-                            portrait.addEventListener('touchend', handleToggle);
+                            portrait.addEventListener('click', (e) => {
+                                // Check if this was a swipe gesture - if so, ignore click
+                                const mainDisplay = document.querySelector('.character-main-display');
+                                if (mainDisplay && mainDisplay.hasAttribute('data-swipe-handled')) {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    return;
+                                }
+                                handleToggle(e);
+                            });
                         }
                         if (img) {
-                            img.addEventListener('click', handleToggle);
-                            img.addEventListener('touchend', handleToggle);
+                            img.addEventListener('click', (e) => {
+                                // Check if this was a swipe gesture - if so, ignore click
+                                const mainDisplay = document.querySelector('.character-main-display');
+                                if (mainDisplay && mainDisplay.hasAttribute('data-swipe-handled')) {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    return;
+                                }
+                                handleToggle(e);
+                            });
                         }
                         if (videoElement) {
-                            videoElement.addEventListener('click', handleToggle);
-                            videoElement.addEventListener('touchend', handleToggle);
+                            videoElement.addEventListener('click', (e) => {
+                                // Check if this was a swipe gesture - if so, ignore click
+                                const mainDisplay = document.querySelector('.character-main-display');
+                                if (mainDisplay && mainDisplay.hasAttribute('data-swipe-handled')) {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    return;
+                                }
+                                handleToggle(e);
+                            });
                         }
 
                         // Prevent any navigation on the card itself for mobile
