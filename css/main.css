@@ -43,15 +43,15 @@
     --mobile-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
 
-    /* Typography - Professional Classic Business (Active) */
-    --font-primary: 'Libre Baskerville', serif;
+    /* Typography - Google Noto Fonts */
+    --font-primary: 'Noto Serif', serif;
     /* Authoritative, classic headers */
-    --font-secondary: 'Source Serif Pro', serif;
-    /* Professional, clean subtitles */
-    --font-display: 'Merriweather', serif;
-    /* Trustworthy, readable display */
-    --font-body: 'Lora', serif;
-    /* Elegant, highly readable body text */
+    --font-secondary: 'Noto Sans', sans-serif;
+    /* Professional, clean subtitles and body text */
+    --font-display: 'Noto Serif', serif;
+    /* Trustworthy, readable display for titles */
+    --font-body: 'Noto Sans', sans-serif;
+    /* Clean, readable body text */
 
     /* Base Colors - Modern Dark Gradient */
     --bg-warm-1: rgba(15, 20, 25, 0.95);
@@ -101,6 +101,11 @@ body {
     background: transparent;
     position: relative;
     min-height: 100vh;
+}
+
+/* Headings use Noto Serif */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Noto Serif', serif;
 }
 
 /* Remove body background - will be handled per page */
@@ -731,7 +736,7 @@ body.persona-dad::after {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Georgia', 'Palatino', 'Times New Roman', serif;
+    font-family: 'Noto Serif', serif;
     font-size: 0.95rem;
     font-weight: 400;
     letter-spacing: 0.02em;
@@ -1085,8 +1090,12 @@ body.persona-dad .timeline-content {
 
 body.persona-investor .sidebar,
 body.persona-dad .sidebar {
-    background: rgba(255, 255, 255, 0.1);
-    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    background: linear-gradient(180deg,
+            rgba(0, 0, 0, 0.1) 0%,
+            rgba(0, 0, 0, 0.05) 50%,
+            transparent 100%);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    /* Same as founder and operator */
 }
 
 .sidebar-header {
@@ -1127,9 +1136,46 @@ body.persona-dad .sidebar {
     text-transform: uppercase;
 }
 
+/* Hide persona-badge on desktop, keep on mobile */
+@media (min-width: 769px) {
+    .persona-badge {
+        display: none !important;
+    }
+
+    /* Improve site title presentation now that badge is gone */
+    .sidebar-header {
+        padding: 20px 20px 0 10px;
+        margin-bottom: 40px;
+        text-align: center !important;
+        /* Center the header content */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        /* Ensure content is centered */
+    }
+
+    .site-title {
+        margin: 0;
+        /* Remove bottom margin since badge is gone */
+        white-space: nowrap;
+        /* Keep name on one line */
+        text-align: center !important;
+        /* Center the title */
+        width: 100%;
+        /* Full width to center properly */
+    }
+
+    .site-title-link {
+        display: inline-block;
+        /* Allow centering */
+        text-align: center;
+    }
+}
+
 body.persona-investor .persona-badge,
 body.persona-dad .persona-badge {
     background: rgba(0, 0, 0, 0.05);
+    color: #EAEAEA !important;
 }
 
 /* ==================== Navigation ==================== */
@@ -1719,7 +1765,7 @@ body.persona-dad .question-item::before {
     @media (max-width: 768px) {
         .investment-list .external-link::after {
             content: "\2197";
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: 'Noto Sans', sans-serif;
             font-variant: normal;
             text-rendering: optimizeLegibility;
             -webkit-font-feature-settings: normal;
@@ -1826,39 +1872,49 @@ body.persona-dad .investment-status {
 
 /* ==================== Persona Theme Classes ==================== */
 body.persona-founder {
-    --theme-primary: var(--founder-bg);
+    --theme-primary: var(--operator-bg);
+    /* Use operator's background color for all roles */
     --theme-accent: var(--founder-accent);
     --theme-accent-rgb: var(--founder-accent-rgb);
-    --theme-text: var(--founder-text);
-    background-color: var(--founder-bg) !important;
-    color: var(--founder-text) !important;
+    --theme-text: #EAEAEA;
+    /* Use light color for all roles for better readability */
+    background-color: var(--operator-bg) !important;
+    /* Use operator's background color */
+    color: #EAEAEA !important;
 }
 
 body.persona-operator {
     --theme-primary: var(--operator-bg);
     --theme-accent: var(--operator-accent);
     --theme-accent-rgb: var(--operator-accent-rgb);
-    --theme-text: var(--operator-text);
+    --theme-text: #EAEAEA;
+    /* Use light color for all roles for better readability */
     background-color: var(--operator-bg) !important;
-    color: var(--operator-text) !important;
+    color: #EAEAEA !important;
 }
 
 body.persona-investor {
-    --theme-primary: var(--investor-bg);
+    --theme-primary: var(--operator-bg);
+    /* Use operator's background color for all roles */
     --theme-accent: var(--investor-accent);
     --theme-accent-rgb: var(--investor-accent-rgb);
-    --theme-text: var(--investor-text);
-    background-color: var(--investor-bg) !important;
-    color: var(--investor-text) !important;
+    --theme-text: #EAEAEA;
+    /* Use light color for all roles for better readability */
+    background-color: var(--operator-bg) !important;
+    /* Use operator's background color */
+    color: #EAEAEA !important;
 }
 
 body.persona-dad {
-    --theme-primary: var(--dad-bg);
+    --theme-primary: var(--operator-bg);
+    /* Use operator's background color for all roles */
     --theme-accent: var(--dad-accent);
     --theme-accent-rgb: var(--dad-accent-rgb);
-    --theme-text: var(--dad-text);
-    background-color: var(--dad-bg) !important;
-    color: var(--dad-text) !important;
+    --theme-text: #EAEAEA;
+    /* Use light color for all roles for better readability */
+    background-color: var(--operator-bg) !important;
+    /* Use operator's background color */
+    color: #EAEAEA !important;
 }
 
 /* Apply theme colors to specific elements */
@@ -1918,16 +1974,6 @@ body.persona-dad .sidebar {
             rgba(0, 0, 0, 0.05) 50%,
             transparent 100%);
     border-right: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* Adjust text colors for light backgrounds (Investor and Dad) */
-body.persona-investor .sidebar,
-body.persona-dad .sidebar {
-    border-right: 1px solid rgba(0, 0, 0, 0.1);
-    background: linear-gradient(180deg,
-            rgba(255, 255, 255, 0.95) 0%,
-            rgba(255, 255, 255, 0.9) 50%,
-            rgba(255, 255, 255, 0.85) 100%);
 }
 
 body.persona-investor .nav-link,
@@ -2295,7 +2341,7 @@ body.persona-dad .empty-state {
         .article-content a[href^="http"]::after,
         .article-content a[target="_blank"]::after {
             content: "\2197";
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: 'Noto Sans', sans-serif;
             font-variant: normal;
             text-rendering: optimizeLegibility;
             -webkit-font-feature-settings: normal;
@@ -2330,7 +2376,7 @@ body.persona-dad .empty-state {
 }
 
 .article-content code {
-    font-family: 'Courier New', monospace;
+    font-family: 'Noto Sans Mono', monospace;
     font-size: 15.5px;
         background: rgba(255, 255, 255, 0.05);
     padding: 2px 6px;
@@ -2560,8 +2606,13 @@ body.persona-operator .sidebar {
 
 body.persona-investor .sidebar,
 body.persona-dad .sidebar {
-    background: rgba(255, 255, 255, 0.1);
+    background: linear-gradient(180deg,
+            rgba(0, 0, 0, 0.1) 0%,
+            rgba(0, 0, 0, 0.05) 50%,
+            transparent 100%);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
     color: var(--theme-text);
+    /* Same as founder and operator */
 }
 
 body.persona-founder main.content,
@@ -2682,7 +2733,7 @@ body.persona-dad .nav-list a.active {
 }
 
 .deck-card-name {
-    font-family: 'Cinzel', serif;
+    font-family: 'Noto Serif', serif;
     font-size: 0.85rem;
     font-weight: bold;
     margin: 0 0 4px 0;
@@ -2779,7 +2830,7 @@ body.persona-dad .nav-list a.active {
 .progress-percentage {
     color: var(--theme-accent, var(--founder-accent));
     font-weight: bold;
-    font-family: 'Courier New', monospace;
+    font-family: 'Noto Sans Mono', monospace;
     font-size: 0.75rem;
 }
 
@@ -3085,6 +3136,7 @@ body.persona-dad .nav-list a.active {
     min-width: 55%;
     max-width: 65%;
     clip-path: polygon(0 0, calc(100% - 15px) 0, calc(100% - 5px) 100%, 0 100%);
+    font-family: 'Noto Serif', serif;
     font-size: 14px;
     font-weight: 600;
     letter-spacing: 1px;
@@ -3585,8 +3637,8 @@ body::after {
         width: 95%;
         max-width: 380px;
         height: auto;
-        min-height: 480px;
-        /* Reduced from 550px to make cards shorter */
+        min-height: 440px;
+        /* Slightly reduced from 480px since we removed character-desc */
         padding: 0;
         flex-direction: column;
         border-radius: 12px;
@@ -3783,8 +3835,8 @@ body::after {
     /* Info section for main card - natural height, no scroll */
     .character-info {
         height: auto;
-        padding: 30px 20px 10px 20px;
-        /* Reduced top padding from 60px to 30px */
+        padding: 30px 20px 15px 20px;
+        /* Moderate bottom padding for spacing */
         margin-top: -60px;
         /* Reduced overlap from -110px to -60px to show more image */
         display: flex;
@@ -3809,8 +3861,8 @@ body::after {
         font-weight: 700;
         letter-spacing: 1.5px;
         text-transform: uppercase;
-        margin-top: 5px;
-        /* Reduced from 15px to bring closer to image */
+        margin-top: 12px;
+        /* Increased from 5px to move down a bit */
         margin-bottom: 0px;
         color: #F0F2F5 !important;
         width: auto !important;
@@ -3821,8 +3873,8 @@ body::after {
         font-size: 14px !important;
         font-weight: 400 !important;
         /* Lighter weight on mobile */
-        margin: 0 0 8px 0;
-        /* No top margin to move even higher */
+        margin: 4px 0 4px 0;
+        /* Added top margin to move down a bit */
         color: #D8D8D8 !important;
         letter-spacing: 0.3px;
     }
@@ -4083,7 +4135,7 @@ body::after {
         letter-spacing: 1.5px;
         cursor: pointer;
         transition: all 0.3s ease;
-        font-family: 'Cinzel', serif;
+        font-family: 'Noto Serif', serif;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         position: relative;
         overflow: hidden;
@@ -4308,8 +4360,8 @@ body::after {
 
     /* Ensure padding stays consistent when card is active */
     .character-card.active .character-info {
-        padding: 30px 20px 10px 20px !important;
-        /* Same as default */
+        padding: 30px 20px 15px 20px !important;
+        /* Same as default - moderate bottom padding */
         margin-top: -60px !important;
         /* Same as default */
     }
@@ -4418,7 +4470,7 @@ body::after {
         right: 0;
         height: calc(var(--mobile-navbar-height) + 10px);
         /* Slightly taller header */
-        background: var(--theme-primary, var(--founder-bg));
+        background: var(--theme-primary, var(--operator-bg));
         backdrop-filter: blur(10px);
         z-index: 1000;
         align-items: center;
@@ -4602,7 +4654,7 @@ body::after {
     }
 
     .mobile-role-title .role-text {
-        font-family: 'Cinzel', serif;
+        font-family: 'Noto Serif', serif;
         color: var(--color-primary);
         font-size: 16px;
         font-weight: 600;
@@ -4684,10 +4736,10 @@ body::after {
         backdrop-filter: blur(10px);
     }
 
-    /* Persona-specific sidebar backgrounds */
+    /* Persona-specific sidebar backgrounds - all use operator's background */
     body.persona-founder .sidebar {
-        background: rgba(30, 44, 35, 0.98);
-        /* Founder green theme - matches var(--founder-bg) */
+        background: rgba(26, 29, 32, 0.98);
+        /* Use operator's background color for all roles */
     }
 
     body.persona-operator .sidebar {
@@ -4696,20 +4748,20 @@ body::after {
     }
 
     body.persona-investor .sidebar {
-        background: rgba(239, 235, 228, 0.98);
-        /* Investor light theme - matches var(--investor-bg) */
+        background: rgba(26, 29, 32, 0.98);
+        /* Use operator's background color for all roles */
     }
 
     body.persona-dad .sidebar {
-        background: rgba(255, 251, 239, 0.98);
-        /* Dad warm light theme - matches var(--dad-bg) */
+        background: rgba(26, 29, 32, 0.98);
+        /* Use operator's background color for all roles */
     }
 
     /* Light theme adjustments for mobile navigation */
     body.persona-investor .nav-link,
     body.persona-dad .nav-link {
-        color: #0A1D1A !important;
-        /* Dark text for light backgrounds */
+        color: #EAEAEA !important;
+        /* Use light color for all roles for better readability */
     }
 
     body.persona-investor .nav-link:hover,
@@ -4728,12 +4780,13 @@ body::after {
 
     body.persona-investor .site-title-link,
     body.persona-dad .site-title-link {
-        color: #0A1D1A !important;
+        color: #EAEAEA !important;
     }
 
     body.persona-investor .persona-badge,
     body.persona-dad .persona-badge {
         background: rgba(0, 0, 0, 0.05);
+        color: #EAEAEA !important;
     }
 
     .sidebar.open {
@@ -4777,7 +4830,7 @@ body::after {
     .site-title-link {
         color: rgba(255, 255, 255, 0.95) !important;
         text-decoration: none;
-        font-family: 'Cinzel', serif;
+        font-family: 'Noto Serif', serif;
         font-weight: 600;
         letter-spacing: 1px;
     }
@@ -4851,7 +4904,7 @@ body::after {
 
     .nav-text {
         display: inline-block !important;
-        font-family: 'Montserrat', sans-serif;
+        font-family: 'Noto Sans', sans-serif;
         font-weight: 500;
     }
 
@@ -5664,13 +5717,17 @@ body::after {
 .card-number {
     position: relative;
     margin-right: 2.5rem;
-    font-family: 'Cinzel', 'Playfair Display', serif;
+    font-family: 'Noto Serif', serif;
     font-size: 2.5rem;
     font-weight: 700;
     color: var(--theme-accent);
     opacity: 0.3;
     transition: all 0.3s ease;
     flex-shrink: 0;
+    width: 3rem;
+    /* Fixed width to ensure all numerals take same space */
+    text-align: center;
+    /* Center the numerals within the fixed width */
 }
 
 /* .welcome-card:hover .card-number {

@@ -1325,7 +1325,7 @@ class GamingSystem {
             },
             operator: {
                 name: 'Operator',
-                subtitle: 'Systems Architect'
+                subtitle: 'Systems Thinker'
             },
             investor: {
                 name: 'Investor',
@@ -1333,7 +1333,7 @@ class GamingSystem {
             },
             dad: {
                 name: 'Dad',
-                subtitle: 'Life Mentor'
+                subtitle: 'Stuffie Wrangler'
             }
         };
 
