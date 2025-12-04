@@ -1144,7 +1144,7 @@ body.persona-dad .sidebar {
 
     /* Improve site title presentation now that badge is gone */
     .sidebar-header {
-        padding: 20px 20px 0 10px;
+        padding: 19px 20px 0 10px;
         margin-bottom: 40px;
         text-align: center !important;
         /* Center the header content */
