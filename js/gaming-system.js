@@ -1454,144 +1454,151 @@ class GamingSystem {
             <rect x="2" y="14" width="1" height="1" fill="#B8860B"/>
         </svg>`;
 
-        // Pixel art wrench icon for operator - simple vertical design (rotated via CSS)
-        const screwdriverSvg = `<svg width="20" height="20" viewBox="0 0 20 20" style="image-rendering: pixelated; image-rendering: crisp-edges; transform: rotate(45deg); transform-origin: center;">
-            <!-- C-shaped head at top (opening facing up) -->
-            <!-- Left side of C -->
-            <rect x="6" y="2" width="2" height="5" fill="#8C8C8C"/>
-            <rect x="6" y="2" width="1" height="5" fill="#A0A0A0"/>
-
-            <!-- Right side of C -->
-            <rect x="12" y="2" width="2" height="5" fill="#8C8C8C"/>
-            <rect x="13" y="2" width="1" height="5" fill="#A0A0A0"/>
-
-            <!-- Bottom bar of C -->
-            <rect x="6" y="6" width="8" height="2" fill="#8C8C8C"/>
-            <rect x="7" y="7" width="6" height="1" fill="#A0A0A0"/>
-
-            <!-- Handle (vertical stick) -->
-            <rect x="9" y="8" width="2" height="10" fill="#A0A0A0"/>
-
-            <!-- Left edge shadow on handle -->
-            <rect x="8" y="8" width="1" height="10" fill="#8C8C8C"/>
-
-            <!-- Right edge highlight on handle -->
-            <rect x="11" y="8" width="1" height="10" fill="#B0B0B0"/>
-
-            <!-- Light center line on handle for depth -->
-            <rect x="10" y="8" width="1" height="10" fill="#C0C0C0"/>
+        // Pixel art whiteboard icon for operator
+        const whiteboardSvg = `<svg width="20" height="20" viewBox="0 0 20 20" style="image-rendering: pixelated; image-rendering: crisp-edges;">
+            <!-- Whiteboard frame (outer border) -->
+            <rect x="3" y="3" width="14" height="12" fill="#E0E0E0" stroke="#B0B0B0" stroke-width="1"/>
+            
+            <!-- Whiteboard surface (white) -->
+            <rect x="4" y="4" width="12" height="10" fill="#FFFFFF"/>
+            
+            <!-- Frame details (top and bottom) -->
+            <rect x="3" y="3" width="14" height="1" fill="#C0C0C0"/>
+            <rect x="3" y="14" width="14" height="1" fill="#C0C0C0"/>
+            <rect x="3" y="3" width="1" height="12" fill="#C0C0C0"/>
+            <rect x="16" y="3" width="1" height="12" fill="#C0C0C0"/>
+            
+            <!-- Hand-drawn lines on whiteboard (dark grey) - top straight, bottom wavy -->
+            <!-- First line (straight line) -->
+            <rect x="5" y="7" width="6" height="2" fill="#4A4A4A"/>
+            
+            <!-- Second wavy line (subtle wave) -->
+            <rect x="5" y="10" width="1" height="2" fill="#4A4A4A"/>
+            <rect x="6" y="9" width="1" height="2" fill="#4A4A4A"/>
+            <rect x="7" y="10" width="1" height="2" fill="#4A4A4A"/>
+            <rect x="8" y="10" width="1" height="2" fill="#4A4A4A"/>
+            <rect x="9" y="10" width="1" height="2" fill="#4A4A4A"/>
+            <rect x="10" y="9" width="1" height="2" fill="#4A4A4A"/>
+            <rect x="11" y="10" width="1" height="2" fill="#4A4A4A"/>
+            <rect x="12" y="10" width="1" height="2" fill="#4A4A4A"/>
+            
+            <!-- Marker/pen at bottom (red) -->
+            <rect x="2" y="16" width="3" height="1" fill="#DC143C"/>
+            <rect x="2" y="17" width="3" height="1" fill="#FF0000"/>
         </svg>`;
 
-        // Pixel art dollar coin icon for investor - gold/yellow coin
-        const moneyStackSvg = `<svg width="20" height="20" viewBox="0 0 20 20" style="image-rendering: pixelated; image-rendering: crisp-edges;">
-            <!-- Black outline for coin -->
-            <rect x="7" y="3" width="6" height="1" fill="#000000"/>
-            <rect x="5" y="4" width="2" height="1" fill="#000000"/>
-            <rect x="13" y="4" width="2" height="1" fill="#000000"/>
-            <rect x="4" y="5" width="1" height="2" fill="#000000"/>
-            <rect x="15" y="5" width="1" height="2" fill="#000000"/>
-            <rect x="3" y="7" width="1" height="6" fill="#000000"/>
-            <rect x="16" y="7" width="1" height="6" fill="#000000"/>
-            <rect x="4" y="13" width="1" height="2" fill="#000000"/>
-            <rect x="15" y="13" width="1" height="2" fill="#000000"/>
-            <rect x="5" y="15" width="2" height="1" fill="#000000"/>
-            <rect x="13" y="15" width="2" height="1" fill="#000000"/>
-            <rect x="7" y="16" width="6" height="1" fill="#000000"/>
-
-            <!-- Gold coin body -->
-            <rect x="7" y="4" width="6" height="1" fill="#FFD700"/>
-            <rect x="5" y="5" width="10" height="1" fill="#FFC107"/>
-            <rect x="4" y="6" width="12" height="1" fill="#FFD700"/>
-            <rect x="4" y="7" width="12" height="1" fill="#FFC107"/>
-            <rect x="4" y="8" width="12" height="1" fill="#FFD700"/>
-            <rect x="4" y="9" width="12" height="1" fill="#FFC107"/>
-            <rect x="4" y="10" width="12" height="1" fill="#FFD700"/>
-            <rect x="4" y="11" width="12" height="1" fill="#FFC107"/>
-            <rect x="4" y="12" width="12" height="1" fill="#FFD700"/>
-            <rect x="5" y="13" width="10" height="1" fill="#FFC107"/>
-            <rect x="5" y="14" width="10" height="1" fill="#FFD700"/>
-            <rect x="7" y="15" width="6" height="1" fill="#FFC107"/>
-
-            <!-- Dollar sign (more prominent) -->
+        // Perfect circle dollar coin icon for investor - deep green coin
+        const moneyStackSvg = `<svg width="20" height="20" viewBox="0 0 20 20">
+            <!-- Perfect circle coin (deep green) -->
+            <circle cx="10" cy="10" r="7" fill="#166534" stroke="#14532D" stroke-width="1"/>
+            
+            <!-- Dollar sign (white for contrast) -->
             <!-- Vertical line -->
-            <rect x="9" y="5" width="1" height="1" fill="#654321"/>
-            <rect x="9" y="6" width="1" height="1" fill="#654321"/>
-            <rect x="9" y="7" width="1" height="1" fill="#654321"/>
-            <rect x="9" y="8" width="1" height="1" fill="#654321"/>
-            <rect x="9" y="9" width="1" height="1" fill="#654321"/>
-            <rect x="9" y="10" width="1" height="1" fill="#654321"/>
-            <rect x="9" y="11" width="1" height="1" fill="#654321"/>
-            <rect x="9" y="12" width="1" height="1" fill="#654321"/>
-            <rect x="9" y="13" width="1" height="1" fill="#654321"/>
+            <rect x="9" y="5" width="1" height="1" fill="#FFFFFF"/>
+            <rect x="9" y="6" width="1" height="1" fill="#FFFFFF"/>
+            <rect x="9" y="7" width="1" height="1" fill="#FFFFFF"/>
+            <rect x="9" y="8" width="1" height="1" fill="#FFFFFF"/>
+            <rect x="9" y="9" width="1" height="1" fill="#FFFFFF"/>
+            <rect x="9" y="10" width="1" height="1" fill="#FFFFFF"/>
+            <rect x="9" y="11" width="1" height="1" fill="#FFFFFF"/>
+            <rect x="9" y="12" width="1" height="1" fill="#FFFFFF"/>
+            <rect x="9" y="13" width="1" height="1" fill="#FFFFFF"/>
 
             <!-- S shape -->
-            <rect x="8" y="6" width="3" height="1" fill="#654321"/>
-            <rect x="7" y="7" width="1" height="1" fill="#654321"/>
-            <rect x="8" y="8" width="2" height="1" fill="#654321"/>
-            <rect x="10" y="9" width="2" height="1" fill="#654321"/>
-            <rect x="11" y="10" width="1" height="1" fill="#654321"/>
-            <rect x="8" y="11" width="3" height="1" fill="#654321"/>
-
-            <!-- Shine/highlight -->
-            <rect x="6" y="5" width="2" height="1" fill="#FFF8DC"/>
-            <rect x="5" y="6" width="2" height="1" fill="#FFF8DC"/>
+            <rect x="8" y="6" width="3" height="1" fill="#FFFFFF"/>
+            <rect x="7" y="7" width="1" height="1" fill="#FFFFFF"/>
+            <rect x="8" y="8" width="2" height="1" fill="#FFFFFF"/>
+            <rect x="10" y="9" width="2" height="1" fill="#FFFFFF"/>
+            <rect x="11" y="10" width="1" height="1" fill="#FFFFFF"/>
+            <rect x="8" y="11" width="3" height="1" fill="#FFFFFF"/>
         </svg>`;
 
-        // Pixel art house icon for dad - clear simple design
+        // Pixel art stuffed bear toy icon for dad - reddish-brown, sitting, facing right
         const houseSvg = `<svg width="20" height="20" viewBox="0 0 20 20" style="image-rendering: pixelated; image-rendering: crisp-edges;">
-            <!-- Black outline for roof -->
-            <rect x="10" y="3" width="1" height="1" fill="#2C2C2C"/>
-            <rect x="9" y="4" width="1" height="1" fill="#2C2C2C"/>
-            <rect x="11" y="4" width="1" height="1" fill="#2C2C2C"/>
-            <rect x="8" y="5" width="1" height="1" fill="#2C2C2C"/>
-            <rect x="12" y="5" width="1" height="1" fill="#2C2C2C"/>
-            <rect x="7" y="6" width="1" height="1" fill="#2C2C2C"/>
-            <rect x="13" y="6" width="1" height="1" fill="#2C2C2C"/>
-            <rect x="6" y="7" width="1" height="1" fill="#2C2C2C"/>
-            <rect x="14" y="7" width="1" height="1" fill="#2C2C2C"/>
-            <rect x="5" y="8" width="1" height="1" fill="#2C2C2C"/>
-            <rect x="15" y="8" width="1" height="1" fill="#2C2C2C"/>
-
-            <!-- Coral roof fill to match Dad theme -->
-            <rect x="10" y="4" width="1" height="1" fill="#FF7F50"/>
-            <rect x="9" y="5" width="3" height="1" fill="#FF7F50"/>
-            <rect x="8" y="6" width="5" height="1" fill="#FF7F50"/>
-            <rect x="7" y="7" width="7" height="1" fill="#FF7F50"/>
-            <rect x="6" y="8" width="9" height="1" fill="#FF7F50"/>
-
-            <!-- Black outline for walls -->
-            <rect x="5" y="9" width="1" height="6" fill="#2C2C2C"/>
-            <rect x="15" y="9" width="1" height="6" fill="#2C2C2C"/>
-            <rect x="5" y="15" width="11" height="1" fill="#2C2C2C"/>
-
-            <!-- Beige/tan walls -->
-            <rect x="6" y="9" width="9" height="6" fill="#F5DEB3"/>
-
-            <!-- Brown door -->
-            <rect x="9" y="11" width="2" height="4" fill="#8B4513"/>
-
-            <!-- Chimney on the right -->
-            <rect x="14" y="6" width="2" height="3" fill="#8B4513"/>
-            <rect x="14" y="5" width="2" height="1" fill="#654321"/>
-
-            <!-- Animated smoke (will be animated with CSS) -->
-            <g class="house-smoke">
-                <rect x="14" y="3" width="1" height="1" fill="#444444" opacity="0.9"/>
-                <rect x="15" y="2" width="1" height="1" fill="#444444" opacity="0.8"/>
-                <rect x="14" y="1" width="1" height="1" fill="#444444" opacity="0.7"/>
-            </g>
-
-            <g class="house-smoke" style="animation-delay: 0.5s;">
-                <rect x="13" y="3" width="1" height="1" fill="#444444" opacity="0.9"/>
-                <rect x="14" y="2" width="1" height="1" fill="#444444" opacity="0.8"/>
-                <rect x="15" y="1" width="1" height="1" fill="#444444" opacity="0.7"/>
-            </g>
-
-            <g class="house-smoke" style="animation-delay: 1s;">
-                <rect x="15" y="3" width="1" height="1" fill="#444444" opacity="0.9"/>
-                <rect x="14" y="2" width="1" height="1" fill="#444444" opacity="0.8"/>
-                <rect x="13" y="1" width="1" height="1" fill="#444444" opacity="0.7"/>
-            </g>
+            <!-- Bear head outline (darker reddish-brown) -->
+            <rect x="6" y="3" width="8" height="7" fill="#8B4513"/>
+            <rect x="5" y="4" width="1" height="5" fill="#8B4513"/>
+            <rect x="14" y="4" width="1" height="5" fill="#8B4513"/>
+            <rect x="6" y="2" width="1" height="1" fill="#8B4513"/>
+            <rect x="13" y="2" width="1" height="1" fill="#8B4513"/>
+            
+            <!-- Bear head fill (medium reddish-brown) -->
+            <rect x="6" y="4" width="8" height="5" fill="#A0522D"/>
+            <rect x="5" y="5" width="1" height="3" fill="#A0522D"/>
+            <rect x="14" y="5" width="1" height="3" fill="#A0522D"/>
+            
+            <!-- Left ear (back) -->
+            <rect x="5" y="3" width="2" height="2" fill="#8B4513"/>
+            <rect x="5" y="4" width="2" height="1" fill="#A0522D"/>
+            <rect x="5" y="4" width="1" height="1" fill="#CD853F"/>
+            
+            <!-- Right ear (front, slightly larger) -->
+            <rect x="13" y="3" width="3" height="2" fill="#8B4513"/>
+            <rect x="13" y="4" width="3" height="1" fill="#A0522D"/>
+            <rect x="14" y="4" width="1" height="1" fill="#CD853F"/>
+            
+            <!-- Muzzle (lighter tan-like reddish-brown, oval-shaped) -->
+            <rect x="7" y="7" width="6" height="3" fill="#CD853F"/>
+            <rect x="6" y="8" width="1" height="1" fill="#CD853F"/>
+            <rect x="13" y="8" width="1" height="1" fill="#CD853F"/>
+            <rect x="7" y="9" width="6" height="1" fill="#CD853F"/>
+            
+            <!-- Left eye (aligned) -->
+            <rect x="7" y="5" width="1" height="1" fill="#000000"/>
+            
+            <!-- Right eye (aligned, same level) -->
+            <rect x="10" y="5" width="1" height="1" fill="#000000"/>
+            
+            <!-- Nose (single black pixel at top center of muzzle) -->
+            <rect x="9" y="8" width="1" height="1" fill="#000000"/>
+            
+            <!-- Mouth (inverted T/Y shape: vertical line + horizontal line of 3 pixels) -->
+            <rect x="9" y="9" width="1" height="1" fill="#000000"/>
+            <rect x="8" y="10" width="3" height="1" fill="#000000"/>
+            
+            <!-- Body outline (darker reddish-brown, pear-shaped) -->
+            <rect x="5" y="10" width="10" height="6" fill="#8B4513"/>
+            <rect x="4" y="11" width="1" height="4" fill="#8B4513"/>
+            <rect x="15" y="11" width="1" height="4" fill="#8B4513"/>
+            <rect x="5" y="16" width="10" height="1" fill="#8B4513"/>
+            <rect x="6" y="15" width="8" height="1" fill="#8B4513"/>
+            
+            <!-- Body fill (medium reddish-brown) -->
+            <rect x="5" y="11" width="10" height="5" fill="#A0522D"/>
+            <rect x="4" y="12" width="1" height="3" fill="#A0522D"/>
+            <rect x="15" y="12" width="1" height="3" fill="#A0522D"/>
+            <rect x="6" y="16" width="8" height="1" fill="#A0522D"/>
+            
+            <!-- Belly patch (lighter tan-like reddish-brown, oval on lower central body) -->
+            <rect x="7" y="13" width="6" height="3" fill="#CD853F"/>
+            <rect x="6" y="14" width="1" height="1" fill="#CD853F"/>
+            <rect x="13" y="14" width="1" height="1" fill="#CD853F"/>
+            
+            <!-- Left arm (stubby, bent at elbow, extending downward) -->
+            <rect x="4" y="11" width="2" height="3" fill="#8B4513"/>
+            <rect x="4" y="12" width="2" height="2" fill="#A0522D"/>
+            <rect x="4" y="13" width="2" height="1" fill="#8B4513"/>
+            <rect x="3" y="13" width="1" height="1" fill="#A0522D"/>
+            
+            <!-- Right arm (stubby, bent at elbow, extending downward) -->
+            <rect x="14" y="11" width="2" height="3" fill="#8B4513"/>
+            <rect x="14" y="12" width="2" height="2" fill="#A0522D"/>
+            <rect x="14" y="13" width="2" height="1" fill="#8B4513"/>
+            <rect x="16" y="13" width="1" height="1" fill="#A0522D"/>
+            
+            <!-- Left leg (bent, positioned forward, rounded foot) -->
+            <rect x="6" y="15" width="2" height="3" fill="#8B4513"/>
+            <rect x="6" y="16" width="2" height="2" fill="#A0522D"/>
+            <rect x="6" y="17" width="2" height="1" fill="#8B4513"/>
+            <rect x="5" y="17" width="1" height="1" fill="#A0522D"/>
+            <rect x="6" y="18" width="2" height="1" fill="#8B4513"/>
+            
+            <!-- Right leg (bent, positioned forward, rounded foot) -->
+            <rect x="11" y="15" width="2" height="3" fill="#8B4513"/>
+            <rect x="11" y="16" width="2" height="2" fill="#A0522D"/>
+            <rect x="11" y="17" width="2" height="1" fill="#8B4513"/>
+            <rect x="13" y="17" width="1" height="1" fill="#A0522D"/>
+            <rect x="11" y="18" width="2" height="1" fill="#8B4513"/>
         </svg>`;
 
         navItems.forEach(item => {
@@ -1610,13 +1617,13 @@ class GamingSystem {
                     // For founder: ONLY show sword on active page, hide ALL other icons
                     navIcon.innerHTML = isActive ? swordSvg : '';
                 } else if (isOperator) {
-                    // For operator: ONLY show wrench on active page, hide ALL other icons
-                    navIcon.innerHTML = isActive ? screwdriverSvg : '';
+                    // For operator: ONLY show whiteboard on active page, hide ALL other icons
+                    navIcon.innerHTML = isActive ? whiteboardSvg : '';
                 } else if (isInvestor) {
                     // For investor: ONLY show money stack on active page, hide ALL other icons
                     navIcon.innerHTML = isActive ? moneyStackSvg : '';
                 } else if (isDad) {
-                    // For dad: ONLY show house on active page, hide ALL other icons
+                    // For dad: ONLY show stuffie bear on active page, hide ALL other icons
                     navIcon.innerHTML = isActive ? houseSvg : '';
                 } else {
                     // Restore original icons for other personas

@@ -136,7 +136,6 @@ body.persona-dad::after {
     background-repeat: no-repeat;
     -webkit-background-repeat: no-repeat;
     /* Safari support */
-    opacity: 0.1;
     z-index: 0;
     pointer-events: none;
     display: block !important;
@@ -154,21 +153,40 @@ body.persona-dad::after {
     -webkit-will-change: transform;
 }
 
+/* Founder and Operator - slightly more visible */
+body.persona-founder::after,
+body.persona-operator::after {
+    opacity: 0.05;
+}
+
+/* Investor and Dad - darker for better readability */
+body.persona-investor::after,
+body.persona-dad::after {
+    opacity: 0.03;
+}
+
 /* Safari-specific: Force opacity and display recalculation */
 @supports (-webkit-appearance: none) {
 
-    body.persona-operator::after {
-        opacity: 0.06 !important;
+    body.persona-founder::after {
+        opacity: 0.05 !important;
         display: block !important;
         visibility: visible !important;
         -webkit-transform: translateZ(0) !important;
         transform: translateZ(0) !important;
     }
 
-    body.persona-founder::after,
+    body.persona-operator::after {
+        opacity: 0.05 !important;
+        display: block !important;
+        visibility: visible !important;
+        -webkit-transform: translateZ(0) !important;
+        transform: translateZ(0) !important;
+    }
+
     body.persona-investor::after,
     body.persona-dad::after {
-        opacity: 0.1 !important;
+        opacity: 0.03 !important;
         display: block !important;
         visibility: visible !important;
         -webkit-transform: translateZ(0) !important;
@@ -2910,43 +2928,32 @@ body.persona-dad .nav-list a.active {
     }
 }
 
-/* Operator persona wrench icon styling */
+/* Operator persona whiteboard icon styling */
 .persona-operator .nav-link.active .nav-icon svg {
     image-rendering: pixelated;
     image-rendering: -moz-crisp-edges;
     image-rendering: crisp-edges;
-    filter: drop-shadow(0 0 2px rgba(90, 188, 216, 0.6));
-    animation: wrenchTurn 2.5s ease-in-out infinite;
+    filter: drop-shadow(0 0 2px rgba(255, 184, 0, 0.6));
+    animation: whiteboardPulse 2s ease-in-out infinite;
 }
 
-@keyframes wrenchTurn {
+@keyframes whiteboardPulse {
 
     0%,
     100% {
-        filter: drop-shadow(0 0 2px rgba(90, 188, 216, 0.4));
-        transform: rotate(0deg);
-    }
-
-    25% {
-        transform: rotate(-8deg);
+        filter: drop-shadow(0 0 2px rgba(255, 184, 0, 0.4));
+        transform: translateY(0);
     }
 
     50% {
-        filter: drop-shadow(0 0 4px rgba(90, 188, 216, 0.9));
-        transform: rotate(0deg);
-    }
-
-    75% {
-        transform: rotate(8deg);
+        filter: drop-shadow(0 0 4px rgba(255, 184, 0, 0.9));
+        transform: translateY(-1px);
     }
 }
 
 /* Investor persona coin icon styling */
 .persona-investor .nav-link.active .nav-icon svg {
-    image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: crisp-edges;
-    filter: drop-shadow(0 0 3px rgba(255, 215, 0, 0.6));
+    filter: drop-shadow(0 0 3px rgba(22, 101, 52, 0.6));
     animation: coinBounce 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
@@ -2954,56 +2961,35 @@ body.persona-dad .nav-list a.active {
 
     0%,
     100% {
-        filter: drop-shadow(0 0 3px rgba(255, 215, 0, 0.4));
+        filter: drop-shadow(0 0 3px rgba(22, 101, 52, 0.4));
         transform: translateY(0);
     }
 
     50% {
-        filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.7));
+        filter: drop-shadow(0 0 5px rgba(22, 101, 52, 0.7));
         transform: translateY(-5px);
     }
 }
 
-/* Dad persona house icon styling */
+/* Dad persona stuffie bear icon styling */
 .persona-dad .nav-link.active .nav-icon svg {
     image-rendering: pixelated;
     image-rendering: -moz-crisp-edges;
     image-rendering: crisp-edges;
+    filter: drop-shadow(0 0 3px rgba(255, 127, 80, 0.6));
+    animation: stuffieBounce 2s ease-in-out infinite;
 }
 
-.persona-dad .nav-link.active .nav-icon svg .house-smoke {
-    animation: smokeRise 3s ease-in-out infinite;
-}
-
-@keyframes smokeRise {
-    0% {
-        opacity: 0;
+@keyframes stuffieBounce {
+    0%,
+    100% {
+        filter: drop-shadow(0 0 3px rgba(255, 127, 80, 0.4));
         transform: translateY(0);
     }
 
-    20% {
-        opacity: 0.6;
-        transform: translateY(-2px);
-    }
-
-    40% {
-        opacity: 0.8;
-        transform: translateY(-4px) translateX(1px);
-    }
-
-    60% {
-        opacity: 0.6;
-        transform: translateY(-6px) translateX(-1px);
-    }
-
-    80% {
-        opacity: 0.3;
-        transform: translateY(-8px);
-    }
-
-    100% {
-        opacity: 0;
-        transform: translateY(-10px);
+    50% {
+        filter: drop-shadow(0 0 5px rgba(255, 127, 80, 0.8));
+        transform: translateY(-3px);
     }
 }
 
