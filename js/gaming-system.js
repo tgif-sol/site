@@ -59,7 +59,7 @@ class GamingSystem {
                 }
             },
             dad: {
-                name: 'Dad',
+                name: 'Girl Dad',
                 theme: 'persona-dad',
                 image: '/assets/dad.png',
                 content: {
@@ -1332,7 +1332,7 @@ class GamingSystem {
                 subtitle: 'Capital Allocator'
             },
             dad: {
-                name: 'Dad',
+                name: 'Girl Dad',
                 subtitle: 'Stuffie Wrangler'
             }
         };
