@@ -18,8 +18,8 @@
 
     /* Operator Theme - Executive Dark */
     --operator-bg: #1A1D20;
-    --operator-accent: #FFB800;
-    --operator-accent-rgb: 255, 184, 0;
+    --operator-accent: #D99A00;
+    --operator-accent-rgb: 217, 154, 0;
     --operator-text: #EAEAEA;
 
     /* Investor Theme - Sophisticated Light */
@@ -153,40 +153,22 @@ body.persona-dad::after {
     -webkit-will-change: transform;
 }
 
-/* Founder and Operator - slightly more visible */
+/* All personas - consistent opacity */
 body.persona-founder::after,
-body.persona-operator::after {
-    opacity: 0.05;
-}
-
-/* Investor and Dad - darker for better readability */
+body.persona-operator::after,
 body.persona-investor::after,
 body.persona-dad::after {
-    opacity: 0.03;
+    opacity: 0.06;
 }
 
 /* Safari-specific: Force opacity and display recalculation */
 @supports (-webkit-appearance: none) {
 
-    body.persona-founder::after {
-        opacity: 0.05 !important;
-        display: block !important;
-        visibility: visible !important;
-        -webkit-transform: translateZ(0) !important;
-        transform: translateZ(0) !important;
-    }
-
-    body.persona-operator::after {
-        opacity: 0.05 !important;
-        display: block !important;
-        visibility: visible !important;
-        -webkit-transform: translateZ(0) !important;
-        transform: translateZ(0) !important;
-    }
-
+    body.persona-founder::after,
+    body.persona-operator::after,
     body.persona-investor::after,
     body.persona-dad::after {
-        opacity: 0.03 !important;
+        opacity: 0.06 !important;
         display: block !important;
         visibility: visible !important;
         -webkit-transform: translateZ(0) !important;
@@ -257,7 +239,7 @@ body.persona-dad::after {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: var(--operator-bg);
+    background-color: #0A0B0D;
     z-index: -2;
     pointer-events: none;
 }
@@ -1890,49 +1872,49 @@ body.persona-dad .investment-status {
 
 /* ==================== Persona Theme Classes ==================== */
 body.persona-founder {
-    --theme-primary: var(--operator-bg);
-    /* Use operator's background color for all roles */
+    --theme-primary: var(--investor-bg);
+    /* Use investor's background color for all roles */
     --theme-accent: var(--founder-accent);
     --theme-accent-rgb: var(--founder-accent-rgb);
-    --theme-text: #EAEAEA;
-    /* Use light color for all roles for better readability */
-    background-color: var(--operator-bg) !important;
-    /* Use operator's background color */
-    color: #EAEAEA !important;
+    --theme-text: var(--investor-text);
+    /* Use dark text color for light background readability */
+    background-color: var(--investor-bg) !important;
+    /* Use investor's background color */
+    color: var(--investor-text) !important;
 }
 
 body.persona-operator {
-    --theme-primary: var(--operator-bg);
+    --theme-primary: var(--investor-bg);
     --theme-accent: var(--operator-accent);
     --theme-accent-rgb: var(--operator-accent-rgb);
-    --theme-text: #EAEAEA;
-    /* Use light color for all roles for better readability */
-    background-color: var(--operator-bg) !important;
-    color: #EAEAEA !important;
+    --theme-text: var(--investor-text);
+    /* Use dark text color for light background readability */
+    background-color: var(--investor-bg) !important;
+    color: var(--investor-text) !important;
 }
 
 body.persona-investor {
-    --theme-primary: var(--operator-bg);
-    /* Use operator's background color for all roles */
+    --theme-primary: var(--investor-bg);
+    /* Use investor's background color for all roles */
     --theme-accent: var(--investor-accent);
     --theme-accent-rgb: var(--investor-accent-rgb);
-    --theme-text: #EAEAEA;
-    /* Use light color for all roles for better readability */
-    background-color: var(--operator-bg) !important;
-    /* Use operator's background color */
-    color: #EAEAEA !important;
+    --theme-text: var(--investor-text);
+    /* Use dark text color for light background readability */
+    background-color: var(--investor-bg) !important;
+    /* Use investor's background color */
+    color: var(--investor-text) !important;
 }
 
 body.persona-dad {
-    --theme-primary: var(--operator-bg);
-    /* Use operator's background color for all roles */
+    --theme-primary: var(--investor-bg);
+    /* Use investor's background color for all roles */
     --theme-accent: var(--dad-accent);
     --theme-accent-rgb: var(--dad-accent-rgb);
-    --theme-text: #EAEAEA;
-    /* Use light color for all roles for better readability */
-    background-color: var(--operator-bg) !important;
-    /* Use operator's background color */
-    color: #EAEAEA !important;
+    --theme-text: var(--investor-text);
+    /* Use dark text color for light background readability */
+    background-color: var(--investor-bg) !important;
+    /* Use investor's background color */
+    color: var(--investor-text) !important;
 }
 
 /* Apply theme colors to specific elements */
@@ -2845,6 +2827,15 @@ body.persona-dad .nav-list a.active {
     font-size: 0.65rem;
 }
 
+/* Founder and Operator XP text colors - use investor/dad colors */
+body.persona-founder .progress-text {
+    color: var(--investor-text);
+}
+
+body.persona-operator .progress-text {
+    color: var(--dad-text);
+}
+
 .progress-percentage {
     color: var(--theme-accent, var(--founder-accent));
     font-weight: bold;
@@ -3152,6 +3143,17 @@ body.persona-dad .nav-list a.active {
     z-index: 1;
 }
 
+/* Founder and Operator card text colors - use investor/dad colors */
+body.persona-founder .role-card-name-banner,
+body.persona-founder .role-card-subtitle-banner {
+    color: var(--investor-text);
+}
+
+body.persona-operator .role-card-name-banner,
+body.persona-operator .role-card-subtitle-banner {
+    color: var(--dad-text);
+}
+
 /* Persona-specific banner widths */
 body.persona-operator .role-card-name-banner {
     min-width: 55%;
@@ -3165,13 +3167,13 @@ body.persona-investor .role-card-name-banner {
 
 body.persona-dad .role-card-name-banner {
     min-width: 30%;
-    max-width: 54%;
+    max-width: 68%;
 }
 
 /* Subtitle banner - same for all personas */
 body.persona-dad .role-card-subtitle-banner {
     min-width: 60%;
-    max-width: 61%;
+    max-width: 74%;
     clip-path: polygon(0 0, calc(100% - 15px) 0, calc(100% - 7px) 100%, 0 100%);
 }
 
@@ -3201,13 +3203,13 @@ body.persona-founder .role-card::before {
 }
 
 body.persona-operator {
-    --theme-rgb: 255, 184, 0;
+    --theme-rgb: 217, 154, 0;
     /* var(--operator-accent) */
 }
 
 /* Operator card specific border colors */
 body.persona-operator .role-card {
-    border-color: rgba(255, 184, 0, 0.3);
+    border-color: rgba(217, 154, 0, 0.3);
     /* var(--operator-accent) with transparency */
 }
 
@@ -4456,7 +4458,7 @@ body::after {
         right: 0;
         height: calc(var(--mobile-navbar-height) + 10px);
         /* Slightly taller header */
-        background: var(--theme-primary, var(--operator-bg));
+        background: var(--theme-primary, var(--investor-bg));
         backdrop-filter: blur(10px);
         z-index: 1000;
         align-items: center;

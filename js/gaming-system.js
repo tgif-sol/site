@@ -28,7 +28,7 @@ class GamingSystem {
             founder: {
                 name: 'Founder',
                 theme: 'persona-founder',
-                image: '/assets/founder-profile.jpeg',
+                image: '/assets/founder.jpeg',
                 content: {
                     title: 'Welcome to the War Room',
                     welcome: "Welcome to my personal website! This site's \"job to be done\" is to make me as legible as possible.",
@@ -39,7 +39,7 @@ class GamingSystem {
             operator: {
                 name: 'Operator',
                 theme: 'persona-operator',
-                image: '/assets/operator.png',
+                image: '/assets/operator.jpeg',
                 content: {
                     title: 'Strategic Operations Center',
                     welcome: "Welcome to my personal website! This site's \"job to be done\" is to make me as legible as possible.",
@@ -50,7 +50,7 @@ class GamingSystem {
             investor: {
                 name: 'Investor',
                 theme: 'persona-investor',
-                image: '/assets/investor.png',
+                image: '/assets/investor.jpeg',
                 content: {
                     title: 'The Trading Hall',
                     welcome: "Welcome to my personal website! This site's \"job to be done\" is to make me as legible as possible.",
@@ -61,7 +61,7 @@ class GamingSystem {
             dad: {
                 name: 'Girl Dad',
                 theme: 'persona-dad',
-                image: '/assets/dad.png',
+                image: '/assets/dad.jpeg',
                 content: {
                     title: "The Scholar's Sanctuary",
                     welcome: "Welcome to my personal website! This site's \"job to be done\" is to make me as legible as possible.",
@@ -1348,10 +1348,10 @@ class GamingSystem {
 
         // Update with character avatars - same as top-right corner
         const avatars = {
-            founder: '/assets/founder-profile.jpeg',
-            operator: '/assets/operator.png',
-            investor: '/assets/investor.png',
-            dad: '/assets/dad.png'
+            founder: '/assets/founder.jpeg',
+            operator: '/assets/operator.jpeg',
+            investor: '/assets/investor.jpeg',
+            dad: '/assets/dad.jpeg'
         };
 
         const avatarUrl = avatars[persona] || avatars.founder;
