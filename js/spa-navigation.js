@@ -49,7 +49,7 @@
      * Extract page name from pathname
      */
     function extractPageFromPath(pathname) {
-        if (pathname === '/' || pathname === '/index.html') return 'welcome';
+        if (pathname === '/' || pathname === '/index.html' || pathname.includes('/pages/welcome')) return 'welcome';
         if (pathname.includes('bio')) return 'bio';
         if (pathname.includes('writing')) return 'writing';
         if (pathname.includes('quotes')) return 'quotes';
@@ -163,22 +163,22 @@
         const personaData = {
             founder: {
                 welcome: `Welcome to my personal website! This site's "job to be done" is to make me as legible as possible.`,
-                focus: `A good place to start is with my <a href="/bio.html" class="text-link">bio</a>, my <a href="/writing/user-manual.html" class="text-link">user manual</a>, or my <a href="/writing/lattice-work.html" class="text-link">latticework</a>.`,
+                focus: `A good place to start is with my <a href="/pages/bio/" class="text-link">bio</a>, my <a href="/pages/writing/user-manual.html" class="text-link">user manual</a>, or my <a href="/pages/writing/latticework.html" class="text-link">latticework</a>.`,
                 ending: `Thanks for stopping by and please reach out on <a href="https://twitter.com/alanjamescurtis" target="_blank" class="text-link">X</a>, <a href="https://linkedin.com/in/alanjamescurtis" target="_blank" class="text-link">LinkedIn</a>, or <a href="mailto:alanjamescurtis@gmail.com" class="text-link">email</a> if we should be working together!`
             },
             operator: {
                 welcome: `Welcome to my personal website! This site's "job to be done" is to make me as legible as possible.`,
-                focus: `A good place to start is with my <a href="/bio.html" class="text-link">bio</a>, my <a href="/writing/user-manual.html" class="text-link">user manual</a>, or my <a href="/writing/lattice-work.html" class="text-link">latticework</a>.`,
+                focus: `A good place to start is with my <a href="/pages/bio/" class="text-link">bio</a>, my <a href="/pages/writing/user-manual.html" class="text-link">user manual</a>, or my <a href="/pages/writing/latticework.html" class="text-link">latticework</a>.`,
                 ending: `Thanks for stopping by and please reach out on <a href="https://twitter.com/alanjamescurtis" target="_blank" class="text-link">X</a>, <a href="https://linkedin.com/in/alanjamescurtis" target="_blank" class="text-link">LinkedIn</a>, or <a href="mailto:alanjamescurtis@gmail.com" class="text-link">email</a> if we should be working together!`
             },
             investor: {
                 welcome: `Welcome to my personal website! This site's "job to be done" is to make me as legible as possible.`,
-                focus: `A good place to start is with my <a href="/bio.html" class="text-link">bio</a>, my <a href="/writing/user-manual.html" class="text-link">user manual</a>, or my <a href="/writing/lattice-work.html" class="text-link">latticework</a>.`,
+                focus: `A good place to start is with my <a href="/pages/bio/" class="text-link">bio</a>, my <a href="/pages/writing/user-manual.html" class="text-link">user manual</a>, or my <a href="/pages/writing/latticework.html" class="text-link">latticework</a>.`,
                 ending: `Thanks for stopping by and please reach out on <a href="https://twitter.com/alanjamescurtis" target="_blank" class="text-link">X</a>, <a href="https://linkedin.com/in/alanjamescurtis" target="_blank" class="text-link">LinkedIn</a>, or <a href="mailto:alanjamescurtis@gmail.com" class="text-link">email</a> if we should be working together!`
             },
             dad: {
                 welcome: `Welcome to my personal website! This site's "job to be done" is to make me as legible as possible.`,
-                focus: `A good place to start is with my <a href="/bio.html" class="text-link">bio</a>, my <a href="/writing/user-manual.html" class="text-link">user manual</a>, or my <a href="/writing/lattice-work.html" class="text-link">latticework</a>.`,
+                focus: `A good place to start is with my <a href="/pages/bio/" class="text-link">bio</a>, my <a href="/pages/writing/user-manual.html" class="text-link">user manual</a>, or my <a href="/pages/writing/latticework.html" class="text-link">latticework</a>.`,
                 ending: `Thanks for stopping by and please reach out on <a href="https://twitter.com/alanjamescurtis" target="_blank" class="text-link">X</a>, <a href="https://linkedin.com/in/alanjamescurtis" target="_blank" class="text-link">LinkedIn</a>, or <a href="mailto:alanjamescurtis@gmail.com" class="text-link">email</a> if we should be working together!`
             }
         };
@@ -264,23 +264,23 @@
                 let page = null;
                 let article = null;
 
-                if (href.includes('/bio')) {
+                if (href.includes('/bio') || href.includes('/pages/bio')) {
                     page = 'bio';
-                } else if (href.includes('/writing/')) {
+                } else if (href.includes('/writing/') || href.includes('/pages/writing/')) {
                     // This is a specific article
                     page = 'writing';
-                    // Extract article name from path
-                    const match = href.match(/\/writing\/(.+)\.html/);
+                    // Extract article name from path (support both /writing/ and /pages/writing/)
+                    const match = href.match(/(?:\/pages)?\/writing\/(.+)\.html/);
                     if (match) {
                         article = match[1];
                     }
-                } else if (href.includes('/writing')) {
+                } else if (href.includes('/writing') || href.includes('/pages/writing')) {
                     page = 'writing';
-                } else if (href.includes('/investments')) {
+                } else if (href.includes('/investments') || href.includes('/pages/investments')) {
                     page = 'investments';
-                } else if (href.includes('/quotes')) {
+                } else if (href.includes('/quotes') || href.includes('/pages/quotes')) {
                     page = 'quotes';
-                } else if (href.includes('/questions')) {
+                } else if (href.includes('/questions') || href.includes('/pages/questions')) {
                     page = 'questions';
                 }
 

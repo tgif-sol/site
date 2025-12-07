@@ -534,8 +534,8 @@ body.persona-dad::after {
     height: 100%;
     object-fit: cover;
     -webkit-object-fit: cover;
-    object-position: center 20%;
-    -webkit-object-position: center 20%;
+    object-position: center 10%;
+    -webkit-object-position: center 10%;
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -574,12 +574,18 @@ body.persona-dad::after {
     transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     object-fit: cover;
     -webkit-object-fit: cover;
-    object-position: center 5%;
-    -webkit-object-position: center 5%;
+    object-position: center 10%;
+    -webkit-object-position: center 10%;
     transform: translateZ(0) translateY(-10%);
     -webkit-transform: translateZ(0) translateY(-10%);
 }
 
+.character-card[data-persona="founder"] .character-video {
+    object-position: center 10%;
+    -webkit-object-position: center 10%;
+    transform: translateZ(0) translateY(-8%);
+    -webkit-transform: translateZ(0) translateY(-8%);
+}
 
 .character-card[data-persona="founder"]:hover .character-video,
 .character-card[data-persona="dad"]:hover .character-video,
@@ -609,15 +615,15 @@ body.persona-dad::after {
 }
 
 .character-card[data-persona="dad"] .character-video {
-    object-position: center 30%;
-    -webkit-object-position: center 30%;
+    object-position: center 10%;
+    -webkit-object-position: center 10%;
     transform: translateZ(0) scale(1.0) translateY(-5%);
     -webkit-transform: translateZ(0) scale(1.0) translateY(-5%);
 }
 
 .character-card[data-persona="investor"] .character-video {
-    object-position: center 25%;
-    -webkit-object-position: center 25%;
+    object-position: center 10%;
+    -webkit-object-position: center 10%;
     transform: translateZ(0) translateY(-5%);
     -webkit-transform: translateZ(0) translateY(-5%);
 }
@@ -4214,8 +4220,8 @@ body::after {
 
     /* Unified Mobile Alignment - Videos */
     .character-card[data-persona="founder"] .character-video {
-        object-position: center top !important;
-        -webkit-object-position: center top !important;
+        object-position: center 10% !important;
+        -webkit-object-position: center 10% !important;
         transform: scale(1.25) translateY(5%) !important;
         -webkit-transform: scale(1.25) translateY(5%) !important;
     }
@@ -4223,8 +4229,8 @@ body::after {
     .character-card[data-persona="dad"] .character-video,
     .character-card[data-persona="investor"] .character-video,
     .character-card[data-persona="operator"] .character-video {
-        object-position: center 25% !important;
-        -webkit-object-position: center 25% !important;
+        object-position: center 10% !important;
+        -webkit-object-position: center 10% !important;
         transform: scale(1.25) !important;
         -webkit-transform: scale(1.25) !important;
     }
@@ -4252,29 +4258,29 @@ body::after {
     .character-card[data-persona="founder"].video-playing .character-video {
         transform: scale(1.25) translateY(8%) !important;
         -webkit-transform: scale(1.25) translateY(8%) !important;
-        object-position: center top !important;
-        -webkit-object-position: center top !important;
+        object-position: center 10% !important;
+        -webkit-object-position: center 10% !important;
     }
 
     .character-card[data-persona="dad"].video-playing .character-video {
         transform: scale(1.05) !important;
         -webkit-transform: scale(1.05) !important;
-        object-position: center 43% !important;
-        -webkit-object-position: center 25% !important;
+        object-position: center 10% !important;
+        -webkit-object-position: center 10% !important;
     }
 
     .character-card[data-persona="investor"].video-playing .character-video {
         transform: scale(1.25) !important;
         -webkit-transform: scale(1.25) !important;
-        object-position: center 37% !important;
-        -webkit-object-position: center 25% !important;
+        object-position: center 10% !important;
+        -webkit-object-position: center 10% !important;
     }
 
     .character-card[data-persona="operator"].video-playing .character-video {
         transform: scale(1.25) !important;
         -webkit-transform: scale(1.25) !important;
-        object-position: center 24% !important;
-        -webkit-object-position: center 25% !important;
+        object-position: center 10% !important;
+        -webkit-object-position: center 10% !important;
     }
 
     .character-card[data-persona="founder"].video-playing .character-photo,

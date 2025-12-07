@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5, user-scalable=yes">
+    <title>Welcome - Alan James Curtis</title>
+    <meta name="description"
+        content="Founder, Operator, Investor, and Girl Dad. Five exits, $100M+ raised, COO at EigenLayer, CTO at Core Scientific.">
+
+    <!-- Google Noto Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700&family=Noto+Serif:wght@300;400;500;600;700;900&family=Noto+Sans+Mono:wght@400;500;600;700&display=swap"
+        rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700&family=Noto+Serif:wght@300;400;500;600;700;900&family=Noto+Sans+Mono:wght@400;500;600;700&display=swap"
+            rel="stylesheet">
+    </noscript>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/css/main.css">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:title" content="Welcome - Alan James Curtis">
+    <meta property="og:description" content="Founder. Operator. Investor. Girl Dad.">
+    <meta property="og:image" content="https://yourdomain.com/og-image.jpg">
+    <meta property="og:url" content="https://yourdomain.com/pages/welcome/">
+    <meta property="og:type" content="website">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BFD7WNPCNP"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-BFD7WNPCNP');
+    </script>
+</head>
+
+<body>
+    <!-- Character Selection Overlay -->
+    <div id="characterSelect" class="character-select-overlay">
+        <div class="character-select-modal">
+            <div class="scroll-header">
+                <h1 class="select-title">CHOOSE YOUR CHARACTER</h1>
+            </div>
+
+            <div class="character-grid">
+                <!-- Warlord Character -->
+                <div class="character-card" data-persona="founder">
+                    <div class="card-background warlord-bg"></div>
+                    <div class="character-frame">
+                        <div class="character-portrait warlord-portrait">
+                            <img src="/assets/founder.jpeg" alt="Founder" class="character-photo" loading="lazy">
+                            <video data-src="/assets/animation/founder.mp4" class="character-video" muted loop
+                                playsinline preload="auto" webkit-playsinline poster="/assets/founder.jpeg"></video>
+                        </div>
+                    </div>
+                    <div class="character-info">
+                        <h3 class="character-name">FOUNDER</h3>
+                        <p class="character-title">Startup Warrior</p>
+                    </div>
+                </div>
+
+                <!-- Strategist Character -->
+                <div class="character-card" data-persona="operator">
+                    <div class="card-background strategist-bg"></div>
+                    <div class="character-frame">
+                        <div class="character-portrait strategist-portrait">
+                            <img src="/assets/operator.jpeg" alt="Operator" class="character-photo" loading="lazy">
+                            <video data-src="/assets/animation/operator.mp4" class="character-video" muted loop
+                                playsinline preload="auto" webkit-playsinline poster="/assets/operator.jpeg"></video>
+                        </div>
+                    </div>
+                    <div class="character-info">
+                        <h3 class="character-name">OPERATOR</h3>
+                        <p class="character-title">Systems Thinker</p>
+                    </div>
+                </div>
+
+                <!-- Merchant Character -->
+                <div class="character-card" data-persona="investor">
+                    <div class="card-background merchant-bg"></div>
+                    <div class="character-frame">
+                        <div class="character-portrait merchant-portrait">
+                            <img src="/assets/investor.jpeg" alt="Investor" class="character-photo" loading="lazy">
+                            <video data-src="/assets/animation/investor.mp4" class="character-video" muted loop
+                                playsinline preload="auto" webkit-playsinline poster="/assets/investor.jpeg"></video>
+                        </div>
+                    </div>
+                    <div class="character-info">
+                        <h3 class="character-name">INVESTOR</h3>
+                        <p class="character-title">Capital Allocator</p>
+                    </div>
+                </div>
+
+                <!-- Scholar Character -->
+                <div class="character-card" data-persona="dad">
+                    <div class="card-background scholar-bg"></div>
+                    <div class="character-frame">
+                        <div class="character-portrait scholar-portrait">
+                            <img src="/assets/dad.jpeg" alt="Girl Dad" class="character-photo" loading="lazy">
+                            <video data-src="/assets/animation/dad.mp4" class="character-video" muted loop playsinline
+                                preload="auto" webkit-playsinline poster="/assets/dad.jpeg"></video>
+                        </div>
+                    </div>
+                    <div class="character-info">
+                        <h3 class="character-name">GIRL DAD</h3>
+                        <p class="character-title">Stuffie Wrangler</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Persona Switcher -->
+    <div id="personaSwitcher" class="persona-switcher">
+        <div class="persona-icons-container">
+            <!-- Other role icons that appear on hover -->
+            <div class="persona-options">
+                <button data-persona="founder" class="persona-icon-btn" title="Founder">
+                    <img class="persona-icon-img" src="/assets/founder.jpeg" alt="Founder" loading="lazy">
+                </button>
+                <button data-persona="operator" class="persona-icon-btn" title="Operator">
+                    <img class="persona-icon-img" src="/assets/operator.jpeg" alt="Operator" loading="lazy">
+                </button>
+                <button data-persona="investor" class="persona-icon-btn" title="Investor">
+                    <img class="persona-icon-img" src="/assets/investor.jpeg" alt="Investor" loading="lazy">
+                </button>
+                <button data-persona="dad" class="persona-icon-btn" title="Girl Dad">
+                    <img class="persona-icon-img" src="/assets/dad.jpeg" alt="Girl Dad" loading="lazy">
+                </button>
+            </div>
+            <!-- Current role icon (always visible) -->
+            <button class="persona-btn" aria-label="Switch Persona">
+                <span class="current-persona-avatar">
+                    <img id="currentPersonaImage" class="persona-profile-img" src="/assets/founder.jpeg"
+                        alt="Current Persona" loading="eager">
+                </span>
+            </button>
+        </div>
+        <!-- Keep original dropdown for mobile -->
+        <div class="persona-dropdown mobile-only">
+            <button data-persona="founder" class="dropdown-item">
+                <span class="item-avatar">
+                    <svg viewBox="0 0 100 100" width="30" height="30">
+                        <path d="M50 20 L30 40 L30 60 L50 80 L70 60 L70 40 Z" fill="var(--founder-accent)"
+                            opacity="0.6" />
+                        <path d="M50 10 L20 30 L20 70 L50 90 L80 70 L80 30 Z" stroke="var(--founder-accent)" fill="none"
+                            stroke-width="2" />
+                    </svg>
+                </span>
+                <span>Founder</span>
+            </button>
+            <button data-persona="operator" class="dropdown-item">
+                <span class="item-avatar">
+                    <svg viewBox="0 0 100 100" width="30" height="30">
+                        <rect x="30" y="30" width="40" height="40" stroke="var(--operator-accent)" fill="none"
+                            stroke-width="2" />
+                        <circle cx="50" cy="50" r="10" fill="var(--operator-accent)" opacity="0.6" />
+                    </svg>
+                </span>
+                <span>Operator</span>
+            </button>
+            <button data-persona="investor" class="dropdown-item">
+                <span class="item-avatar">
+                    <svg viewBox="0 0 100 100" width="30" height="30">
+                        <circle cx="50" cy="30" r="20" stroke="var(--investor-accent)" fill="none" stroke-width="2" />
+                        <circle cx="35" cy="55" r="15" stroke="var(--investor-accent)" fill="var(--investor-accent)"
+                            opacity="0.3" />
+                        <circle cx="65" cy="55" r="15" stroke="var(--investor-accent)" fill="var(--investor-accent)"
+                            opacity="0.3" />
+                    </svg>
+                </span>
+                <span>Investor</span>
+            </button>
+            <button data-persona="dad" class="dropdown-item">
+                <span class="item-avatar">
+                    <svg viewBox="0 0 100 100" width="30" height="30">
+                        <rect x="35" y="20" width="30" height="40" stroke="var(--dad-accent)" fill="none"
+                            stroke-width="2" />
+                        <path d="M30 65 Q50 75 70 65" stroke="var(--dad-accent)" fill="none" stroke-width="2" />
+                        <circle cx="50" cy="80" r="5" fill="var(--dad-accent)" opacity="0.6" />
+                    </svg>
+                </span>
+                <span>Girl Dad</span>
+            </button>
+            <div class="dropdown-divider"></div>
+            <button id="resetSelection" class="dropdown-item reset-btn">
+                <span class="item-icon reset-icon"></span>
+                <span>Change Role</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Hamburger menu button - outside container for mobile visibility -->
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <!-- Main Site Container -->
+    <div class="container" id="mainContainer">
+        <!-- Mobile role title display -->
+        <div class="mobile-role-title" id="mobileRoleTitle">
+            <span class="role-text">Founder</span>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1 class="site-title">
+                    <a href="/?reset=true" class="site-title-link">Alan James Curtis</a>
+                </h1>
+                <div class="persona-badge" id="personaBadge">
+                    <span class="badge-text">Founder</span>
+                </div>
+            </div>
+
+            <nav id="nav" class="navigation">
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="/pages/welcome/" class="nav-link active" data-page="welcome">
+                            <span class="nav-icon">
+                                <svg width="20" height="20" viewBox="0 0 20 20">
+                                    <path d="M10 2L2 8v10h6v-6h4v6h6V8z" fill="currentColor" />
+                                </svg>
+                            </span>
+                            <span class="nav-text">Welcome</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/pages/bio/" class="nav-link" data-page="bio">
+                            <span class="nav-icon">
+                                <svg width="20" height="20" viewBox="0 0 20 20">
+                                    <rect x="4" y="2" width="12" height="16" stroke="currentColor" fill="none" />
+                                    <line x1="7" y1="6" x2="13" y2="6" stroke="currentColor" />
+                                    <line x1="7" y1="10" x2="13" y2="10" stroke="currentColor" />
+                                </svg>
+                            </span>
+                            <span class="nav-text">Bio</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/pages/writing/" class="nav-link" data-page="writing">
+                            <span class="nav-icon">
+                                <svg width="20" height="20" viewBox="0 0 20 20">
+                                    <path d="M14 2L18 6L8 16L2 18L4 12z" stroke="currentColor" fill="none" />
+                                </svg>
+                            </span>
+                            <span class="nav-text">Writing</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/pages/quotes/" class="nav-link" data-page="quotes">
+                            <span class="nav-icon">
+                                <svg width="20" height="20" viewBox="0 0 20 20">
+                                    <circle cx="10" cy="10" r="8" stroke="currentColor" fill="none" />
+                                    <path d="M6 10Q10 6 14 10" stroke="currentColor" fill="none" />
+                                </svg>
+                            </span>
+                            <span class="nav-text">Quotes</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/pages/questions/" class="nav-link" data-page="questions">
+                            <span class="nav-icon">
+                                <svg width="20" height="20" viewBox="0 0 20 20">
+                                    <circle cx="10" cy="8" r="6" stroke="currentColor" fill="none" />
+                                    <circle cx="10" cy="16" r="1" fill="currentColor" />
+                                </svg>
+                            </span>
+                            <span class="nav-text">Questions</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/pages/investments/" class="nav-link" data-page="investments">
+                            <span class="nav-icon">
+                                <svg width="20" height="20" viewBox="0 0 20 20">
+                                    <polygon points="10,2 12,8 18,8 13,12 15,18 10,14 5,18 7,12 2,8 8,8"
+                                        stroke="currentColor" fill="none" />
+                                </svg>
+                            </span>
+                            <span class="nav-text">Investments</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- Progress System inside Navigation -->
+                <div class="progress-system" id="progressSystem">
+                    <div class="progress-label">
+                        <span class="progress-text">XP</span>
+                        <span class="progress-percentage" id="progressPercentage">0%</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" id="progressBarFill"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Role Card Display -->
+                <div class="role-card-container" id="roleCardContainer">
+                    <div class="role-card" id="roleCard">
+                        <div class="role-card-image" id="roleCardIcon">
+                            <!-- Dynamic character image will be inserted here -->
+                        </div>
+                        <div class="role-card-banners">
+                            <div class="role-card-name-banner">
+                                <span id="roleCardName">Founder</span>
+                            </div>
+                            <div class="role-card-subtitle-banner">
+                                <span id="roleCardSubtitle">Startup Warrior</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Role Selection Options -->
+                    <div class="role-selection-options">
+                        <button class="role-option active" data-role="founder" aria-label="Founder"></button>
+                        <button class="role-option" data-role="operator" aria-label="Operator"></button>
+                        <button class="role-option" data-role="investor" aria-label="Investor"></button>
+                        <button class="role-option" data-role="dad" aria-label="Girl Dad"></button>
+                    </div>
+                </div>
+            </nav>
+
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content" id="mainContent">
+            <div class="page-header">
+                <h1 class="page-title" id="pageTitle">Welcome</h1>
+            </div>
+
+            <div class="content-body" id="contentBody">
+                <p>Welcome to my personal website! This site's "job to be done" is to make me as legible as possible.
+                </p>
+
+                <p>A good place to start is with my <a href="/pages/bio/" class="text-link">bio</a>, my <a
+                        href="/pages/writing/user-manual.html" class="text-link">user manual</a>, or my <a
+                        href="/pages/writing/latticework.html" class="text-link">latticework</a>.</p>
+
+                <p>Thanks for stopping by and please reach out on <a href="https://twitter.com/alanjamescurtis"
+                        target="_blank" class="text-link">X</a>, <a href="https://linkedin.com/in/alanjamescurtis"
+                        target="_blank" class="text-link">LinkedIn</a>, or <a href="mailto:alanjamescurtis@gmail.com"
+                        class="text-link">email</a> if we should be working together!</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- GSAP Animation Library - Load only when needed -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/gsap.min.js" defer></script>
+
+    <!-- Scripts - Defer non-critical scripts -->
+    <script src="/js/utilities.js" defer></script>
+    <script src="/js/gaming-system.js" defer></script>
+    <script src="/js/mobile.js" defer></script>
+    <script src="/js/writing-content.js" defer></script>
+    <script src="/js/quotes-content.js" defer></script>
+    <script src="/js/questions-content.js" defer></script>
+    <script src="/js/investments-content.js" defer></script>
+    <script src="/js/spa-navigation.js" defer></script>
+    <script src="/js/progress-system.js" defer></script>
+</body>
+
+</html>
+
