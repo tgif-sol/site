@@ -479,8 +479,12 @@ body.persona-dad::after {
     object-position: center 20%;
     -webkit-object-position: center 20%;
     /* Safari support */
-    transition: all 0.4s ease;
+    transition: opacity 0.2s ease-out, 
+                visibility 0.2s ease-out,
+                transform 0.2s ease-out,
+                filter 0.2s ease;
     filter: brightness(0.9) contrast(1.1);
+    will-change: opacity, transform;
 }
 
 /* Zoom in on operator and investor faces */
@@ -522,7 +526,7 @@ body.persona-dad::after {
 }
 
 .character-card[data-persona="dad"]:hover .character-photo {
-    transform: scale(1.15) translateY(-8%);
+    transform: scale(1.15) translateY(0%);
     filter: brightness(1.05) contrast(1.05) saturate(1.05);
 }
 
@@ -538,8 +542,10 @@ body.persona-dad::after {
     -webkit-object-position: center 10%;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: opacity;
+    transition: opacity 0.2s ease-out, 
+                visibility 0.2s ease-out,
+                transform 0.2s ease-out;
+    will-change: opacity, transform;
     transform: translateZ(0) translateY(-5%);
     -webkit-transform: translateZ(0) translateY(-5%);
     backface-visibility: hidden;
@@ -571,7 +577,9 @@ body.persona-dad::after {
 
 .character-card[data-persona="operator"] .character-video {
     filter: brightness(0.9) contrast(1.1);
-    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: opacity 0.2s ease-out, 
+                visibility 0.2s ease-out,
+                transform 0.2s ease-out;
     object-fit: cover;
     -webkit-object-fit: cover;
     object-position: center 10%;
@@ -595,7 +603,9 @@ body.persona-dad::after {
     visibility: hidden;
     filter: brightness(1.05) contrast(1.05) saturate(1.05);
     pointer-events: none;
-    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: opacity 0.2s ease-out, 
+                visibility 0.2s ease-out,
+                transform 0.2s ease-out;
 }
 
 .character-card[data-persona="founder"]:hover.video-playing .character-video,
@@ -612,6 +622,9 @@ body.persona-dad::after {
 .character-card[data-persona="investor"]:hover.video-playing .character-photo {
     opacity: 0;
     visibility: hidden;
+    transition: opacity 0.2s ease-out, 
+                visibility 0.2s ease-out,
+                transform 0.2s ease-out;
 }
 
 .character-card[data-persona="dad"] .character-video {
@@ -3820,8 +3833,8 @@ body::after {
     }
 
     .character-card[data-persona="dad"] .character-photo {
-        transform: scale(1.12) translateY(-6%);
-        /* Reduced zoom and move up slightly */
+        transform: scale(1.12) translateY(3%);
+        /* Reduced zoom and move down slightly */
         object-position: center 20%;
         /* Moved up to 20% to bring head closer to top */
     }
@@ -4187,7 +4200,10 @@ body::after {
         display: block !important;
         position: relative;
         z-index: 1;
-        transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: opacity 0.2s ease-out, 
+                    visibility 0.2s ease-out,
+                    transform 0.2s ease-out;
+        will-change: opacity, transform;
     }
 
     /* Initially hide video for ALL cards with video including operator */
@@ -4197,46 +4213,53 @@ body::after {
     .character-card[data-persona="investor"] .character-video {
         opacity: 0;
         visibility: hidden;
-        display: none;
+        display: block;
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
         z-index: 2;
-        transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: opacity 0.2s ease-out, 
+                    visibility 0.2s ease-out,
+                    transform 0.2s ease-out;
         transform: none !important;
         -webkit-transform: none !important;
         object-position: center center !important;
         -webkit-object-position: center center !important;
+        will-change: opacity, transform;
     }
 
     /* Video filter and positioning for specific personas on mobile */
     .character-card[data-persona="dad"] .character-video,
     .character-card[data-persona="investor"] .character-video {
         filter: brightness(1.05) contrast(1.05) saturate(1.05);
-        transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: opacity 0.2s ease-out, 
+                    visibility 0.2s ease-out,
+                    transform 0.2s ease-out;
     }
 
     /* Unified Mobile Alignment - Videos */
     .character-card[data-persona="founder"] .character-video {
         object-position: center 10% !important;
         -webkit-object-position: center 10% !important;
-        transform: scale(1.25) translateY(5%) !important;
-        -webkit-transform: scale(1.25) translateY(5%) !important;
+        transform: scale(1.1) translateY(-5%) !important;
+        -webkit-transform: scale(1.1) translateY(-5%) !important;
     }
 
     .character-card[data-persona="dad"] .character-video,
     .character-card[data-persona="investor"] .character-video {
         object-position: center 25% !important;
         -webkit-object-position: center 25% !important;
+        transform: scale(1.1) translateY(-5%) !important;
+        -webkit-transform: scale(1.1) translateY(-5%) !important;
     }
 
     .character-card[data-persona="operator"] .character-video {
         object-position: center 10% !important;
         -webkit-object-position: center 10% !important;
-        transform: scale(1.25) !important;
-        -webkit-transform: scale(1.25) !important;
+        transform: scale(1.1) translateY(-5%) !important;
+        -webkit-transform: scale(1.1) translateY(-5%) !important;
     }
 
     /* When card is active and playing, show video and hide photo */
@@ -4255,34 +4278,36 @@ body::after {
         /* Remove mask when playing */
         -webkit-mask-image: none !important;
         mask-image: none !important;
-        transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: opacity 0.2s ease-out, 
+                    visibility 0.2s ease-out,
+                    transform 0.2s ease-out;
     }
 
     /* Maintain alignment when video is playing */
     .character-card[data-persona="founder"].video-playing .character-video {
-        transform: scale(1.25) translateY(8%) !important;
-        -webkit-transform: scale(1.25) translateY(8%) !important;
+        transform: scale(1.1) translateY(-5%) !important;
+        -webkit-transform: scale(1.1) translateY(-5%) !important;
         object-position: center 10% !important;
         -webkit-object-position: center 10% !important;
     }
 
     .character-card[data-persona="dad"].video-playing .character-video {
-        transform: scale(1.05) !important;
-        -webkit-transform: scale(1.05) !important;
+        transform: scale(1.1) translateY(-5%) !important;
+        -webkit-transform: scale(1.1) translateY(-5%) !important;
         object-position: center 25% !important;
         -webkit-object-position: center 25% !important;
     }
 
     .character-card[data-persona="investor"].video-playing .character-video {
-        transform: scale(1.25) !important;
-        -webkit-transform: scale(1.25) !important;
+        transform: scale(1.1) translateY(-5%) !important;
+        -webkit-transform: scale(1.1) translateY(-5%) !important;
         object-position: center 25% !important;
         -webkit-object-position: center 25% !important;
     }
 
     .character-card[data-persona="operator"].video-playing .character-video {
-        transform: scale(1.25) !important;
-        -webkit-transform: scale(1.25) !important;
+        transform: scale(1.1) translateY(-5%) !important;
+        -webkit-transform: scale(1.1) translateY(-5%) !important;
         object-position: center 10% !important;
         -webkit-object-position: center 10% !important;
     }
@@ -4292,6 +4317,9 @@ body::after {
     .character-card[data-persona="dad"].video-playing .character-photo,
     .character-card[data-persona="investor"].video-playing .character-photo {
         opacity: 0 !important;
+        transition: opacity 0.2s ease-out, 
+                    visibility 0.2s ease-out,
+                    transform 0.2s ease-out;
     }
 
     /* Keep character-info and character-name in place when video is playing */
