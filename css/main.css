@@ -3707,10 +3707,10 @@ body::after {
         display: none !important;
     }
 
-    /* Hide character-frame on mobile - merge with portrait */
-    .character-frame {
+    /* Remove character-portrait layer on mobile - keep frame */
+    .character-portrait {
         display: contents;
-        /* This makes the frame act as if it doesn't exist */
+        /* This makes the portrait act as if it doesn't exist, photo and video become direct children of frame */
     }
 
 
@@ -3732,8 +3732,8 @@ body::after {
         }
     }
 
-    /* Maintain the same fade gradient for active cards */
-    .character-card.active .character-portrait {
+    /* Maintain the same fade gradient for active cards - apply to photo directly */
+    .character-card.active .character-photo {
         -webkit-mask-image: linear-gradient(to bottom,
                 rgba(0, 0, 0, 1) 0%,
                 rgba(0, 0, 0, 1) 80%,
@@ -3764,8 +3764,8 @@ body::after {
                 rgba(0, 0, 0, 0) 100%) !important;
     }
 
-    /* Adjust portrait for main card */
-    .character-portrait {
+    /* Adjust frame for main card - portrait is removed so frame contains photo/video directly */
+    .character-frame {
         height: 380px;
         /* Increased from 350px to show more image */
         width: 100%;
@@ -3773,39 +3773,6 @@ body::after {
         margin: 0;
         border-radius: 12px 12px 0 0;
         overflow: hidden;
-        background: linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.3) 100%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        /* Ultra-smooth gradient fade starting at title position */
-        -webkit-mask-image: linear-gradient(to bottom,
-                rgba(0, 0, 0, 1) 0%,
-                rgba(0, 0, 0, 1) 80%,
-                /* Full opacity until 80% - where title starts */
-                rgba(0, 0, 0, 0.98) 82%,
-                rgba(0, 0, 0, 0.95) 84%,
-                rgba(0, 0, 0, 0.90) 86%,
-                rgba(0, 0, 0, 0.82) 88%,
-                rgba(0, 0, 0, 0.70) 90%,
-                rgba(0, 0, 0, 0.55) 92%,
-                rgba(0, 0, 0, 0.38) 94%,
-                rgba(0, 0, 0, 0.20) 96%,
-                rgba(0, 0, 0, 0.08) 98%,
-                rgba(0, 0, 0, 0) 100%);
-        mask-image: linear-gradient(to bottom,
-                rgba(0, 0, 0, 1) 0%,
-                rgba(0, 0, 0, 1) 80%,
-                /* Full opacity until 80% - where title starts */
-                rgba(0, 0, 0, 0.98) 82%,
-                rgba(0, 0, 0, 0.95) 84%,
-                rgba(0, 0, 0, 0.90) 86%,
-                rgba(0, 0, 0, 0.82) 88%,
-                rgba(0, 0, 0, 0.70) 90%,
-                rgba(0, 0, 0, 0.55) 92%,
-                rgba(0, 0, 0, 0.38) 94%,
-                rgba(0, 0, 0, 0.20) 96%,
-                rgba(0, 0, 0, 0.08) 98%,
-                rgba(0, 0, 0, 0) 100%);
     }
 
     .character-photo,
@@ -4333,8 +4300,8 @@ body::after {
         width: 100% !important;
     }
 
-    /* Maintain the same fade gradient when video is playing */
-    .character-card.video-playing .character-portrait {
+    /* Maintain the same fade gradient when video is playing - apply to video directly */
+    .character-card.video-playing .character-video {
         -webkit-mask-image: linear-gradient(to bottom,
                 rgba(0, 0, 0, 1) 0%,
                 rgba(0, 0, 0, 1) 80%,

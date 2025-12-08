@@ -417,8 +417,8 @@
                     if (video) {
                         video.muted = true;  // Ensure muted
                         video.pause();
-                        // Reset founder video to 2 seconds, others to 0
-                        video.currentTime = card.dataset.persona === 'founder' ? 2 : 0;
+                        // Reset all videos to 0 seconds
+                        video.currentTime = 0;
                     }
                 }
             });
@@ -453,58 +453,16 @@
             const video = card.querySelector('.character-video');
             if (!video) return;
 
-            // Ensure video is muted
+            // Ensure video is muted and looped
             video.muted = true;
-            
-            // Setup founder video to loop between 2-6 seconds
-            if (card.dataset.persona === 'founder' && !video.hasAttribute('data-listener-added')) {
-                video.loop = false; // Disable native loop
-                video.setAttribute('data-listener-added', 'true');
-                video.addEventListener('timeupdate', () => {
-                    if (video.currentTime < 2) {
-                        video.currentTime = 2; // Start from 2 seconds
-                    } else if (video.currentTime >= 6) {
-                        video.currentTime = 2; // Loop back to 2 seconds
-                    }
-                });
-            }
-            // Setup operator video to loop back at 4 seconds
-            else if (card.dataset.persona === 'operator' && !video.hasAttribute('data-listener-added')) {
-                video.loop = false; // Disable native loop
-                video.setAttribute('data-listener-added', 'true');
-                video.addEventListener('timeupdate', () => {
-                    if (video.currentTime >= 4) {
-                        video.currentTime = 0; // Loop back to start
-                    }
-                });
-            }
-            // Setup investor video to loop back at 4 seconds
-            else if (card.dataset.persona === 'investor' && !video.hasAttribute('data-listener-added')) {
-                video.loop = false; // Disable native loop
-                video.setAttribute('data-listener-added', 'true');
-                video.addEventListener('timeupdate', () => {
-                    if (video.currentTime >= 4) {
-                        video.currentTime = 0; // Loop back to start
-                    }
-                });
-            }
-            // Setup dad video to loop back at 6 seconds
-            else if (card.dataset.persona === 'dad' && !video.hasAttribute('data-listener-added')) {
-                video.loop = false; // Disable native loop
-                video.setAttribute('data-listener-added', 'true');
-                video.addEventListener('timeupdate', () => {
-                    if (video.currentTime >= 6) {
-                        video.currentTime = 0; // Loop back to start
-                    }
-                });
-            }
+            video.loop = true; // Use native loop - play from 0 to end
 
             if (card.classList.contains('video-playing')) {
                 // Stop video and go back to image
                 card.classList.remove('video-playing');
                 video.pause();
-                // Reset founder video to 2 seconds, others to 0
-                video.currentTime = card.dataset.persona === 'founder' ? 2 : 0;
+                // Reset all videos to 0 seconds
+                video.currentTime = 0;
 
                 // Remove any inline styles that might override CSS
                 video.removeAttribute('style');
@@ -539,10 +497,8 @@
                     
                     // Play video when ready
                     const playVideo = () => {
-                        // Set founder video to start at 2 seconds
-                        if (card.dataset.persona === 'founder') {
-                            video.currentTime = 2;
-                        }
+                        // All videos start from 0 seconds
+                        video.currentTime = 0;
                         video.play().catch((e) => {
                             console.log('Video play failed:', e);
                             // Keep the class for smooth transition even if play fails
