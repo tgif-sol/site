@@ -615,15 +615,15 @@ body.persona-dad::after {
 }
 
 .character-card[data-persona="dad"] .character-video {
-    object-position: center 10%;
-    -webkit-object-position: center 10%;
+    object-position: center 25%;
+    -webkit-object-position: center 25%;
     transform: translateZ(0) scale(1.0) translateY(-5%);
     -webkit-transform: translateZ(0) scale(1.0) translateY(-5%);
 }
 
 .character-card[data-persona="investor"] .character-video {
-    object-position: center 10%;
-    -webkit-object-position: center 10%;
+    object-position: center 25%;
+    -webkit-object-position: center 25%;
     transform: translateZ(0) translateY(-5%);
     -webkit-transform: translateZ(0) translateY(-5%);
 }
@@ -4227,7 +4227,11 @@ body::after {
     }
 
     .character-card[data-persona="dad"] .character-video,
-    .character-card[data-persona="investor"] .character-video,
+    .character-card[data-persona="investor"] .character-video {
+        object-position: center 25% !important;
+        -webkit-object-position: center 25% !important;
+    }
+
     .character-card[data-persona="operator"] .character-video {
         object-position: center 10% !important;
         -webkit-object-position: center 10% !important;
@@ -4265,15 +4269,15 @@ body::after {
     .character-card[data-persona="dad"].video-playing .character-video {
         transform: scale(1.05) !important;
         -webkit-transform: scale(1.05) !important;
-        object-position: center 10% !important;
-        -webkit-object-position: center 10% !important;
+        object-position: center 25% !important;
+        -webkit-object-position: center 25% !important;
     }
 
     .character-card[data-persona="investor"].video-playing .character-video {
         transform: scale(1.25) !important;
         -webkit-transform: scale(1.25) !important;
-        object-position: center 10% !important;
-        -webkit-object-position: center 10% !important;
+        object-position: center 25% !important;
+        -webkit-object-position: center 25% !important;
     }
 
     .character-card[data-persona="operator"].video-playing .character-video {
