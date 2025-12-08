@@ -49,7 +49,7 @@
      * Extract page name from pathname
      */
     function extractPageFromPath(pathname) {
-        if (pathname === '/' || pathname === '/index.html') return 'welcome';
+        if (pathname === '/' || pathname === '/index.html' || pathname.includes('/pages/welcome')) return 'welcome';
         if (pathname.includes('bio')) return 'bio';
         if (pathname.includes('writing')) return 'writing';
         if (pathname.includes('quotes')) return 'quotes';
@@ -163,22 +163,22 @@
         const personaData = {
             founder: {
                 welcome: `Welcome to my personal website! This site's "job to be done" is to make me as legible as possible.`,
-                focus: `A good place to start is with my <a href="/bio.html" class="text-link">bio</a>, my <a href="/writing/user-manual.html" class="text-link">user manual</a>, or my <a href="/writing/lattice-work.html" class="text-link">latticework</a>.`,
+                focus: `A good place to start is with my <a href="/pages/bio/" class="text-link">bio</a>, my <a href="/pages/writing/user-manual.html" class="text-link">user manual</a>, or my <a href="/pages/writing/latticework.html" class="text-link">latticework</a>.`,
                 ending: `Thanks for stopping by and please reach out on <a href="https://twitter.com/alanjamescurtis" target="_blank" class="text-link">X</a>, <a href="https://linkedin.com/in/alanjamescurtis" target="_blank" class="text-link">LinkedIn</a>, or <a href="mailto:alanjamescurtis@gmail.com" class="text-link">email</a> if we should be working together!`
             },
             operator: {
                 welcome: `Welcome to my personal website! This site's "job to be done" is to make me as legible as possible.`,
-                focus: `A good place to start is with my <a href="/bio.html" class="text-link">bio</a>, my <a href="/writing/user-manual.html" class="text-link">user manual</a>, or my <a href="/writing/lattice-work.html" class="text-link">latticework</a>.`,
+                focus: `A good place to start is with my <a href="/pages/bio/" class="text-link">bio</a>, my <a href="/pages/writing/user-manual.html" class="text-link">user manual</a>, or my <a href="/pages/writing/latticework.html" class="text-link">latticework</a>.`,
                 ending: `Thanks for stopping by and please reach out on <a href="https://twitter.com/alanjamescurtis" target="_blank" class="text-link">X</a>, <a href="https://linkedin.com/in/alanjamescurtis" target="_blank" class="text-link">LinkedIn</a>, or <a href="mailto:alanjamescurtis@gmail.com" class="text-link">email</a> if we should be working together!`
             },
             investor: {
                 welcome: `Welcome to my personal website! This site's "job to be done" is to make me as legible as possible.`,
-                focus: `A good place to start is with my <a href="/bio.html" class="text-link">bio</a>, my <a href="/writing/user-manual.html" class="text-link">user manual</a>, or my <a href="/writing/lattice-work.html" class="text-link">latticework</a>.`,
+                focus: `A good place to start is with my <a href="/pages/bio/" class="text-link">bio</a>, my <a href="/pages/writing/user-manual.html" class="text-link">user manual</a>, or my <a href="/pages/writing/latticework.html" class="text-link">latticework</a>.`,
                 ending: `Thanks for stopping by and please reach out on <a href="https://twitter.com/alanjamescurtis" target="_blank" class="text-link">X</a>, <a href="https://linkedin.com/in/alanjamescurtis" target="_blank" class="text-link">LinkedIn</a>, or <a href="mailto:alanjamescurtis@gmail.com" class="text-link">email</a> if we should be working together!`
             },
             dad: {
                 welcome: `Welcome to my personal website! This site's "job to be done" is to make me as legible as possible.`,
-                focus: `A good place to start is with my <a href="/bio.html" class="text-link">bio</a>, my <a href="/writing/user-manual.html" class="text-link">user manual</a>, or my <a href="/writing/lattice-work.html" class="text-link">latticework</a>.`,
+                focus: `A good place to start is with my <a href="/pages/bio/" class="text-link">bio</a>, my <a href="/pages/writing/user-manual.html" class="text-link">user manual</a>, or my <a href="/pages/writing/latticework.html" class="text-link">latticework</a>.`,
                 ending: `Thanks for stopping by and please reach out on <a href="https://twitter.com/alanjamescurtis" target="_blank" class="text-link">X</a>, <a href="https://linkedin.com/in/alanjamescurtis" target="_blank" class="text-link">LinkedIn</a>, or <a href="mailto:alanjamescurtis@gmail.com" class="text-link">email</a> if we should be working together!`
             }
         };
@@ -264,23 +264,23 @@
                 let page = null;
                 let article = null;
 
-                if (href.includes('/bio')) {
+                if (href.includes('/bio') || href.includes('/pages/bio')) {
                     page = 'bio';
-                } else if (href.includes('/writing/')) {
+                } else if (href.includes('/writing/') || href.includes('/pages/writing/')) {
                     // This is a specific article
                     page = 'writing';
-                    // Extract article name from path
-                    const match = href.match(/\/writing\/(.+)\.html/);
+                    // Extract article name from path (support both /writing/ and /pages/writing/)
+                    const match = href.match(/(?:\/pages)?\/writing\/(.+)\.html/);
                     if (match) {
                         article = match[1];
                     }
-                } else if (href.includes('/writing')) {
+                } else if (href.includes('/writing') || href.includes('/pages/writing')) {
                     page = 'writing';
-                } else if (href.includes('/investments')) {
+                } else if (href.includes('/investments') || href.includes('/pages/investments')) {
                     page = 'investments';
-                } else if (href.includes('/quotes')) {
+                } else if (href.includes('/quotes') || href.includes('/pages/quotes')) {
                     page = 'quotes';
-                } else if (href.includes('/questions')) {
+                } else if (href.includes('/questions') || href.includes('/pages/questions')) {
                     page = 'questions';
                 }
 
@@ -357,11 +357,11 @@
             </div>
             <div class="content-body">
                 <div class="bio-introduction">
-                    <p>Alan Curtis is a Founder, Operator, Investor, and most importantly, a Dad.</p>
+                    <p>Alan Curtis is a Founder, Operator, Investor, and most importantly, a Girl Dad.</p>
                     <p>As a Founder, Alan has five exits and has delivered a lifetime 300%+ IRR for investors across $100M+ raised from 75+ venture capital funds and 100+ angel investors.</p>
                     <p>As an Operator, Alan has been COO at EigenLayer during a $7B TGE ($EIGEN), CTO of Core Scientific during $4B IPO ($CORZ) and CSO at Blockcap during a $2B merger.</p>
                     <p>As an Investor, Alan has invested in 50+ companies (seven unicorns and five exits) and 10+ he was also the first Head of Platform at Blockchain Capital to launch post-investment support.</p>
-                    <p>As a Dad, Alan lives with his wife and two daughters outside Boulder, Colorado and is proud soccer coach, avid nail polish test subject, and amateur "rock stacker."</p>
+                    <p>As a Girl Dad, Alan lives with his wife and two daughters outside Boulder, Colorado and is proud soccer coach, avid nail polish test subject, and amateur "rock stacker."</p>
                 </div>
 
                 <div class="bio-timeline">

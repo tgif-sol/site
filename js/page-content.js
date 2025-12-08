@@ -7,7 +7,7 @@ window.pageContent = {
     bio: {
         title: "Bio",
         content: `
-            <p>Alan Curtis is a Founder, Operator, Investor, and most importantly, a Dad.</p>
+            <p>Alan Curtis is a Founder, Operator, Investor, and most importantly, a Girl Dad.</p>
 
             <p>As a Founder, Alan has five exits and has delivered a lifetime 300%+ IRR for investors across $100M+ raised from 75+ venture capital funds and 100+ angel investors.</p>
 
@@ -15,7 +15,7 @@ window.pageContent = {
 
             <p>As an Investor, Alan has invested in 50+ companies (seven unicorns and five exits) and 10+ he was also the first Head of Platform at Blockchain Capital to launch post-investment support.</p>
 
-            <p>As a Dad, Alan lives with his wife and two daughters outside Boulder, Colorado and is proud soccer coach, avid nail polish test subject, and amateur "rock stacker."</p>
+            <p>As a Girl Dad, Alan lives with his wife and two daughters outside Boulder, Colorado and is proud soccer coach, avid nail polish test subject, and amateur "rock stacker."</p>
 
             <h2>2025</h2>
             <h3>Founder and CEO, The Invention Network</h3>

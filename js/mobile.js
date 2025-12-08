@@ -216,12 +216,6 @@
 
             buttonContainer.appendChild(selectButton);
 
-            // Add footer text inside the button container
-            const footerText = document.createElement('p');
-            footerText.className = 'footer-text mobile-footer-text';
-            footerText.textContent = 'Each perspective reveals different aspects of my journey';
-            buttonContainer.appendChild(footerText);
-
             grid.appendChild(buttonContainer);
 
             // Hide the original footer on mobile
