@@ -4190,7 +4190,7 @@ body::after {
         opacity: 1;
     }
 
-    /* Initially show photo for all cards */
+    /* Initially show photo for all cards on mobile */
     .character-card[data-persona="founder"] .character-photo,
     .character-card[data-persona="operator"] .character-photo,
     .character-card[data-persona="dad"] .character-photo,
@@ -4206,7 +4206,7 @@ body::after {
         will-change: opacity, transform;
     }
 
-    /* Initially hide video for ALL cards with video including operator */
+    /* Initially hide video for ALL cards on mobile */
     .character-card[data-persona="founder"] .character-video,
     .character-card[data-persona="operator"] .character-video,
     .character-card[data-persona="dad"] .character-video,
