@@ -249,7 +249,7 @@ window.pageContent = {
                         <span class="stat-label">Exits</span>
                     </div>
                     <div class="stat">
-                        <span class="stat-value">300%+</span>
+                        <span class="stat-value">30%+</span>
                         <span class="stat-label">Lifetime IRR</span>
                     </div>
                 </div>
