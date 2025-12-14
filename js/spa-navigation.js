@@ -271,7 +271,7 @@
                     page = 'writing';
                     // Extract article name from path (support both /writing/ and /pages/writing/)
                     const match = href.match(/(?:\/pages)?\/writing\/(.+)\.html/);
-                    if (match) {
+                    if (match && match[1]) {
                         article = match[1];
                     }
                 } else if (href.includes('/writing') || href.includes('/pages/writing')) {
@@ -718,7 +718,7 @@
                             const text = p.textContent.trim();
                             // Match patterns like "1. ", "2. ", "3. ", etc. at the start
                             const numberMatch = text.match(/^(\d+)\.\s/);
-                            if (numberMatch && !p.querySelector('.number')) {
+                            if (numberMatch && numberMatch[1] && !p.querySelector('.number')) {
                                 const number = numberMatch[1];
                                 const restOfText = text.substring(numberMatch[0].length);
                                 
@@ -727,7 +727,7 @@
                                 if (strong) {
                                     const strongText = strong.textContent.trim();
                                     const strongNumberMatch = strongText.match(/^(\d+)\.\s/);
-                                    if (strongNumberMatch) {
+                                    if (strongNumberMatch && strongNumberMatch[1]) {
                                         const strongNumber = strongNumberMatch[1];
                                         const strongRest = strongText.substring(strongNumberMatch[0].length);
                                         strong.innerHTML = `<span class="number">${strongNumber}.</span> ${strongRest}`;
@@ -827,7 +827,7 @@
                         <div class="quotes-container">
                             ${category.items.map(item => {
                                 const parts = item.split(' - ');
-                                const quote = parts[0];
+                                const quote = parts[0] || '';
                                 const author = parts[1] || '';
                                 return `
                                     <div class="quote-item">
@@ -1170,8 +1170,8 @@
         const hash = window.location.hash.substring(1);
         if (hash) {
             const parts = hash.split('/');
-            const pageKey = parts[0];
-            const articleKey = parts[1];
+            const pageKey = parts[0] || null;
+            const articleKey = parts[1] || null;
 
             if (pageKey && pageKey !== currentPage) {
                 loadPageContent(pageKey);

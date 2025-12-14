@@ -186,9 +186,6 @@ class GamingSystem {
      */
     setupEventListeners() {
         // Character selection cards
-        // Preload videos early, especially founder video
-        this.preloadVideos();
-
         this.setupCharacterSelection();
 
         // Persona switcher
@@ -221,19 +218,9 @@ class GamingSystem {
                     // Ensure video is muted
                     video.muted = true;
                     
-                    // Handle founder video - loop between 2-6 seconds
+                    // Handle founder video - play from start
                     if (card.dataset.persona === 'founder') {
-                        video.loop = false; // Disable native loop
-                        video.addEventListener('loadeddata', () => {
-                            video.currentTime = 2; // Start from 2 seconds
-                        }, { once: true });
-                        video.addEventListener('timeupdate', () => {
-                            if (video.currentTime < 2) {
-                                video.currentTime = 2; // Start from 2 seconds
-                            } else if (video.currentTime >= 6) {
-                                video.currentTime = 2; // Loop back to 2 seconds
-                            }
-                        });
+                        video.loop = true; // Use native loop
                     }
                     // Handle operator video - loop back to start at 4 seconds
                     else if (card.dataset.persona === 'operator') {
@@ -288,9 +275,7 @@ class GamingSystem {
                             if (isSafari) {
                                 const warmUpVideo = () => {
                                     if (video.readyState >= 2) {
-                                        if (card.dataset.persona === 'founder') {
-                                            video.currentTime = 2;
-                                        }
+                                        video.currentTime = 0;
                                         video.pause();
                                     }
                                 };
@@ -298,19 +283,13 @@ class GamingSystem {
                                 video.addEventListener('loadedmetadata', warmUpVideo, { once: true });
                                 video.addEventListener('canplay', warmUpVideo, { once: true });
                                 video.addEventListener('canplaythrough', () => {
-                                    if (card.dataset.persona === 'founder') {
-                                        video.currentTime = 2;
-                                    } else {
-                                        video.currentTime = 0;
-                                    }
+                                    video.currentTime = 0;
                                     video.pause();
                                 }, { once: true });
                                 
                                 card.addEventListener('mouseenter', () => {
                                     if (video.readyState >= 2 && video.paused) {
-                                        if (card.dataset.persona === 'founder' && video.currentTime !== 2) {
-                                            video.currentTime = 2;
-                                        }
+                                        video.currentTime = 0;
                                     }
                                 }, { passive: true });
                             }
@@ -321,9 +300,7 @@ class GamingSystem {
                             const maxAttempts = 5;
                             
                             const playVideo = () => {
-                                if (card.dataset.persona === 'founder' && video.currentTime !== 2) {
-                                    video.currentTime = 2;
-                                }
+                                video.currentTime = 0;
                                 
                                 if (isSafari && video.readyState < 2) {
                                     video.load();
@@ -395,30 +372,38 @@ class GamingSystem {
                         card.addEventListener('mouseleave', () => {
                             video.pause();
                             card.classList.remove('video-playing');
-                            // Reset founder video to 2 seconds, others to 0
-                            video.currentTime = card.dataset.persona === 'founder' ? 2 : 0;
+                            // Reset all videos to 0 seconds
+                            video.currentTime = 0;
                         });
                     }
-                    // MOBILE behavior - Click on portrait toggles between image and video
+                    // MOBILE behavior - Show video preview by default, click to play/pause
                     else {
-                        // Preload video early for smoother playback
                         const videoSrc = video.getAttribute('data-src') || video.getAttribute('src');
                         if (videoSrc) {
-                            // If video hasn't been loaded yet (from preloadVideos), load it now
                             if (!video.src || video.readyState === 0) {
                                 if (video.getAttribute('data-src') && video.src !== videoSrc) {
                                     video.src = videoSrc;
                                 }
                                 video.muted = true;
                                 video.playsInline = true;
-                                video.preload = 'auto';
+                                video.preload = 'metadata';
                                 video.setAttribute('webkit-playsinline', 'true');
                                 video.setAttribute('playsinline', 'true');
+                                
+                                const setupPreview = () => {
+                                    video.currentTime = 0;
+                                    video.pause();
+                                };
+                                
+                                video.addEventListener('loadedmetadata', setupPreview, { once: true });
                                 video.load();
+                            } else {
+                                video.currentTime = 0;
+                                video.pause();
                             }
                         }
 
-                        // Click on portrait toggles between image and video
+                        // Click on card toggles between video preview/playing
                         const portrait = card.querySelector('.character-portrait');
                         const img = card.querySelector('.character-photo');
                         const videoElement = card.querySelector('.character-video');
@@ -429,121 +414,59 @@ class GamingSystem {
                             e.stopPropagation(); // Prevent any bubbling
 
                             if (card.classList.contains('video-playing')) {
-                                // Switch to image
+                                // Pause video - show image
                                 card.classList.remove('video-playing');
+                                card.classList.add('video-paused');
                                 video.pause();
-                                // Reset all videos to 1 second
-                                video.currentTime = 1;
+                                video.currentTime = 0;
                             } else {
-                                // Switch to video - video should already be preloaded
+                                // Start video playback
                                 const videoSrc = video.getAttribute('data-src') || video.getAttribute('src');
                                 if (videoSrc) {
-                                    // Ensure src is set (should already be from preload)
                                     if (video.getAttribute('data-src') && video.src !== videoSrc) {
                                         video.src = videoSrc;
                                     }
                                     
-                                    // Wait for video to be ready before playing
-                                    // Check if video is ready to play (HAVE_FUTURE_DATA = 3)
-                                    if (video.readyState < 3) {
+                                    card.classList.remove('video-paused');
+                                    card.classList.add('video-playing');
+                                    
+                                    // Play video when ready
+                                    const playVideo = () => {
+                                        video.currentTime = 0;
+                                        const playPromise = video.play();
+                                        if (playPromise !== undefined) {
+                                            playPromise.then(() => {
+                                                // Video is playing
+                                            }).catch(err => {
+                                                console.log('Video play failed:', err);
+                                                // If play fails, remove video-playing class to show image
+                                                card.classList.remove('video-playing');
+                                            });
+                                        }
+                                    };
+                                    
+                                    if (video.readyState >= 3) {
+                                        // Video has enough data to play
+                                        playVideo();
+                                    } else {
                                         // Video is still loading, wait for it
                                         if (video.readyState === 0) {
                                             video.load();
                                         }
-
+                                        
                                         const playWhenReady = () => {
-                                            // Set all videos to start at 1 second
-                                            video.currentTime = 1;
-
-                                            // Wait for enough buffering before playing
-                                            const playVideo = () => {
-                                                if (video.readyState >= 4) {
-                                                    // Have enough data, play now
-                                                    video.currentTime = 1;
-                                                    const playPromise = video.play();
-                                                    if (playPromise !== undefined) {
-                                                        playPromise.then(() => {
-                                                            requestAnimationFrame(() => {
-                                                                card.classList.add('video-playing');
-                                                            });
-                                                        }).catch(err => {
-                                                            console.log('Video play failed:', err);
-                                                        });
-                                                    }
-                                                } else {
-                                                    // Wait for canplaythrough
-                                                    video.addEventListener('canplaythrough', () => {
-                                                        video.currentTime = 1;
-                                                        const playPromise = video.play();
-                                                        if (playPromise !== undefined) {
-                                                            playPromise.then(() => {
-                                                                requestAnimationFrame(() => {
-                                                                    card.classList.add('video-playing');
-                                                                });
-                                                            }).catch(err => {
-                                                                console.log('Video play failed:', err);
-                                                            });
-                                                        }
-                                                    }, { once: true });
-                                                }
-                                            };
-
-                                            if (video.readyState >= 4) {
-                                                playVideo();
-                                            } else {
-                                                video.addEventListener('canplaythrough', playVideo, { once: true });
-                                                // Fallback after 2 seconds
-                                                setTimeout(() => {
-                                                    if (video.readyState >= 3) {
-                                                        video.currentTime = 1;
-                                                        const playPromise = video.play();
-                                                        if (playPromise !== undefined) {
-                                                            playPromise.then(() => {
-                                                                requestAnimationFrame(() => {
-                                                                    card.classList.add('video-playing');
-                                                                });
-                                                            }).catch(err => {
-                                                                console.log('Video play failed:', err);
-                                                            });
-                                                        }
-                                                    }
-                                                }, 2000);
-                                            }
+                                            playVideo();
                                         };
-
-                                        // Use canplay which fires when readyState becomes 3
+                                        
                                         video.addEventListener('canplay', playWhenReady, { once: true });
-                                    } else {
-                                        // Video already loaded enough to play
-                                        video.currentTime = 1;
-
-                                        // Wait for enough buffering
-                                        if (video.readyState >= 4) {
-                                            const playPromise = video.play();
-                                            if (playPromise !== undefined) {
-                                                playPromise.then(() => {
-                                                    requestAnimationFrame(() => {
-                                                        card.classList.add('video-playing');
-                                                    });
-                                                }).catch(err => {
-                                                    console.log('Video play failed:', err);
-                                                });
+                                        video.addEventListener('canplaythrough', playWhenReady, { once: true });
+                                        
+                                        // Fallback after 2 seconds
+                                        setTimeout(() => {
+                                            if (video.readyState >= 3 && !card.classList.contains('video-playing')) {
+                                                playVideo();
                                             }
-                                        } else {
-                                            video.addEventListener('canplaythrough', () => {
-                                                video.currentTime = 1;
-                                                const playPromise = video.play();
-                                                if (playPromise !== undefined) {
-                                                    playPromise.then(() => {
-                                                        requestAnimationFrame(() => {
-                                                            card.classList.add('video-playing');
-                                                        });
-                                                    }).catch(err => {
-                                                        console.log('Video play failed:', err);
-                                                    });
-                                                }
-                                            }, { once: true });
-                                        }
+                                        }, 2000);
                                     }
                                 }
                             }

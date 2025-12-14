@@ -47,19 +47,19 @@
                 paragraphs.forEach(p => {
                     const text = p.textContent.trim();
                     // Match patterns like "1. ", "2. ", "3. ", etc. at the start
-                    const numberMatch = text.match(/^(\d+)\.\s/);
-                    if (numberMatch && !p.querySelector('.number')) {
-                        const number = numberMatch[1];
-                        const restOfText = text.substring(numberMatch[0].length);
-                        
-                        // Check if it's already wrapped in strong
-                        const strong = p.querySelector('strong');
-                        if (strong) {
-                            const strongText = strong.textContent.trim();
-                            const strongNumberMatch = strongText.match(/^(\d+)\.\s/);
-                            if (strongNumberMatch) {
-                                const strongNumber = strongNumberMatch[1];
-                                const strongRest = strongText.substring(strongNumberMatch[0].length);
+                        const numberMatch = text.match(/^(\d+)\.\s/);
+                        if (numberMatch && numberMatch[1] && !p.querySelector('.number')) {
+                            const number = numberMatch[1];
+                            const restOfText = text.substring(numberMatch[0].length);
+                            
+                            // Check if it's already wrapped in strong
+                            const strong = p.querySelector('strong');
+                            if (strong) {
+                                const strongText = strong.textContent.trim();
+                                const strongNumberMatch = strongText.match(/^(\d+)\.\s/);
+                                if (strongNumberMatch && strongNumberMatch[1]) {
+                                    const strongNumber = strongNumberMatch[1];
+                                    const strongRest = strongText.substring(strongNumberMatch[0].length);
                                 strong.innerHTML = `<span class="number">${strongNumber}.</span> ${strongRest}`;
                             }
                         } else {

@@ -147,13 +147,60 @@
                     card.style.display = 'none';
                 }
 
+                // Initialize video preview state for mobile
+                if (card.dataset.persona === 'founder' || card.dataset.persona === 'dad' || card.dataset.persona === 'operator' || card.dataset.persona === 'investor') {
+                    const video = card.querySelector('.character-video');
+                    if (video) {
+                        const videoSrc = video.getAttribute('data-src') || video.getAttribute('src');
+                        if (videoSrc) {
+                            if (video.getAttribute('data-src') && video.src !== videoSrc) {
+                                video.src = videoSrc;
+                            }
+                            
+                            video.muted = true;
+                            video.playsInline = true;
+                            video.preload = 'metadata';
+                            video.setAttribute('webkit-playsinline', 'true');
+                            video.setAttribute('playsinline', 'true');
+                            
+                            const setupPreview = () => {
+                                video.currentTime = 0;
+                                video.pause();
+                            };
+                            
+                            if (video.readyState >= 1) {
+                                // 이미 메타데이터가 로드됨
+                                setupPreview();
+                            } else {
+                                // 메타데이터 로드 대기
+                                video.addEventListener('loadedmetadata', setupPreview, { once: true });
+                                video.load();
+                            }
+                        }
+                    }
+                }
+
                 // Add click handler for ALL cards to prevent navigation and handle video toggle
                 card.addEventListener('click', (e) => {
+                    console.log('[Mobile] Card clicked', {
+                        persona: card.dataset.persona,
+                        target: e.target,
+                        hasVideoPlaying: card.classList.contains('video-playing'),
+                        hasVideoPaused: card.classList.contains('video-paused')
+                    });
+
                     // Check if this was a swipe gesture - if so, ignore click
                     const mainDisplay = document.querySelector('.character-main-display');
                     if (mainDisplay && mainDisplay.hasAttribute('data-swipe-handled')) {
+                        console.log('[Mobile] Swipe handled, ignoring click');
                         e.preventDefault();
                         e.stopPropagation();
+                        return;
+                    }
+
+                    // Only allow Select Role button to pass through
+                    if (e.target.closest('.select-role-btn')) {
+                        console.log('[Mobile] Select button clicked, ignoring');
                         return;
                     }
 
@@ -161,17 +208,12 @@
                     e.preventDefault();
                     e.stopPropagation();
 
-                    // Only allow Select Role button to pass through
-                    if (e.target.closest('.select-role-btn')) {
-                        // Don't prevent the button from working
-                        return;
-                    }
-
                     // For cards with video, toggle playback
                     if (card.dataset.persona === 'founder' || card.dataset.persona === 'dad' || card.dataset.persona === 'operator' || card.dataset.persona === 'investor') {
-                        this.toggleFounderVideo(card);  // Works for founder, dad, operator, and investor
+                        console.log('[Mobile] Calling toggleFounderVideo');
+                        this.toggleFounderVideo(card);
                     }
-                });
+                }, { passive: false });
 
                 // Remove click handlers from portrait, image and video elements
                 // to allow swipe gestures to work properly on the entire card
@@ -277,14 +319,12 @@
                 // Only process horizontal swipes (minimum 50px, horizontal movement > vertical)
                 if (Math.abs(deltaX) > 50 && Math.abs(deltaX) > Math.abs(deltaY)) {
                     e.preventDefault();
-                    e.stopPropagation(); // Prevent click events
+                    e.stopPropagation();
                     swipeHandled = true;
                     if (deltaX > 0) {
-                        // Swipe right - go to previous card
                         console.log('Swipe right detected, going to previous card');
                         this.previousCard();
                     } else {
-                        // Swipe left - go to next card
                         console.log('Swipe left detected, going to next card');
                         this.nextCard();
                     }
@@ -292,12 +332,9 @@
                     mainDisplay.setAttribute('data-swipe-handled', 'true');
                     setTimeout(() => {
                         mainDisplay.removeAttribute('data-swipe-handled');
-                    }, 300);
-                } else if (hasMoved) {
-                    // If user moved but it wasn't a swipe, still prevent click
-                    e.preventDefault();
-                    e.stopPropagation();
+                    }, 200);
                 }
+                // Remove the else if (hasMoved) block - allow clicks even if there was small movement
             }, { passive: false });
 
             // Also add touch events to individual cards and their child elements to ensure swipe works everywhere
@@ -349,11 +386,9 @@
                         mainDisplay.setAttribute('data-swipe-handled', 'true');
                         setTimeout(() => {
                             mainDisplay.removeAttribute('data-swipe-handled');
-                        }, 300);
-                    } else if (cardHasMoved) {
-                        e.preventDefault();
-                        e.stopPropagation();
+                        }, 200);
                     }
+                    // Remove the else if (cardHasMoved) block - allow clicks even if there was small movement
                 };
 
                 // Add touch events to card
@@ -410,14 +445,13 @@
                 card.classList.remove('active');
                 card.style.display = 'none';
 
-                // Stop video and remove playing class
+                // Stop video and reset to preview state
                 if (card.dataset.persona === 'founder' || card.dataset.persona === 'dad' || card.dataset.persona === 'operator' || card.dataset.persona === 'investor') {
-                    card.classList.remove('video-playing');
+                    card.classList.remove('video-playing', 'video-paused');
                     const video = card.querySelector('.character-video');
                     if (video) {
-                        video.muted = true;  // Ensure muted
+                        video.muted = true;
                         video.pause();
-                        // Reset all videos to 0 seconds
                         video.currentTime = 0;
                     }
                 }
@@ -441,35 +475,79 @@
 
             this.currentIndex = index;
 
-            // For Founder card, show static image initially (don't auto-play video)
+            // Setup video preview for new card
             const newCard = this.cards[index];
-            if (newCard.dataset.persona === 'founder') {
-                // Just show the card with static image, don't start video
-                newCard.classList.remove('video-playing');
+            if (newCard.dataset.persona === 'founder' || newCard.dataset.persona === 'dad' || newCard.dataset.persona === 'operator' || newCard.dataset.persona === 'investor') {
+                newCard.classList.remove('video-playing', 'video-paused');
+                const video = newCard.querySelector('.character-video');
+                if (video) {
+                    const videoSrc = video.getAttribute('data-src') || video.getAttribute('src');
+                    if (videoSrc && (!video.src || video.readyState === 0)) {
+                        if (video.getAttribute('data-src') && video.src !== videoSrc) {
+                            video.src = videoSrc;
+                        }
+                        video.muted = true;
+                        video.playsInline = true;
+                        video.preload = 'metadata';
+                        video.setAttribute('webkit-playsinline', 'true');
+                        video.setAttribute('playsinline', 'true');
+                        
+                        const setupPreview = () => {
+                            video.currentTime = 0;
+                            video.pause();
+                        };
+                        
+                        if (video.readyState >= 1) {
+                            setupPreview();
+                        } else {
+                            video.addEventListener('loadedmetadata', setupPreview, { once: true });
+                            video.load();
+                        }
+                    } else {
+                        video.currentTime = 0;
+                        video.pause();
+                    }
+                }
             }
         }
 
         toggleFounderVideo(card) {  // Works for founder, dad, operator, and investor videos
+            console.log('[Mobile] toggleFounderVideo called', {
+                persona: card.dataset.persona,
+                hasVideoPlaying: card.classList.contains('video-playing'),
+                hasVideoPaused: card.classList.contains('video-paused'),
+                classes: card.className
+            });
+
             const video = card.querySelector('.character-video');
-            if (!video) return;
+            if (!video) {
+                console.log('[Mobile] No video element found');
+                return;
+            }
+
+            console.log('[Mobile] Video element found', {
+                src: video.src,
+                dataSrc: video.getAttribute('data-src'),
+                readyState: video.readyState,
+                paused: video.paused,
+                currentTime: video.currentTime
+            });
 
             // Ensure video is muted and looped
             video.muted = true;
-            video.loop = true; // Use native loop - play from 0 to end
+            video.loop = true;
 
             if (card.classList.contains('video-playing')) {
-                // Stop video and go back to image
+                console.log('[Mobile] Video is playing, pausing...');
+                // Pause video - show video preview (image not needed on mobile)
                 card.classList.remove('video-playing');
+                card.classList.add('video-paused');
                 video.pause();
-                // Reset all videos to 0 seconds
                 video.currentTime = 0;
+                console.log('[Mobile] Video paused, classes:', card.className);
 
                 // Remove any inline styles that might override CSS
                 video.removeAttribute('style');
-                const photo = card.querySelector('.character-photo');
-                if (photo) {
-                    photo.removeAttribute('style');
-                }
                 
                 // Remove any active/focus states that might cause border to appear
                 card.blur();
@@ -478,45 +556,70 @@
                     void card.offsetWidth;
                 }
             } else {
-                // Start video - only load when needed
+                console.log('[Mobile] Video is not playing, starting playback...');
+                // Remove paused class if it exists
+                if (card.classList.contains('video-paused')) {
+                    console.log('[Mobile] Removing video-paused class');
+                    card.classList.remove('video-paused');
+                }
+
+                // Start video playback
                 const videoSrc = video.getAttribute('data-src') || video.getAttribute('src');
+                console.log('[Mobile] Video source:', videoSrc);
+                
                 if (videoSrc) {
                     // Always set src from data-src if it exists
                     if (video.getAttribute('data-src') && video.src !== videoSrc) {
+                        console.log('[Mobile] Setting video src from data-src');
                         video.src = videoSrc;
                     }
                     
-                    // Start loading video immediately - CSS transition will handle smooth fade-in
+                    // Start loading video immediately
                     if (video.readyState === 0) {
+                        console.log('[Mobile] Loading video');
                         video.load();
                     }
                     
-                    // Add video-playing class immediately to start CSS transition
-                    // Don't wait for video to load - transition will be smooth regardless
+                    // Add video-playing class immediately
+                    console.log('[Mobile] Adding video-playing class');
                     card.classList.add('video-playing');
+                    console.log('[Mobile] Classes after adding video-playing:', card.className);
                     
                     // Play video when ready
                     const playVideo = () => {
-                        // All videos start from 0 seconds
+                        console.log('[Mobile] playVideo called, readyState:', video.readyState);
                         video.currentTime = 0;
-                        video.play().catch((e) => {
-                            console.log('Video play failed:', e);
-                            // Keep the class for smooth transition even if play fails
-                        });
+                        const playPromise = video.play();
+                        if (playPromise !== undefined) {
+                            playPromise.then(() => {
+                                console.log('[Mobile] Video play promise resolved');
+                            }).catch(err => {
+                                console.error('[Mobile] Video play failed:', err);
+                                // If play fails, remove video-playing class to show image
+                                card.classList.remove('video-playing');
+                                card.classList.add('video-paused');
+                            });
+                        } else {
+                            console.log('[Mobile] Video play promise is undefined');
+                        }
                     };
                     
-                    if (video.readyState >= 2) {
-                        // Video has enough data to play
+                    if (video.readyState >= 3) {
+                        console.log('[Mobile] Video ready, playing immediately');
                         playVideo();
                     } else {
-                        // Video is loading, play when ready
-                        // Use loadedmetadata for faster response
+                        console.log('[Mobile] Video not ready, waiting...');
+                        // Video is loading, wait for it
                         const playWhenReady = () => {
+                            console.log('[Mobile] Video ready event fired');
                             playVideo();
                         };
                         video.addEventListener('loadedmetadata', playWhenReady, { once: true });
                         video.addEventListener('canplay', playWhenReady, { once: true });
+                        video.addEventListener('canplaythrough', playWhenReady, { once: true });
                     }
+                } else {
+                    console.error('[Mobile] No video source found');
                 }
             }
         }
