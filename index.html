@@ -73,7 +73,7 @@
                             <img src="/assets/founder.png" alt="Founder" class="character-photo" loading="lazy">
                             <video data-src="/assets/animation/founder.mp4" class="character-video" muted loop
                                 playsinline preload="auto" webkit-playsinline poster="/assets/founder.png" 
-                                onloadedmetadata="this.preload='auto';"></video>
+                                x-webkit-airplay="allow"></video>
                         </div>
                     </div>
                     <div class="character-info">
@@ -89,7 +89,8 @@
                         <div class="character-portrait strategist-portrait">
                             <img src="/assets/operator.png" alt="Operator" class="character-photo" loading="lazy">
                             <video data-src="/assets/animation/operator.mp4" class="character-video" muted loop
-                                playsinline preload="auto" webkit-playsinline poster="/assets/operator.png"></video>
+                                playsinline preload="auto" webkit-playsinline poster="/assets/operator.png"
+                                x-webkit-airplay="allow"></video>
                         </div>
                     </div>
                     <div class="character-info">
@@ -105,7 +106,8 @@
                         <div class="character-portrait merchant-portrait">
                             <img src="/assets/investor.png" alt="Investor" class="character-photo" loading="lazy">
                             <video data-src="/assets/animation/investor.mp4" class="character-video" muted loop
-                                playsinline preload="auto" webkit-playsinline poster="/assets/investor.png"></video>
+                                playsinline preload="auto" webkit-playsinline poster="/assets/investor.png"
+                                x-webkit-airplay="allow"></video>
                         </div>
                     </div>
                     <div class="character-info">
@@ -121,7 +123,8 @@
                         <div class="character-portrait scholar-portrait">
                             <img src="/assets/dad.png" alt="Girl Dad" class="character-photo" loading="lazy">
                             <video data-src="/assets/animation/dad.mp4" class="character-video" muted loop playsinline
-                                preload="auto" webkit-playsinline poster="/assets/dad.png"></video>
+                                preload="auto" webkit-playsinline poster="/assets/dad.png"
+                                x-webkit-airplay="allow"></video>
                         </div>
                     </div>
                     <div class="character-info">
@@ -373,19 +376,55 @@
         </main>
     </div>
 
-    <!-- GSAP Animation Library - Load only when needed -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/gsap.min.js" defer></script>
-
-    <!-- Scripts - Defer non-critical scripts -->
+    <!-- Core scripts - Load immediately -->
     <script src="/js/utilities.js" defer></script>
     <script src="/js/gaming-system.js" defer></script>
     <script src="/js/mobile.js" defer></script>
-    <script src="/js/writing-content.js" defer></script>
-    <script src="/js/quotes-content.js" defer></script>
-    <script src="/js/questions-content.js" defer></script>
-    <script src="/js/investments-content.js" defer></script>
     <script src="/js/spa-navigation.js" defer></script>
     <script src="/js/progress-system.js" defer></script>
+    
+    <!-- Content scripts - Lazy load when needed -->
+    <script>
+        // Lazy load content scripts only when needed
+        function loadContentScript(src) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = src;
+                script.defer = true;
+                script.onload = resolve;
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        }
+        
+        // Load content scripts based on current page
+        document.addEventListener('DOMContentLoaded', () => {
+            const path = window.location.pathname;
+            const hash = window.location.hash;
+            
+            // Determine which content script to load
+            if (path.includes('writing') || hash.includes('writing')) {
+                loadContentScript('/js/writing-content.js');
+            }
+            if (path.includes('quotes') || hash.includes('quotes')) {
+                loadContentScript('/js/quotes-content.js');
+            }
+            if (path.includes('questions') || hash.includes('questions')) {
+                loadContentScript('/js/questions-content.js');
+            }
+            if (path.includes('investments') || hash.includes('investments')) {
+                loadContentScript('/js/investments-content.js');
+            }
+            
+            // Load GSAP only if needed (for card deck animations)
+            if (window.innerWidth > 768 && !document.getElementById('characterSelect')?.classList.contains('hidden')) {
+                const gsapScript = document.createElement('script');
+                gsapScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/gsap.min.js';
+                gsapScript.defer = true;
+                document.head.appendChild(gsapScript);
+            }
+        });
+    </script>
 </body>
 
 </html>

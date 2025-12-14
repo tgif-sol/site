@@ -386,17 +386,26 @@ class GamingSystem {
                                 }
                                 video.muted = true;
                                 video.playsInline = true;
-                                video.preload = 'metadata';
+                                video.preload = 'auto'; // Preload for instant playback
                                 video.setAttribute('webkit-playsinline', 'true');
                                 video.setAttribute('playsinline', 'true');
+                                video.setAttribute('x-webkit-airplay', 'allow');
                                 
                                 const setupPreview = () => {
                                     video.currentTime = 0;
                                     video.pause();
+                                    // Force Safari to show first frame
+                                    if (video.readyState >= 2) {
+                                        video.currentTime = 0.1;
+                                        setTimeout(() => {
+                                            video.currentTime = 0;
+                                        }, 50);
+                                    }
                                 };
                                 
-                                video.addEventListener('loadedmetadata', setupPreview, { once: true });
                                 video.load();
+                                video.addEventListener('loadedmetadata', setupPreview, { once: true });
+                                video.addEventListener('loadeddata', setupPreview, { once: true });
                             } else {
                                 video.currentTime = 0;
                                 video.pause();
@@ -420,17 +429,18 @@ class GamingSystem {
                                 video.pause();
                                 video.currentTime = 0;
                             } else {
-                                // Start video playback
+                                // Start video playback - optimized for instant playback
                                 const videoSrc = video.getAttribute('data-src') || video.getAttribute('src');
                                 if (videoSrc) {
                                     if (video.getAttribute('data-src') && video.src !== videoSrc) {
                                         video.src = videoSrc;
                                     }
                                     
+                                    // Add playing class immediately to prevent black screen
                                     card.classList.remove('video-paused');
                                     card.classList.add('video-playing');
                                     
-                                    // Play video when ready
+                                    // Play immediately - video should be preloaded
                                     const playVideo = () => {
                                         video.currentTime = 0;
                                         const playPromise = video.play();
@@ -439,34 +449,28 @@ class GamingSystem {
                                                 // Video is playing
                                             }).catch(err => {
                                                 console.log('Video play failed:', err);
-                                                // If play fails, remove video-playing class to show image
                                                 card.classList.remove('video-playing');
+                                                card.classList.add('video-paused');
                                             });
                                         }
                                     };
                                     
-                                    if (video.readyState >= 3) {
-                                        // Video has enough data to play
+                                    // Try to play immediately if ready
+                                    if (video.readyState >= 2) {
                                         playVideo();
                                     } else {
-                                        // Video is still loading, wait for it
-                                        if (video.readyState === 0) {
-                                            video.load();
-                                        }
-                                        
+                                        // Wait for minimum data, then play
                                         const playWhenReady = () => {
                                             playVideo();
                                         };
-                                        
+                                        video.addEventListener('loadeddata', playWhenReady, { once: true });
                                         video.addEventListener('canplay', playWhenReady, { once: true });
-                                        video.addEventListener('canplaythrough', playWhenReady, { once: true });
-                                        
-                                        // Fallback after 2 seconds
+                                        // Fallback: play after short delay
                                         setTimeout(() => {
-                                            if (video.readyState >= 3 && !card.classList.contains('video-playing')) {
+                                            if (video.readyState >= 2 && video.paused) {
                                                 playVideo();
                                             }
-                                        }, 2000);
+                                        }, 100);
                                     }
                                 }
                             }
@@ -1087,18 +1091,25 @@ class GamingSystem {
             }, 50);
         });
 
-        // If we're on the welcome page, reload it to update content and links
+        // If we're on the welcome page, reload it to update content and links - optimized for Safari
         const activeNav = document.querySelector('.nav-link.active');
         const isWelcomePage = !activeNav || activeNav.dataset.page === 'welcome';
         if (isWelcomePage) {
-            const tryLoadWelcome = (attempts = 0) => {
+            requestAnimationFrame(() => {
                 if (window.loadPageContent) {
-                window.loadPageContent('welcome');
-                } else if (attempts < 10) {
-                    setTimeout(() => tryLoadWelcome(attempts + 1), 100);
+                    window.loadPageContent('welcome');
+                } else {
+                    // Fallback: try to load after short delay
+                    const tryLoadWelcome = (attempts = 0) => {
+                        if (window.loadPageContent) {
+                            window.loadPageContent('welcome');
+                        } else if (attempts < 5) {
+                            setTimeout(() => tryLoadWelcome(attempts + 1), 50);
+                        }
+                    };
+                    setTimeout(() => tryLoadWelcome(), 10);
                 }
-            };
-            setTimeout(() => tryLoadWelcome(), 100);
+            });
         }
 
         // Event dispatch is now handled in setPersona()

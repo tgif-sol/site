@@ -147,7 +147,7 @@
                     card.style.display = 'none';
                 }
 
-                // Initialize video preview state for mobile
+                // Initialize video preview state for mobile - preload for instant playback
                 if (card.dataset.persona === 'founder' || card.dataset.persona === 'dad' || card.dataset.persona === 'operator' || card.dataset.persona === 'investor') {
                     const video = card.querySelector('.character-video');
                     if (video) {
@@ -159,22 +159,34 @@
                             
                             video.muted = true;
                             video.playsInline = true;
-                            video.preload = 'metadata';
+                            video.preload = 'auto'; // Preload entire video for instant playback
                             video.setAttribute('webkit-playsinline', 'true');
                             video.setAttribute('playsinline', 'true');
+                            
+                            // Safari-specific optimizations
+                            video.setAttribute('x-webkit-airplay', 'allow');
+                            video.setAttribute('webkit-playsinline', 'true');
                             
                             const setupPreview = () => {
                                 video.currentTime = 0;
                                 video.pause();
+                                // Force Safari to show first frame
+                                if (video.readyState >= 2) {
+                                    video.currentTime = 0.1; // Small offset to ensure frame is shown
+                                    setTimeout(() => {
+                                        video.currentTime = 0;
+                                    }, 50);
+                                }
                             };
                             
+                            // Load video immediately
+                            video.load();
+                            
                             if (video.readyState >= 1) {
-                                // 이미 메타데이터가 로드됨
                                 setupPreview();
                             } else {
-                                // 메타데이터 로드 대기
                                 video.addEventListener('loadedmetadata', setupPreview, { once: true });
-                                video.load();
+                                video.addEventListener('loadeddata', setupPreview, { once: true });
                             }
                         }
                     }
@@ -182,17 +194,9 @@
 
                 // Add click handler for ALL cards to prevent navigation and handle video toggle
                 card.addEventListener('click', (e) => {
-                    console.log('[Mobile] Card clicked', {
-                        persona: card.dataset.persona,
-                        target: e.target,
-                        hasVideoPlaying: card.classList.contains('video-playing'),
-                        hasVideoPaused: card.classList.contains('video-paused')
-                    });
-
                     // Check if this was a swipe gesture - if so, ignore click
                     const mainDisplay = document.querySelector('.character-main-display');
                     if (mainDisplay && mainDisplay.hasAttribute('data-swipe-handled')) {
-                        console.log('[Mobile] Swipe handled, ignoring click');
                         e.preventDefault();
                         e.stopPropagation();
                         return;
@@ -200,7 +204,6 @@
 
                     // Only allow Select Role button to pass through
                     if (e.target.closest('.select-role-btn')) {
-                        console.log('[Mobile] Select button clicked, ignoring');
                         return;
                     }
 
@@ -210,7 +213,6 @@
 
                     // For cards with video, toggle playback
                     if (card.dataset.persona === 'founder' || card.dataset.persona === 'dad' || card.dataset.persona === 'operator' || card.dataset.persona === 'investor') {
-                        console.log('[Mobile] Calling toggleFounderVideo');
                         this.toggleFounderVideo(card);
                     }
                 }, { passive: false });
@@ -273,7 +275,6 @@
         setupSwipeGestures() {
             const mainDisplay = document.querySelector('.character-main-display');
             if (!mainDisplay) {
-                console.log('CharacterSelectionMobile: mainDisplay not found for swipe gestures');
                 return;
             }
 
@@ -322,10 +323,8 @@
                     e.stopPropagation();
                     swipeHandled = true;
                     if (deltaX > 0) {
-                        console.log('Swipe right detected, going to previous card');
                         this.previousCard();
                     } else {
-                        console.log('Swipe left detected, going to next card');
                         this.nextCard();
                     }
                     // Mark that we handled a swipe to prevent click events
@@ -475,76 +474,63 @@
 
             this.currentIndex = index;
 
-            // Setup video preview for new card
+            // Setup video preview for new card - preload for instant playback
             const newCard = this.cards[index];
             if (newCard.dataset.persona === 'founder' || newCard.dataset.persona === 'dad' || newCard.dataset.persona === 'operator' || newCard.dataset.persona === 'investor') {
                 newCard.classList.remove('video-playing', 'video-paused');
                 const video = newCard.querySelector('.character-video');
                 if (video) {
                     const videoSrc = video.getAttribute('data-src') || video.getAttribute('src');
-                    if (videoSrc && (!video.src || video.readyState === 0)) {
+                    if (videoSrc) {
                         if (video.getAttribute('data-src') && video.src !== videoSrc) {
                             video.src = videoSrc;
                         }
                         video.muted = true;
                         video.playsInline = true;
-                        video.preload = 'metadata';
+                        video.preload = 'auto'; // Preload for instant playback
                         video.setAttribute('webkit-playsinline', 'true');
                         video.setAttribute('playsinline', 'true');
+                        video.setAttribute('x-webkit-airplay', 'allow');
                         
                         const setupPreview = () => {
                             video.currentTime = 0;
                             video.pause();
+                            // Force Safari to show first frame
+                            if (video.readyState >= 2) {
+                                video.currentTime = 0.1;
+                                setTimeout(() => {
+                                    video.currentTime = 0;
+                                }, 50);
+                            }
                         };
+                        
+                        video.load();
                         
                         if (video.readyState >= 1) {
                             setupPreview();
                         } else {
                             video.addEventListener('loadedmetadata', setupPreview, { once: true });
-                            video.load();
+                            video.addEventListener('loadeddata', setupPreview, { once: true });
                         }
-                    } else {
-                        video.currentTime = 0;
-                        video.pause();
                     }
                 }
             }
         }
 
         toggleFounderVideo(card) {  // Works for founder, dad, operator, and investor videos
-            console.log('[Mobile] toggleFounderVideo called', {
-                persona: card.dataset.persona,
-                hasVideoPlaying: card.classList.contains('video-playing'),
-                hasVideoPaused: card.classList.contains('video-paused'),
-                classes: card.className
-            });
-
             const video = card.querySelector('.character-video');
-            if (!video) {
-                console.log('[Mobile] No video element found');
-                return;
-            }
-
-            console.log('[Mobile] Video element found', {
-                src: video.src,
-                dataSrc: video.getAttribute('data-src'),
-                readyState: video.readyState,
-                paused: video.paused,
-                currentTime: video.currentTime
-            });
+            if (!video) return;
 
             // Ensure video is muted and looped
             video.muted = true;
             video.loop = true;
 
             if (card.classList.contains('video-playing')) {
-                console.log('[Mobile] Video is playing, pausing...');
                 // Pause video - show video preview (image not needed on mobile)
                 card.classList.remove('video-playing');
                 card.classList.add('video-paused');
                 video.pause();
                 video.currentTime = 0;
-                console.log('[Mobile] Video paused, classes:', card.className);
 
                 // Remove any inline styles that might override CSS
                 video.removeAttribute('style');
@@ -556,70 +542,54 @@
                     void card.offsetWidth;
                 }
             } else {
-                console.log('[Mobile] Video is not playing, starting playback...');
                 // Remove paused class if it exists
                 if (card.classList.contains('video-paused')) {
-                    console.log('[Mobile] Removing video-paused class');
                     card.classList.remove('video-paused');
                 }
 
-                // Start video playback
+                // Start video playback - optimized for instant playback
                 const videoSrc = video.getAttribute('data-src') || video.getAttribute('src');
-                console.log('[Mobile] Video source:', videoSrc);
                 
                 if (videoSrc) {
-                    // Always set src from data-src if it exists
+                    // Ensure src is set
                     if (video.getAttribute('data-src') && video.src !== videoSrc) {
-                        console.log('[Mobile] Setting video src from data-src');
                         video.src = videoSrc;
                     }
                     
-                    // Start loading video immediately
-                    if (video.readyState === 0) {
-                        console.log('[Mobile] Loading video');
-                        video.load();
-                    }
-                    
-                    // Add video-playing class immediately
-                    console.log('[Mobile] Adding video-playing class');
+                    // Add video-playing class immediately to show video (no black screen)
                     card.classList.add('video-playing');
-                    console.log('[Mobile] Classes after adding video-playing:', card.className);
                     
-                    // Play video when ready
+                    // Play immediately - video should already be preloaded
                     const playVideo = () => {
-                        console.log('[Mobile] playVideo called, readyState:', video.readyState);
                         video.currentTime = 0;
                         const playPromise = video.play();
                         if (playPromise !== undefined) {
                             playPromise.then(() => {
-                                console.log('[Mobile] Video play promise resolved');
-                            }).catch(err => {
-                                console.error('[Mobile] Video play failed:', err);
-                                // If play fails, remove video-playing class to show image
+                                // Video playing
+                            }).catch(() => {
                                 card.classList.remove('video-playing');
                                 card.classList.add('video-paused');
                             });
-                        } else {
-                            console.log('[Mobile] Video play promise is undefined');
                         }
                     };
                     
-                    if (video.readyState >= 3) {
-                        console.log('[Mobile] Video ready, playing immediately');
+                    // Try to play immediately if ready
+                    if (video.readyState >= 2) {
                         playVideo();
                     } else {
-                        console.log('[Mobile] Video not ready, waiting...');
-                        // Video is loading, wait for it
+                        // Wait for minimum data, then play
                         const playWhenReady = () => {
-                            console.log('[Mobile] Video ready event fired');
                             playVideo();
                         };
-                        video.addEventListener('loadedmetadata', playWhenReady, { once: true });
+                        video.addEventListener('loadeddata', playWhenReady, { once: true });
                         video.addEventListener('canplay', playWhenReady, { once: true });
-                        video.addEventListener('canplaythrough', playWhenReady, { once: true });
+                        // Fallback: play after short delay
+                        setTimeout(() => {
+                            if (video.readyState >= 2 && video.paused) {
+                                playVideo();
+                            }
+                        }, 100);
                     }
-                } else {
-                    console.error('[Mobile] No video source found');
                 }
             }
         }
@@ -637,38 +607,51 @@
             localStorage.setItem('gaming_persona', persona);
             localStorage.setItem('selectedPersona', persona);
 
-            // Hide character selection and show main content
+            // Hide character selection immediately (optimize for Safari)
             const characterSelect = document.getElementById('characterSelect');
             if (characterSelect) {
                 characterSelect.classList.add('hidden');
                 characterSelect.style.display = 'none';
             }
 
-            // Show main container
+            // Show main container immediately
             const mainContainer = document.getElementById('mainContainer');
             if (mainContainer) {
                 mainContainer.classList.remove('hidden');
                 mainContainer.style.display = '';
             }
 
-            // Apply persona class to body
-            document.body.className = '';
-            document.body.classList.add(`persona-${persona}`);
-
-            // Update persona badges
-            const badges = document.querySelectorAll('.persona-badge .badge-text');
-            badges.forEach(badge => {
-                badge.textContent = persona.charAt(0).toUpperCase() + persona.slice(1);
-            });
-
-            // Update mobile role title
-            const mobileRoleTitle = document.querySelector('.mobile-role-title .role-text');
-            if (mobileRoleTitle) {
-                mobileRoleTitle.textContent = persona.charAt(0).toUpperCase() + persona.slice(1);
+            // Use GamingSystem to switch persona (avoids reload) - batch updates
+            if (window.gamingSystem && window.gamingSystem.switchPersona) {
+                window.gamingSystem.switchPersona(persona);
             }
 
-            // Reload page to apply persona properly
-            window.location.reload();
+            // Update navigation to show welcome as active (immediate)
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.dataset.page === 'welcome') {
+                    link.classList.add('active');
+                }
+            });
+
+            // Load welcome page content immediately (no reload) - optimized for Safari
+            // Use requestAnimationFrame for smoother transition
+            requestAnimationFrame(() => {
+                if (window.loadPageContent) {
+                    window.loadPageContent('welcome');
+                } else {
+                    // Fallback: try to load after minimal delay
+                    setTimeout(() => {
+                        if (window.loadPageContent) {
+                            window.loadPageContent('welcome');
+                        }
+                    }, 10);
+                }
+            });
+
+            // Scroll to top immediately
+            window.scrollTo({ top: 0, behavior: 'instant' });
         }
 
         // Removed duplicate setupSwipeGestures - using the one above
@@ -920,22 +903,13 @@
 
         setupPersonaSwitcher() {
             // Setup for mobile/touch devices
-            console.log('Setting up persona switcher for mobile');
-
             // Try multiple times in case elements aren't ready
             const trySetup = () => {
                 const personaContainer = document.querySelector('.persona-icons-container');
                 const personaBtn = document.querySelector('.persona-btn');
                 const personaOptions = document.querySelectorAll('.persona-icon-btn');
 
-                console.log('Persona elements found:', {
-                    container: !!personaContainer,
-                    button: !!personaBtn,
-                    options: personaOptions.length
-                });
-
                 if (!personaContainer || !personaBtn) {
-                    console.log('Persona elements not ready, retrying...');
                     setTimeout(trySetup, 500);
                     return;
                 }
@@ -953,7 +927,6 @@
                     if (isHandling) return;
                     isHandling = true;
 
-                    console.log('Persona button activated - toggling show-options');
                     personaContainer.classList.toggle('show-options');
 
                     setTimeout(() => {
@@ -991,7 +964,6 @@
                         isSelecting = true;
 
                         const persona = newOptionBtn.dataset.persona;
-                        console.log('Persona selected:', persona);
                         if (!persona) {
                             isSelecting = false;
                             return;
@@ -1012,12 +984,9 @@
                         newOptionBtn.classList.add('current-role');
 
                         // Call the main GamingSystem switchPersona method to properly update everything
-                        console.log('[Mobile] Calling gamingSystem.switchPersona:', persona);
                         if (window.gamingSystem && window.gamingSystem.switchPersona) {
                             window.gamingSystem.switchPersona(persona);
-                            console.log('[Mobile] switchPersona called successfully');
                         } else {
-                            console.warn('[Mobile] gamingSystem not available, falling back to manual update');
                             // Fallback: manual updates if gamingSystem is not available
                             localStorage.setItem('gaming_persona', persona);
                             localStorage.setItem('selectedPersona', persona);
@@ -1049,8 +1018,6 @@
                     // Use only click for options (touchend on main button is enough)
                     newOptionBtn.addEventListener('click', handleSelection);
                 });
-
-                console.log('Persona switcher setup complete');
             };
 
             // Start the setup process
@@ -1167,7 +1134,6 @@
                 return;
             }
 
-            console.log(`Switching to ${newView} view`);
             this.currentView = newView;
 
             if (isMobile) {
@@ -1301,7 +1267,6 @@
         ResponsiveViewManager,
         // Add manual initialization for persona switcher
         initPersonaSwitcher: function() {
-            console.log('Manually initializing persona switcher');
             const nav = new MobileNavigation();
             nav.setupPersonaSwitcher();
         }

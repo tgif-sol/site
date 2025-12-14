@@ -8,6 +8,27 @@
 
     let currentPage = null;
     let writingSPAInitialized = false;
+    
+    /**
+     * Lazy load script
+     */
+    function loadScript(src) {
+        return new Promise((resolve, reject) => {
+            // Check if script already loaded
+            const existing = document.querySelector(`script[src="${src}"]`);
+            if (existing) {
+                resolve();
+                return;
+            }
+            
+            const script = document.createElement('script');
+            script.src = src;
+            script.defer = true;
+            script.onload = resolve;
+            script.onerror = reject;
+            document.head.appendChild(script);
+        });
+    }
 
     /**
      * Initialize SPA Navigation
@@ -65,11 +86,12 @@
         const contentArea = document.querySelector('.content');
         if (!contentArea) return;
 
-        // Update active navigation
+        // Update active navigation immediately (Safari optimization)
         updateActiveNav(pageKey);
 
-        // Load content based on page
-        switch(pageKey) {
+        // Load content based on page - use requestAnimationFrame for smoother rendering
+        requestAnimationFrame(() => {
+            switch(pageKey) {
             case 'welcome':
                 loadWelcomeContent(contentArea);
                 break;
@@ -77,29 +99,58 @@
                 loadBioContent(contentArea);
                 break;
             case 'writing':
-                loadWritingContent(contentArea);
+                // Lazy load writing content script if not loaded
+                if (!window.writingContent) {
+                    loadScript('/js/writing-content.js').then(() => {
+                        loadWritingContent(contentArea);
+                    });
+                } else {
+                    loadWritingContent(contentArea);
+                }
                 break;
             case 'quotes':
-                loadQuotesContent(contentArea);
+                // Lazy load quotes content script if not loaded
+                if (!window.quotesData) {
+                    loadScript('/js/quotes-content.js').then(() => {
+                        loadQuotesContent(contentArea);
+                    });
+                } else {
+                    loadQuotesContent(contentArea);
+                }
                 break;
             case 'questions':
-                loadQuestionsContent(contentArea);
+                // Lazy load questions content script if not loaded
+                if (!window.questionsContent) {
+                    loadScript('/js/questions-content.js').then(() => {
+                        loadQuestionsContent(contentArea);
+                    });
+                } else {
+                    loadQuestionsContent(contentArea);
+                }
                 break;
             case 'investments':
-                loadInvestmentsContent(contentArea);
+                // Lazy load investments content script if not loaded
+                if (!window.investmentsContent) {
+                    loadScript('/js/investments-content.js').then(() => {
+                        loadInvestmentsContent(contentArea);
+                    });
+                } else {
+                    loadInvestmentsContent(contentArea);
+                }
                 break;
-        }
+            }
 
-        currentPage = pageKey;
+            currentPage = pageKey;
 
-        // Update URL without reload
-        const newUrl = `#${pageKey}`;
-        if (window.location.hash !== newUrl) {
-            history.pushState({ page: pageKey }, '', newUrl);
-        }
+            // Update URL without reload
+            const newUrl = `#${pageKey}`;
+            if (window.location.hash !== newUrl) {
+                history.pushState({ page: pageKey }, '', newUrl);
+            }
 
-        // Scroll to top on page change (especially important for mobile)
-        scrollToTop();
+            // Scroll to top on page change (especially important for mobile)
+            scrollToTop();
+        });
     }
 
     /**
@@ -226,19 +277,19 @@
                 </div>
             `;
 
-            // Fade in the cards after a longer delay to ensure smooth loading
-            setTimeout(() => {
+            // Fade in the cards immediately for faster display (Safari optimization)
+            requestAnimationFrame(() => {
                 const cardsContainer = container.querySelector('.welcome-cards');
                 if (cardsContainer) {
                     cardsContainer.classList.remove('cards-hidden');
                 }
-            }, 200);
+            });
         }
 
-        // Setup internal links after content loads
-        setTimeout(() => {
+        // Setup internal links immediately
+        requestAnimationFrame(() => {
             setupWelcomeLinks();
-        }, 300);
+        });
     }
 
     /**
