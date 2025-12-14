@@ -392,14 +392,38 @@ class GamingSystem {
                                 video.setAttribute('x-webkit-airplay', 'allow');
                                 
                                 const setupPreview = () => {
+                                // CRITICAL: Fix video position to 25% via inline style with !important
+                                // This prevents browser reflow from causing position jumps in Chrome/Safari
+                                video.style.setProperty('object-position', 'center 25%', 'important');
+                                video.style.setProperty('-webkit-object-position', 'center 25%', 'important');
+                                video.style.setProperty('transform', 'translateZ(0)', 'important');
+                                video.style.setProperty('-webkit-transform', 'translateZ(0)', 'important');
+                                video.style.setProperty('transition', 'none', 'important');
+                                video.style.setProperty('-webkit-transition', 'none', 'important');
+                                    
                                     video.currentTime = 0;
                                     video.pause();
-                                    // Force Safari to show first frame
+                                    
+                                    // Wait for first frame to be ready, then show video (prevents poster/first frame flash)
                                     if (video.readyState >= 2) {
                                         video.currentTime = 0.1;
                                         setTimeout(() => {
                                             video.currentTime = 0;
+                                            // Re-enforce position to 25% (browser reflow might reset it)
+                                            video.style.setProperty('object-position', 'center 25%', 'important');
+                                            video.style.setProperty('-webkit-object-position', 'center 25%', 'important');
+                                            // Now show the video - first frame is ready (for desktop, video is shown on hover/click)
                                         }, 50);
+                                    } else {
+                                        // Wait for video to be ready
+                                        const showWhenReady = () => {
+                                            if (video.readyState >= 2) {
+                                                video.currentTime = 0;
+                                                // Video will be shown on hover/click for desktop
+                                            }
+                                        };
+                                        video.addEventListener('loadeddata', showWhenReady, { once: true });
+                                        video.addEventListener('canplay', showWhenReady, { once: true });
                                     }
                                 };
                                 
@@ -423,12 +447,38 @@ class GamingSystem {
                             e.stopPropagation(); // Prevent any bubbling
 
                             if (card.classList.contains('video-playing')) {
+                                // CRITICAL: Fix video position to 25% via inline style with !important
+                                // This prevents browser reflow from causing position jumps in Chrome/Safari
+                                video.style.setProperty('object-position', 'center 25%', 'important');
+                                video.style.setProperty('-webkit-object-position', 'center 25%', 'important');
+                                video.style.setProperty('transform', 'translateZ(0)', 'important');
+                                video.style.setProperty('-webkit-transform', 'translateZ(0)', 'important');
+                                video.style.setProperty('transition', 'none', 'important');
+                                video.style.setProperty('-webkit-transition', 'none', 'important');
+                                
                                 // Pause video - show image
                                 card.classList.remove('video-playing');
                                 card.classList.add('video-paused');
                                 video.pause();
                                 video.currentTime = 0;
+                                
+                                // Re-enforce position to 25% after class change (browser reflow might reset it)
+                                requestAnimationFrame(() => {
+                                    video.style.setProperty('object-position', 'center 25%', 'important');
+                                    video.style.setProperty('-webkit-object-position', 'center 25%', 'important');
+                                    video.style.setProperty('transform', 'translateZ(0)', 'important');
+                                    video.style.setProperty('-webkit-transform', 'translateZ(0)', 'important');
+                                });
                             } else {
+                                // CRITICAL: Fix video position to 25% via inline style with !important
+                                // This prevents browser reflow from causing position jumps in Chrome/Safari
+                                video.style.setProperty('object-position', 'center 25%', 'important');
+                                video.style.setProperty('-webkit-object-position', 'center 25%', 'important');
+                                video.style.setProperty('transform', 'translateZ(0)', 'important');
+                                video.style.setProperty('-webkit-transform', 'translateZ(0)', 'important');
+                                video.style.setProperty('transition', 'none', 'important');
+                                video.style.setProperty('-webkit-transition', 'none', 'important');
+                                
                                 // Start video playback - optimized for instant playback
                                 const videoSrc = video.getAttribute('data-src') || video.getAttribute('src');
                                 if (videoSrc) {
@@ -437,8 +487,17 @@ class GamingSystem {
                                     }
                                     
                                     // Add playing class immediately to prevent black screen
+                                    // Position is already fixed above, so no jumping will occur
                                     card.classList.remove('video-paused');
                                     card.classList.add('video-playing');
+                                    
+                                    // Re-enforce position to 25% after class change (browser reflow might reset it)
+                                    requestAnimationFrame(() => {
+                                        video.style.setProperty('object-position', 'center 25%', 'important');
+                                        video.style.setProperty('-webkit-object-position', 'center 25%', 'important');
+                                        video.style.setProperty('transform', 'translateZ(0)', 'important');
+                                        video.style.setProperty('-webkit-transform', 'translateZ(0)', 'important');
+                                    });
                                     
                                     // Play immediately - video should be preloaded
                                     const playVideo = () => {
@@ -449,6 +508,11 @@ class GamingSystem {
                                                 // Video is playing
                                             }).catch(err => {
                                                 console.log('Video play failed:', err);
+                                                // Fix position to 25% before class change to prevent jumping
+                                                video.style.setProperty('object-position', 'center 25%', 'important');
+                                                video.style.setProperty('-webkit-object-position', 'center 25%', 'important');
+                                                video.style.transform = 'translateZ(0)';
+                                                video.style.webkitTransform = 'translateZ(0)';
                                                 card.classList.remove('video-playing');
                                                 card.classList.add('video-paused');
                                             });

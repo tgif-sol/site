@@ -168,14 +168,41 @@
                             video.setAttribute('webkit-playsinline', 'true');
                             
                             const setupPreview = () => {
+                                // CRITICAL: Fix video position to 25% via inline style with !important
+                                // This prevents browser reflow from causing position jumps in Chrome/Safari
+                                video.style.setProperty('object-position', 'center 25%', 'important');
+                                video.style.setProperty('-webkit-object-position', 'center 25%', 'important');
+                                video.style.setProperty('transform', 'translateZ(0)', 'important');
+                                video.style.setProperty('-webkit-transform', 'translateZ(0)', 'important');
+                                video.style.setProperty('transition', 'none', 'important');
+                                video.style.setProperty('-webkit-transition', 'none', 'important');
+                                
                                 video.currentTime = 0;
                                 video.pause();
-                                // Force Safari to show first frame
+                                
+                                // Wait for first frame to be ready, then show video (prevents poster/first frame flash)
                                 if (video.readyState >= 2) {
                                     video.currentTime = 0.1; // Small offset to ensure frame is shown
                                     setTimeout(() => {
                                         video.currentTime = 0;
+                                        // Re-enforce position to 25% (browser reflow might reset it)
+                                        video.style.setProperty('object-position', 'center 25%', 'important');
+                                        video.style.setProperty('-webkit-object-position', 'center 25%', 'important');
+                                        // Now show the video - first frame is ready
+                                        video.style.setProperty('opacity', '1', 'important');
+                                        video.style.setProperty('visibility', 'visible', 'important');
                                     }, 50);
+                                } else {
+                                    // Wait for video to be ready
+                                    const showWhenReady = () => {
+                                        if (video.readyState >= 2) {
+                                            video.currentTime = 0;
+                                            video.style.setProperty('opacity', '1', 'important');
+                                            video.style.setProperty('visibility', 'visible', 'important');
+                                        }
+                                    };
+                                    video.addEventListener('loadeddata', showWhenReady, { once: true });
+                                    video.addEventListener('canplay', showWhenReady, { once: true });
                                 }
                             };
                             
@@ -480,6 +507,15 @@
                 newCard.classList.remove('video-playing', 'video-paused');
                 const video = newCard.querySelector('.character-video');
                 if (video) {
+                    // CRITICAL: Fix video position to 25% via inline style with !important
+                    // This prevents browser reflow from causing position jumps in Chrome/Safari
+                    video.style.setProperty('object-position', 'center 25%', 'important');
+                    video.style.setProperty('-webkit-object-position', 'center 25%', 'important');
+                    video.style.setProperty('transform', 'translateZ(0)', 'important');
+                    video.style.setProperty('-webkit-transform', 'translateZ(0)', 'important');
+                    video.style.setProperty('transition', 'none', 'important');
+                    video.style.setProperty('-webkit-transition', 'none', 'important');
+                    
                     const videoSrc = video.getAttribute('data-src') || video.getAttribute('src');
                     if (videoSrc) {
                         if (video.getAttribute('data-src') && video.src !== videoSrc) {
@@ -493,14 +529,40 @@
                         video.setAttribute('x-webkit-airplay', 'allow');
                         
                         const setupPreview = () => {
+                            // CRITICAL: Fix video position to 25% via inline style with !important
+                            video.style.setProperty('object-position', 'center 25%', 'important');
+                            video.style.setProperty('-webkit-object-position', 'center 25%', 'important');
+                            video.style.setProperty('transform', 'translateZ(0)', 'important');
+                            video.style.setProperty('-webkit-transform', 'translateZ(0)', 'important');
+                            video.style.setProperty('transition', 'none', 'important');
+                            video.style.setProperty('-webkit-transition', 'none', 'important');
+                            
                             video.currentTime = 0;
                             video.pause();
-                            // Force Safari to show first frame
+                            
+                            // Wait for first frame to be ready, then show video (prevents poster/first frame flash)
                             if (video.readyState >= 2) {
                                 video.currentTime = 0.1;
                                 setTimeout(() => {
                                     video.currentTime = 0;
+                                    // Re-enforce position to 25% (browser reflow might reset it)
+                                    video.style.setProperty('object-position', 'center 25%', 'important');
+                                    video.style.setProperty('-webkit-object-position', 'center 25%', 'important');
+                                    // Now show the video - first frame is ready
+                                    video.style.setProperty('opacity', '1', 'important');
+                                    video.style.setProperty('visibility', 'visible', 'important');
                                 }, 50);
+                            } else {
+                                // Wait for video to be ready
+                                const showWhenReady = () => {
+                                    if (video.readyState >= 2) {
+                                        video.currentTime = 0;
+                                        video.style.setProperty('opacity', '1', 'important');
+                                        video.style.setProperty('visibility', 'visible', 'important');
+                                    }
+                                };
+                                video.addEventListener('loadeddata', showWhenReady, { once: true });
+                                video.addEventListener('canplay', showWhenReady, { once: true });
                             }
                         };
                         
@@ -525,15 +587,31 @@
             video.muted = true;
             video.loop = true;
 
+            // CRITICAL: Fix video position to 25% BEFORE any class changes to prevent jumping
+            // This prevents browser reflow from causing position jumps in Chrome/Safari
+            // We fix it to 25% (the desired position) to prevent any temporary jumps
+            video.style.setProperty('object-position', 'center 25%', 'important');
+            video.style.setProperty('-webkit-object-position', 'center 25%', 'important');
+            video.style.setProperty('transform', 'translateZ(0)', 'important');
+            video.style.setProperty('-webkit-transform', 'translateZ(0)', 'important');
+            video.style.setProperty('transition', 'none', 'important');
+            video.style.setProperty('-webkit-transition', 'none', 'important');
+
             if (card.classList.contains('video-playing')) {
                 // Pause video - show video preview (image not needed on mobile)
+                // Position is already fixed above, so no jumping will occur
                 card.classList.remove('video-playing');
                 card.classList.add('video-paused');
                 video.pause();
                 video.currentTime = 0;
 
-                // Remove any inline styles that might override CSS
-                video.removeAttribute('style');
+                // Re-enforce position to 25% after class change (browser reflow might reset it)
+                requestAnimationFrame(() => {
+                    video.style.setProperty('object-position', 'center 25%', 'important');
+                    video.style.setProperty('-webkit-object-position', 'center 25%', 'important');
+                    video.style.setProperty('transform', 'translateZ(0)', 'important');
+                    video.style.setProperty('-webkit-transform', 'translateZ(0)', 'important');
+                });
                 
                 // Remove any active/focus states that might cause border to appear
                 card.blur();
@@ -543,6 +621,7 @@
                 }
             } else {
                 // Remove paused class if it exists
+                // Position is already fixed above, so no jumping will occur
                 if (card.classList.contains('video-paused')) {
                     card.classList.remove('video-paused');
                 }
@@ -557,7 +636,16 @@
                     }
                     
                     // Add video-playing class immediately to show video (no black screen)
+                    // Position is already fixed above via inline style, so no jumping will occur
                     card.classList.add('video-playing');
+                    
+                    // Re-enforce position to 25% after class change (browser reflow might reset it)
+                    requestAnimationFrame(() => {
+                        video.style.setProperty('object-position', 'center 25%', 'important');
+                        video.style.setProperty('-webkit-object-position', 'center 25%', 'important');
+                        video.style.setProperty('transform', 'translateZ(0)', 'important');
+                        video.style.setProperty('-webkit-transform', 'translateZ(0)', 'important');
+                    });
                     
                     // Play immediately - video should already be preloaded
                     const playVideo = () => {
