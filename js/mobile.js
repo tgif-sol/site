@@ -614,16 +614,27 @@
                 characterSelect.style.display = 'none';
             }
 
-            // Show main container immediately
+            // Show main container immediately and ensure it's visible
             const mainContainer = document.getElementById('mainContainer');
             if (mainContainer) {
                 mainContainer.classList.remove('hidden');
                 mainContainer.style.display = '';
+                mainContainer.style.opacity = '1';
+                // Force visibility
+                mainContainer.style.visibility = 'visible';
             }
+
+            // Remove character-select-active class to show mobile menu
+            document.body.classList.remove('character-select-active');
 
             // Use GamingSystem to switch persona (avoids reload) - batch updates
             if (window.gamingSystem && window.gamingSystem.switchPersona) {
                 window.gamingSystem.switchPersona(persona);
+            }
+
+            // Also call showMainContent to ensure everything is set up
+            if (window.gamingSystem && window.gamingSystem.showMainContent) {
+                window.gamingSystem.showMainContent();
             }
 
             // Update navigation to show welcome as active (immediate)
@@ -636,18 +647,43 @@
             });
 
             // Load welcome page content immediately (no reload) - optimized for Safari
-            // Use requestAnimationFrame for smoother transition
-            requestAnimationFrame(() => {
+            // Use multiple attempts to ensure content loads
+            const loadContent = () => {
                 if (window.loadPageContent) {
                     window.loadPageContent('welcome');
+                    // Verify content was loaded
+                    setTimeout(() => {
+                        const contentArea = document.querySelector('.content');
+                        if (contentArea && !contentArea.querySelector('.content-body') && !contentArea.querySelector('.welcome-cards')) {
+                            // Content not loaded, try again
+                            if (window.loadPageContent) {
+                                window.loadPageContent('welcome');
+                            }
+                        }
+                    }, 100);
                 } else {
                     // Fallback: try to load after minimal delay
                     setTimeout(() => {
                         if (window.loadPageContent) {
                             window.loadPageContent('welcome');
+                        } else {
+                            // Last resort: try after longer delay
+                            setTimeout(() => {
+                                if (window.loadPageContent) {
+                                    window.loadPageContent('welcome');
+                                }
+                            }, 200);
                         }
-                    }, 10);
+                    }, 50);
                 }
+            };
+
+            // Try immediately
+            loadContent();
+            
+            // Also try in next frame
+            requestAnimationFrame(() => {
+                loadContent();
             });
 
             // Scroll to top immediately

@@ -3965,9 +3965,11 @@ body::after {
         width: 100%;
         height: 100%;
         z-index: 2;
+        /* Remove all transitions to prevent object-position jumping */
         transition: none !important;
         object-fit: cover !important;
         -webkit-object-fit: cover !important;
+        /* Fixed object-position - no transition to prevent jumping */
         object-position: center 25% !important;
         -webkit-object-position: center 25% !important;
         will-change: opacity;
@@ -4038,9 +4040,9 @@ body::after {
     .character-card[data-persona="dad"] .character-video,
     .character-card[data-persona="investor"] .character-video {
         filter: brightness(1.05) contrast(1.05) saturate(1.05);
+        /* Remove transition for object-position to prevent jumping */
         transition: opacity 0.2s ease-out, 
-                    visibility 0.2s ease-out,
-                    transform 0.2s ease-out;
+                    visibility 0.2s ease-out;
     }
 
     /* Unified Mobile Alignment - All videos positioned at top */
@@ -4105,8 +4107,11 @@ body::after {
     .character-card[data-persona="investor"].video-playing .character-video {
         transform: scale(1) !important;
         -webkit-transform: scale(1) !important;
+        /* Keep same object-position as default/preview to prevent jumping */
         object-position: center 25% !important;
         -webkit-object-position: center 25% !important;
+        /* Remove any transition on object-position */
+        transition: none !important;
     }
 
     /* Mobile: Image not needed - always hidden */
@@ -4133,8 +4138,10 @@ body::after {
         opacity: 1 !important;
         visibility: visible !important;
         z-index: 2 !important;
-        transition: opacity 0.3s ease-out, 
-                    visibility 0.3s ease-out;
+        /* Remove transition for object-position to prevent jumping */
+        transition: opacity 0.2s ease-out, 
+                    visibility 0.2s ease-out;
+        /* Keep same object-position as default to prevent jumping */
         object-position: center 25% !important;
         -webkit-object-position: center 25% !important;
     }
